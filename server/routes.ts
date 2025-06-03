@@ -11,8 +11,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 // Validation schemas
 const createBookingSchema = insertBookingSchema.extend({
-  checkIn: z.string(),
-  checkOut: z.string(),
+  checkIn: z.string().transform((val) => new Date(val).toISOString().split('T')[0]),
+  checkOut: z.string().transform((val) => new Date(val).toISOString().split('T')[0]),
 });
 
 const updateDestinationSchema = insertDestinationSchema.partial();

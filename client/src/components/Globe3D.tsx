@@ -1,141 +1,190 @@
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useRef, useEffect } from "react";
+import * as THREE from "three";
 
 export default function Globe3D() {
-  const globeRef = useRef<HTMLDivElement>(null);
+  const mountRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Since we can't use actual Three.js in this setup, we'll create a CSS-based 3D globe effect
-    const globe = globeRef.current;
-    if (!globe) return;
+    if (!mountRef.current) return;
 
-    // Add floating animation markers
-    const createFloatingMarker = (delay: number, color: string) => {
-      const marker = document.createElement("div");
-      marker.className = `absolute w-3 h-3 rounded-full ${color} opacity-80 animate-pulse`;
-      marker.style.animationDelay = `${delay}s`;
-      return marker;
-    };
+    const width = mountRef.current.clientWidth;
+    const height = mountRef.current.clientHeight;
 
-    // Create animated markers around the globe
-    const markers = [
-      { delay: 0, color: "bg-gold-accent", top: "20%", right: "10%" },
-      { delay: 1, color: "bg-lavender-accent", bottom: "25%", left: "15%" },
-      { delay: 2, color: "bg-mint-accent", top: "50%", right: "5%" },
-    ];
+    // Scene
+    const scene = new THREE.Scene();
+    sceneRef.current = scene;
 
-    markers.forEach(({ delay, color, ...position }) => {
-      const marker = createFloatingMarker(delay, color);
-      Object.assign(marker.style, position);
-      globe.appendChild(marker);
+    // Camera
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.set(0, 0, 3);
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: true, 
+      alpha: true 
+    });
+    renderer.setSize(width, height);
+    renderer.setClearColor(0x000000, 0);
+    rendererRef.current = renderer;
+    mountRef.current.appendChild(renderer.domElement);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    directionalLight.position.set(5, 3, 5);
+    scene.add(directionalLight);
+
+    // Texture Loader
+    const textureLoader = new THREE.TextureLoader();
+    
+    // Create realistic Earth texture
+    const earthTexture = textureLoader.load(
+      'https://raw.githubusercontent.com/ruanyf/react-demos/master/3d-earth/images/earthmap1k.jpg',
+      () => {
+        console.log('Earth texture loaded successfully');
+      },
+      undefined,
+      (error) => {
+        console.log('Earth texture failed to load, using wireframe');
+      }
+    );
+
+    // Create globe geometry
+    const geometry = new THREE.SphereGeometry(1, 64, 64);
+    
+    // Create material with Earth texture
+    const material = new THREE.MeshPhongMaterial({
+      map: earthTexture,
+      transparent: true,
+      opacity: 0.9,
     });
 
+    const earth = new THREE.Mesh(geometry, material);
+    scene.add(earth);
+
+    // Add glowing atmosphere
+    const atmosphereGeometry = new THREE.SphereGeometry(1.05, 64, 64);
+    const atmosphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0x60a5fa,
+      transparent: true,
+      opacity: 0.1,
+      side: THREE.BackSide,
+    });
+    const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+    scene.add(atmosphere);
+
+    // Add destination points
+    const pointsGeometry = new THREE.BufferGeometry();
+    const pointsCount = 30;
+    const positions = new Float32Array(pointsCount * 3);
+
+    // Real destination coordinates converted to 3D positions
+    const destinations = [
+      { lat: 35.6762, lng: 139.6503 }, // Tokyo
+      { lat: 64.9631, lng: -19.0208 }, // Iceland
+      { lat: -13.1631, lng: -72.5450 }, // Machu Picchu
+      { lat: 36.3932, lng: 25.4615 }, // Santorini
+      { lat: 25.2048, lng: 55.2708 }, // Dubai
+      { lat: -8.3405, lng: 115.0920 }, // Bali
+      { lat: 40.7128, lng: -74.0060 }, // New York
+      { lat: 48.8566, lng: 2.3522 }, // Paris
+      { lat: 7.8804, lng: 98.3923 }, // Phuket
+      { lat: 20.7984, lng: -156.3319 }, // Maui
+    ];
+
+    for (let i = 0; i < Math.min(pointsCount, destinations.length); i++) {
+      const { lat, lng } = destinations[i];
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lng + 180) * (Math.PI / 180);
+      const radius = 1.02;
+
+      positions[i * 3] = -(radius * Math.sin(phi) * Math.cos(theta));
+      positions[i * 3 + 1] = radius * Math.cos(phi);
+      positions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
+    }
+
+    // Fill remaining points randomly
+    for (let i = destinations.length; i < pointsCount; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      const radius = 1.02;
+
+      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = radius * Math.cos(phi);
+      positions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
+    }
+
+    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    
+    const pointsMaterial = new THREE.PointsMaterial({
+      color: 0xfbbf24,
+      size: 0.02,
+      transparent: true,
+      opacity: 0.9,
+    });
+
+    const points = new THREE.Points(pointsGeometry, pointsMaterial);
+    scene.add(points);
+
+    // Animation
+    const animate = () => {
+      frameRef.current = requestAnimationFrame(animate);
+      
+      // Smooth rotation
+      earth.rotation.y += 0.0015;
+      atmosphere.rotation.y += 0.0015;
+      points.rotation.y += 0.0015;
+      
+      // Pulsing points
+      const time = Date.now() * 0.005;
+      pointsMaterial.opacity = 0.5 + 0.5 * Math.sin(time);
+      
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    // Handle resize
+    const handleResize = () => {
+      if (!mountRef.current) return;
+      const newWidth = mountRef.current.clientWidth;
+      const newHeight = mountRef.current.clientHeight;
+      
+      camera.aspect = newWidth / newHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(newWidth, newHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
     return () => {
-      if (globe) {
-        globe.innerHTML = "";
+      window.removeEventListener('resize', handleResize);
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
       }
+      if (mountRef.current && renderer.domElement) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
+      geometry.dispose();
+      material.dispose();
+      atmosphereGeometry.dispose();
+      atmosphereMaterial.dispose();
+      pointsGeometry.dispose();
+      pointsMaterial.dispose();
+      renderer.dispose();
     };
   }, []);
 
   return (
-    <div className="relative w-96 h-96 mx-auto">
-      <motion.div
-        ref={globeRef}
-        className="relative w-full h-full"
-        animate={{
-          rotateY: [0, 360],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      >
-        {/* Globe Image with Enhanced Styling */}
-        <div 
-          className="w-full h-full rounded-full shadow-2xl border-4 border-gold-accent bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900"
-          style={{
-            backgroundImage: `
-              radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 70% 70%, rgba(136, 132, 255, 0.2) 0%, transparent 40%),
-              conic-gradient(from 0deg at 50% 50%, 
-                #1e3a8a 0deg, 
-                #1e40af 60deg, 
-                #1d4ed8 120deg, 
-                #2563eb 180deg, 
-                #3b82f6 240deg, 
-                #1e3a8a 300deg, 
-                #1e3a8a 360deg)
-            `,
-            filter: "hue-rotate(45deg) saturate(1.2) brightness(1.1)",
-          }}
-        >
-          {/* Continents overlay */}
-          <div className="absolute inset-0 rounded-full opacity-60">
-            <div className="absolute top-1/4 left-1/3 w-16 h-12 bg-green-600 rounded-full opacity-40 transform rotate-12"></div>
-            <div className="absolute top-1/2 right-1/4 w-20 h-8 bg-green-500 rounded-full opacity-40 transform -rotate-6"></div>
-            <div className="absolute bottom-1/3 left-1/4 w-12 h-16 bg-green-700 rounded-full opacity-40 transform rotate-45"></div>
-          </div>
-        </div>
-
-        {/* Floating Travel Icons */}
-        <motion.div
-          className="absolute top-10 -right-4"
-          animate={{
-            y: [-10, 10, -10],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <div className="w-8 h-8 bg-gold-accent rounded-full flex items-center justify-center shadow-lg">
-            <svg className="w-5 h-5 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z"/>
-            </svg>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="absolute bottom-10 -left-4"
-          animate={{
-            y: [-15, 15, -15],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        >
-          <div className="w-8 h-8 bg-lavender-accent rounded-full flex items-center justify-center shadow-lg">
-            <svg className="w-5 h-5 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 9a2 2 0 114 0 2 2 0 01-4 0z"/>
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a4 4 0 00-2 7.87V16a1 1 0 102 0v-3.13A4 4 0 0011 5z" clipRule="evenodd"/>
-            </svg>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="absolute top-1/2 -right-8"
-          animate={{
-            y: [-20, 20, -20],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        >
-          <div className="w-8 h-8 bg-mint-accent rounded-full flex items-center justify-center shadow-lg">
-            <svg className="w-5 h-5 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
-            </svg>
-          </div>
-        </motion.div>
-      </motion.div>
-    </div>
+    <div 
+      ref={mountRef} 
+      className="w-full h-full"
+      style={{ minHeight: '400px' }}
+    />
   );
 }
