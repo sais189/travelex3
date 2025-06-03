@@ -10,7 +10,7 @@ import Home from "@/pages/Home";
 import Destinations from "@/pages/Destinations";
 import Booking from "@/pages/Booking";
 import MyTrips from "@/pages/MyTrips";
-import Admin from "@/pages/Admin";
+import AdminDashboard from "@/pages/AdminDashboard";
 import Login from "@/pages/Login";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
@@ -30,8 +30,8 @@ function Router() {
         <Route path="/destinations" component={Destinations} />
         <Route path="/booking/:id" component={Booking} />
         <Route path="/my-trips" component={MyTrips} />
-        <Route path="/admin" component={Admin} />
-        <Route path="/admin/:tab" component={Admin} />
+        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/admin/:tab" component={AdminDashboard} />
         <Route path="/auth" component={Login} />
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact} />

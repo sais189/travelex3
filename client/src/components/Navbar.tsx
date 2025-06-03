@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import LocationSearchDropdown from "@/components/LocationSearchDropdown";
 
 export default function Navbar() {
   const [location] = useLocation();
@@ -65,6 +66,11 @@ export default function Navbar() {
             <span className="text-xl font-bold text-gold-accent">Globetrotter</span>
           </motion.div>
         </Link>
+
+        {/* Location Search */}
+        <div className="hidden lg:block flex-1 max-w-md mx-8">
+          <LocationSearchDropdown />
+        </div>
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center space-x-8">
