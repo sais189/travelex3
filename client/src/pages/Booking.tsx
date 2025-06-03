@@ -1,0 +1,496 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useLocation, useParams } from "wouter";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { ArrowLeft, Star, MapPin, Clock, Users, Calendar, ChevronDown, ChevronUp, CreditCard, Home, Utensils, Plane, Coffee } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useAuth } from "@/hooks/useAuth";
+import { apiRequest } from "@/lib/queryClient";
+import { loadStripe } from "@stripe/stripe-js";
+import type { Destination } from "@shared/schema";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
+
+export default function Booking() {
+  const params = useParams();
+  const [, navigate] = useLocation();
+  const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
+  
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState("2");
+  const [travelClass, setTravelClass] = useState("business");
+  const [upgrades, setUpgrades] = useState<string[]>([]);
+  const [showItinerary, setShowItinerary] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const destinationId = parseInt(params.id || "0");
+
+  const { data: destination, isLoading } = useQuery<Destination>({
+    queryKey: [`/api/destinations/${destinationId}`],
+    enabled: !!destinationId,
+  });
+
+  const bookingMutation = useMutation({
+    mutationFn: async (bookingData: any) => {
+      // First create the booking
+      const bookingResponse = await apiRequest("POST", "/api/bookings", bookingData);
+      const booking = await bookingResponse.json();
+      
+      // Then create payment intent
+      const paymentResponse = await apiRequest("POST", "/api/create-payment-intent", {
+        amount: totalAmount,
+        bookingId: booking.id,
+      });
+      const { clientSecret } = await paymentResponse.json();
+      
+      return { booking, clientSecret };
+    },
+    onSuccess: async ({ clientSecret }) => {
+      const stripe = await stripePromise;
+      if (!stripe) {
+        toast({
+          title: "Payment Error",
+          description: "Failed to load payment system",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Redirect to Stripe Checkout
+      const { error } = await stripe.confirmPayment({
+        clientSecret,
+        confirmParams: {
+          return_url: `${window.location.origin}/my-trips`,
+        },
+      });
+
+      if (error) {
+        toast({
+          title: "Payment Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        setShowSuccess(true);
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Booking Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Check if user is authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to book a trip",
+        variant: "destructive",
+      });
+      navigate("/auth");
+    }
+  }, [isAuthenticated, navigate, toast]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-32 pb-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <Skeleton className="h-8 w-48 mb-8" />
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div>
+              <Skeleton className="h-80 w-full mb-6 rounded-2xl" />
+              <Skeleton className="h-12 w-full mb-4" />
+              <Skeleton className="h-6 w-full mb-2" />
+              <Skeleton className="h-6 w-3/4 mb-8" />
+            </div>
+            <div>
+              <Skeleton className="h-96 w-full rounded-2xl" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!destination) {
+    return (
+      <div className="min-h-screen pt-32 pb-16 px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-4xl font-bold mb-4">Destination Not Found</h1>
+          <p className="text-muted-foreground mb-8">The destination you're looking for doesn't exist.</p>
+          <Button onClick={() => navigate("/destinations")}>
+            Return to Destinations
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Calculate upgrade costs
+  const upgradeOptions = [
+    { id: "private-chef", name: "Private Chef", price: 500 },
+    { id: "sunset-yacht", name: "Sunset Yacht", price: 800 },
+    { id: "spa-package", name: "Couples Spa Package", price: 400 },
+  ];
+
+  const basePrice = parseFloat(destination.price) * parseInt(guests);
+  const classMultiplier = travelClass === "business" ? 1.2 : 1;
+  const upgradeTotal = upgrades.reduce((total, upgradeId) => {
+    const upgrade = upgradeOptions.find(u => u.id === upgradeId);
+    return total + (upgrade?.price || 0);
+  }, 0);
+  const totalAmount = Math.round((basePrice * classMultiplier) + upgradeTotal);
+
+  const handleUpgradeChange = (upgradeId: string, checked: boolean) => {
+    if (checked) {
+      setUpgrades(prev => [...prev, upgradeId]);
+    } else {
+      setUpgrades(prev => prev.filter(id => id !== upgradeId));
+    }
+  };
+
+  const handleBookTrip = () => {
+    if (!checkIn || !checkOut) {
+      toast({
+        title: "Missing Information",
+        description: "Please select check-in and check-out dates",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const bookingData = {
+      destinationId: destination.id,
+      checkIn,
+      checkOut,
+      guests: parseInt(guests),
+      travelClass,
+      upgrades,
+      totalAmount,
+      status: "pending",
+      paymentStatus: "pending",
+    };
+
+    bookingMutation.mutate(bookingData);
+  };
+
+  const features = destination.features as string[] || [
+    "Luxury Accommodation",
+    "All Meals Included",
+    "Airport Transfers",
+    "Water Activities",
+    "Spa Access",
+    "Premium Drinks",
+  ];
+
+  const itinerary = destination.itinerary as Array<{day: string, title: string, description: string}> || [
+    { day: "Day 1-2", title: "Arrival & Settling In", description: "Airport transfer, accommodation check-in, welcome dinner" },
+    { day: "Day 3-4", title: "Adventure Activities", description: "Guided tours, cultural experiences, outdoor adventures" },
+    { day: "Day 5-6", title: "Relaxation & Leisure", description: "Spa treatments, leisure time, optional activities" },
+    { day: "Day 7", title: "Departure", description: "Final breakfast, checkout, airport transfer" },
+  ];
+
+  return (
+    <div className="min-h-screen pt-32 pb-16 px-6">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/destinations")}
+            className="mb-8 flex items-center text-muted-foreground hover:text-gold-accent"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Destinations
+          </Button>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Trip Details */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <img
+              src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
+              alt={destination.name}
+              className="w-full h-80 object-cover rounded-2xl mb-6 shadow-lg"
+            />
+
+            <h1 className="text-4xl font-bold mb-4">{destination.name}</h1>
+            <div className="flex items-center mb-6">
+              <div className="flex items-center mr-6">
+                <Star className="w-5 h-5 text-gold-accent mr-1 fill-current" />
+                <span className="font-semibold">{destination.rating}</span>
+                <span className="text-muted-foreground ml-1">
+                  ({destination.reviewCount || 128} reviews)
+                </span>
+              </div>
+              <div className="flex items-center">
+                <MapPin className="w-5 h-5 text-lavender-accent mr-2" />
+                <span className="text-muted-foreground">{destination.country}</span>
+              </div>
+            </div>
+
+            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+              {destination.description}
+            </p>
+
+            {/* Itinerary Toggle */}
+            <Card className="glass-morphism mb-8">
+              <CardContent className="p-6">
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowItinerary(!showItinerary)}
+                  className="flex items-center justify-between w-full text-left p-0 h-auto"
+                >
+                  <h3 className="text-xl font-semibold">View Full Itinerary</h3>
+                  {showItinerary ? (
+                    <ChevronUp className="w-5 h-5 text-gold-accent" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-gold-accent" />
+                  )}
+                </Button>
+
+                {showItinerary && (
+                  <motion.div
+                    className="mt-6 space-y-4"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {itinerary.map((item, index) => (
+                      <div key={index} className="border-l-2 border-gold-accent pl-4">
+                        <h4 className="font-semibold text-gold-accent">{item.day}: {item.title}</h4>
+                        <p className="text-muted-foreground">{item.description}</p>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Included Features */}
+            <Card className="glass-morphism">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold mb-4">What's Included</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {features.map((feature, index) => {
+                    const icons = [Home, Utensils, Plane, Coffee, MapPin, Users];
+                    const Icon = icons[index % icons.length];
+                    const colors = ["text-gold-accent", "text-lavender-accent", "text-mint-accent"];
+                    const colorClass = colors[index % colors.length];
+                    
+                    return (
+                      <div key={index} className="flex items-center">
+                        <Icon className={`w-5 h-5 mr-3 ${colorClass}`} />
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Booking Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <Card className="glass-morphism sticky top-32">
+              <CardContent className="p-8">
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-2xl font-bold text-gold-accent">
+                      ${destination.price}
+                    </span>
+                    <span className="text-muted-foreground">per person</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {destination.duration} days, {destination.duration - 1} nights
+                  </p>
+                </div>
+
+                {/* Date Selection */}
+                <div className="mb-6">
+                  <Label className="text-sm font-semibold mb-2 block">Travel Dates</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-xs text-muted-foreground mb-1 block">
+                        Check-in
+                      </Label>
+                      <Input
+                        type="date"
+                        value={checkIn}
+                        onChange={(e) => setCheckIn(e.target.value)}
+                        className="bg-slate-panel border-border focus:border-gold-accent"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground mb-1 block">
+                        Check-out
+                      </Label>
+                      <Input
+                        type="date"
+                        value={checkOut}
+                        onChange={(e) => setCheckOut(e.target.value)}
+                        className="bg-slate-panel border-border focus:border-gold-accent"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Guest Selection */}
+                <div className="mb-6">
+                  <Label className="text-sm font-semibold mb-2 block">Guests</Label>
+                  <Select value={guests} onValueChange={setGuests}>
+                    <SelectTrigger className="bg-slate-panel border-border focus:border-gold-accent">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from({ length: destination.maxGuests }, (_, i) => i + 1).map(num => (
+                        <SelectItem key={num} value={num.toString()}>
+                          {num} Guest{num > 1 ? 's' : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Travel Class */}
+                <div className="mb-6">
+                  <Label className="text-sm font-semibold mb-2 block">Travel Class</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button
+                      variant={travelClass === "business" ? "default" : "outline"}
+                      onClick={() => setTravelClass("business")}
+                      className={
+                        travelClass === "business"
+                          ? "bg-gold-accent text-primary-foreground"
+                          : "border-border text-muted-foreground hover:border-gold-accent"
+                      }
+                    >
+                      Business
+                    </Button>
+                    <Button
+                      variant={travelClass === "economy" ? "default" : "outline"}
+                      onClick={() => setTravelClass("economy")}
+                      className={
+                        travelClass === "economy"
+                          ? "bg-gold-accent text-primary-foreground"
+                          : "border-border text-muted-foreground hover:border-gold-accent"
+                      }
+                    >
+                      Economy
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Optional Upgrades */}
+                <div className="mb-8">
+                  <Label className="text-sm font-semibold mb-3 block">
+                    Optional Upgrades
+                  </Label>
+                  <div className="space-y-3">
+                    {upgradeOptions.map((upgrade) => (
+                      <div key={upgrade.id} className="flex items-center space-x-3">
+                        <Checkbox
+                          id={upgrade.id}
+                          checked={upgrades.includes(upgrade.id)}
+                          onCheckedChange={(checked) =>
+                            handleUpgradeChange(upgrade.id, checked as boolean)
+                          }
+                          className="border-gold-accent data-[state=checked]:bg-gold-accent"
+                        />
+                        <Label htmlFor={upgrade.id} className="text-sm cursor-pointer">
+                          {upgrade.name} (+${upgrade.price})
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Total & Book Button */}
+                <div className="border-t border-border pt-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <span className="text-lg font-semibold">Total</span>
+                    <span className="text-2xl font-bold text-gold-accent">
+                      ${totalAmount.toLocaleString()}
+                    </span>
+                  </div>
+
+                  <Button
+                    onClick={handleBookTrip}
+                    disabled={bookingMutation.isPending}
+                    className="w-full bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground font-bold py-4 glow-hover mb-4"
+                  >
+                    <CreditCard className="w-5 h-5 mr-2" />
+                    {bookingMutation.isPending ? "Processing..." : "Book Trip Now"}
+                  </Button>
+
+                  <p className="text-xs text-muted-foreground text-center">
+                    Secure payment powered by Stripe. Full refund available up to 48 hours before departure.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Success Modal */}
+      <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
+        <DialogContent className="glass-morphism border-border">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              <div className="success-bounce">
+                <div className="w-16 h-16 bg-mint-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold mb-2">Booking Confirmed!</h2>
+                <p className="text-muted-foreground">Your dream vacation has been successfully booked.</p>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-6">
+            <Button
+              onClick={() => navigate("/my-trips")}
+              className="w-full bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground"
+            >
+              View My Trips
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/destinations")}
+              className="w-full border-gold-accent text-gold-accent hover:bg-gold-accent hover:text-primary-foreground"
+            >
+              Explore More
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

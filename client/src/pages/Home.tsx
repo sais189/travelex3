@@ -1,0 +1,201 @@
+import { motion } from "framer-motion";
+import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, Search, Calendar, MapPin, Star, Plane } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import Globe3D from "@/components/Globe3D";
+import type { Destination } from "@shared/schema";
+
+export default function Home() {
+  const [, navigate] = useLocation();
+
+  const { data: destinations = [] } = useQuery<Destination[]>({
+    queryKey: ["/api/destinations"],
+  });
+
+  const featuredDestinations = destinations.slice(0, 4);
+
+  const handleSearch = () => {
+    navigate("/destinations");
+  };
+
+  const handleBookNow = (destinationId: number) => {
+    navigate(`/booking/${destinationId}`);
+  };
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section with 3D Globe */}
+      <section className="pt-32 pb-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              className="text-center lg:text-left"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+                Explore the{" "}
+                <span className="text-gold-accent">Future</span> of Travel
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8 max-w-lg">
+                Discover extraordinary destinations with our immersive travel
+                experiences powered by cutting-edge technology.
+              </p>
+
+              {/* Search Bar */}
+              <motion.div
+                className="glass-morphism rounded-2xl p-6 mb-8 max-w-2xl"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+                    <Input
+                      placeholder="Where to?"
+                      className="pl-10 bg-slate-panel border-border focus:border-gold-accent text-foreground"
+                    />
+                  </div>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
+                    <Input
+                      type="date"
+                      className="pl-10 bg-slate-panel border-border focus:border-lavender-accent text-foreground"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleSearch}
+                    className="bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground glow-hover"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Search
+                  </Button>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="flex flex-col sm:flex-row gap-4"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <Button
+                  onClick={() => navigate("/destinations")}
+                  className="bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground glow-hover"
+                  size="lg"
+                >
+                  <Plane className="w-5 h-5 mr-2" />
+                  Explore Trips
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => navigate("/about")}
+                  className="border-gold-accent text-gold-accent hover:bg-gold-accent hover:text-primary-foreground"
+                >
+                  Learn More
+                </Button>
+              </motion.div>
+            </motion.div>
+
+            {/* 3D Globe */}
+            <motion.div
+              className="flex justify-center lg:justify-end"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.6 }}
+            >
+              <Globe3D />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Destinations */}
+      <section className="py-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl font-bold mb-4">Popular Destinations</h2>
+            <p className="text-muted-foreground text-lg">
+              Discover the world's most breathtaking locations
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredDestinations.map((destination, index) => (
+              <motion.div
+                key={destination.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden">
+                  <div className="relative h-48">
+                    <img
+                      src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
+                      alt={destination.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <div className="flex items-center space-x-1 bg-black bg-opacity-50 rounded-full px-2 py-1">
+                        <Star className="w-3 h-3 text-gold-accent fill-current" />
+                        <span className="text-xs text-white">{destination.rating}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{destination.name}</h3>
+                    <p className="text-muted-foreground mb-4 text-sm">
+                      {destination.shortDescription || destination.description.slice(0, 100) + "..."}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gold-accent font-bold text-lg">
+                        ${destination.price}
+                      </span>
+                      <Button
+                        onClick={() => handleBookNow(destination.id)}
+                        className="bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground"
+                      >
+                        Book Now
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            className="text-center mt-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <Button
+              onClick={() => navigate("/destinations")}
+              variant="outline"
+              size="lg"
+              className="border-gold-accent text-gold-accent hover:bg-gold-accent hover:text-primary-foreground"
+            >
+              View All Destinations
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+}
