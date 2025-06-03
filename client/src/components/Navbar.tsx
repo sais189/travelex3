@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { apiRequest } from "@/lib/queryClient";
 import LocationSearchDropdown from "@/components/LocationSearchDropdown";
 
 export default function Navbar() {
@@ -117,12 +118,17 @@ export default function Navbar() {
                       </Button>
                     </Link>
                   )}
-                  <a href="/api/logout">
-                    <Button variant="outline" className="border-gold-accent text-gold-accent hover:bg-gold-accent hover:text-primary-foreground">
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </Button>
-                  </a>
+                  <Button 
+                    variant="outline" 
+                    className="border-gold-accent text-gold-accent hover:bg-gold-accent hover:text-primary-foreground"
+                    onClick={async () => {
+                      await apiRequest("POST", "/api/auth/logout");
+                      window.location.href = "/";
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
                 </div>
               )}
             </>
