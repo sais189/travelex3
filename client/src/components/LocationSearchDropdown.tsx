@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search, MapPin, Plane, Star } from "lucide-react";
+import { Search, MapPin, Plane, Star, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 
@@ -22,6 +23,7 @@ interface Destination {
 export default function LocationSearchDropdown() {
   const [, navigate] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("all");
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -30,11 +32,16 @@ export default function LocationSearchDropdown() {
     queryKey: ['/api/destinations'],
   });
 
-  // Filter destinations based on search term
-  const filteredDestinations = destinations.filter((dest: Destination) =>
-    dest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dest.country.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Get unique countries for filter
+  const countries = Array.from(new Set((destinations as Destination[]).map(dest => dest.country)));
+
+  // Filter destinations based on search term and country
+  const filteredDestinations = (destinations as Destination[]).filter((dest: Destination) => {
+    const matchesSearch = dest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         dest.country.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCountry = selectedCountry === "all" || dest.country === selectedCountry;
+    return matchesSearch && matchesCountry;
+  });
 
   useEffect(() => {
     setIsOpen(isFocused && searchTerm.length > 0);
@@ -56,17 +63,41 @@ export default function LocationSearchDropdown() {
 
   return (
     <div className="relative w-full max-w-md">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-        <Input
-          type="text"
-          placeholder="Search destinations..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-          className="pl-10 pr-4 h-12 bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:border-gold-accent"
-        />
+      <div className="flex space-x-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            type="text"
+            placeholder="Search destinations..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+            className="pl-10 pr-4 h-12 bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 focus:border-gold-accent"
+          />
+        </div>
+        <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+          <SelectTrigger className="w-[140px] h-12 bg-white/10 backdrop-blur-sm border-white/20 text-white focus:border-gold-accent">
+            <div className="flex items-center space-x-2">
+              <MapPin className="w-4 h-4" />
+              <SelectValue placeholder="Where to" />
+            </div>
+          </SelectTrigger>
+          <SelectContent className="bg-space-blue/95 backdrop-blur-sm border-gold-accent/20">
+            <SelectItem value="all" className="text-white hover:bg-gold-accent/20">
+              All Countries
+            </SelectItem>
+            {countries.map(country => (
+              <SelectItem 
+                key={country} 
+                value={country}
+                className="text-white hover:bg-gold-accent/20"
+              >
+                {country}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <AnimatePresence>
