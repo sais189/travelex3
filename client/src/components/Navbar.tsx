@@ -23,15 +23,15 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, isLoading } = useAuth();
 
-  // Don't show navbar on 404 page
-  if (location === "/404" || (location !== "/" && location.startsWith("/") && !isValidRoute(location))) {
-    return null;
-  }
-
   const isValidRoute = (path: string) => {
     const validRoutes = ["/", "/destinations", "/booking", "/my-trips", "/admin", "/auth", "/about", "/contact"];
     return validRoutes.some(route => path.startsWith(route));
   };
+
+  // Don't show navbar on 404 page
+  if (location === "/404" || (location !== "/" && location.startsWith("/") && !isValidRoute(location))) {
+    return null;
+  }
 
   const isActive = (path: string) => {
     if (path === "/" && location === "/") return true;
