@@ -93,6 +93,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Admin routes
+  app.get('/api/admin/analytics', async (req, res) => {
+    try {
+      const sessionUser = (req as any).session?.user;
+      if (!sessionUser || sessionUser.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const [revenue, bookingStats, userStats] = await Promise.all([
+        storage.getRevenue(),
+        storage.getBookingStats(),
+        storage.getUserStats()
+      ]);
+
+      res.json({
+        revenue,
+        bookings: bookingStats,
+        users: userStats
+      });
+    } catch (error) {
+      console.error("Analytics error:", error);
+      res.status(500).json({ message: "Failed to fetch analytics" });
+    }
+  });
+
+  app.get('/api/admin/users', async (req, res) => {
+    try {
+      const sessionUser = (req as any).session?.user;
+      if (!sessionUser || sessionUser.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error("Users fetch error:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
+  app.get('/api/admin/activity-logs', async (req, res) => {
+    try {
+      const sessionUser = (req as any).session?.user;
+      if (!sessionUser || sessionUser.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const logs = await storage.getActivityLogs(100);
+      res.json(logs);
+    } catch (error) {
+      console.error("Activity logs error:", error);
+      res.status(500).json({ message: "Failed to fetch activity logs" });
+    }
+  });
+
+  app.patch('/api/admin/users/:id/toggle-status', async (req, res) => {
+    try {
+      const sessionUser = (req as any).session?.user;
+      if (!sessionUser || sessionUser.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const { id } = req.params;
+      const user = await storage.getUser(id);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const updatedUser = await storage.upsertUser({
+        ...user,
+        isActive: !user.isActive
+      });
+
+      // Log the activity
+      await storage.createActivityLog({
+        userId: sessionUser.id,
+        action: `User ${updatedUser.isActive ? 'Activated' : 'Deactivated'}`,
+        description: `Changed status of user ${user.username} to ${updatedUser.isActive ? 'active' : 'inactive'}`
+      });
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Toggle user status error:", error);
+      res.status(500).json({ message: "Failed to update user status" });
+    }
+  });
+
+  app.delete('/api/admin/users/:id', async (req, res) => {
+    try {
+      const sessionUser = (req as any).session?.user;
+      if (!sessionUser || sessionUser.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const { id } = req.params;
+      const user = await storage.getUser(id);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      await storage.deleteUser(id);
+
+      // Log the activity
+      await storage.createActivityLog({
+        userId: sessionUser.id,
+        action: 'User Deleted',
+        description: `Deleted user ${user.username} (${user.email})`
+      });
+
+      res.json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error("Delete user error:", error);
+      res.status(500).json({ message: "Failed to delete user" });
+    }
+  });
+
   // Destinations routes
   app.get('/api/destinations', async (req, res) => {
     try {
