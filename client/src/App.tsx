@@ -8,7 +8,7 @@ import { ThemeProvider } from "next-themes";
 // Pages
 import Home from "@/pages/Home";
 import Destinations from "@/pages/Destinations";
-import Booking from "@/pages/Booking";
+import EnhancedBooking from "@/pages/EnhancedBooking";
 import MyTrips from "@/pages/MyTrips";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Login from "@/pages/Login";
