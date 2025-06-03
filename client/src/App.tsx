@@ -11,7 +11,7 @@ import Destinations from "@/pages/Destinations";
 import Booking from "@/pages/Booking";
 import MyTrips from "@/pages/MyTrips";
 import Admin from "@/pages/Admin";
-import Auth from "@/pages/Auth";
+import Login from "@/pages/Login";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
@@ -32,7 +32,7 @@ function Router() {
         <Route path="/my-trips" component={MyTrips} />
         <Route path="/admin" component={Admin} />
         <Route path="/admin/:tab" component={Admin} />
-        <Route path="/auth" component={Auth} />
+        <Route path="/auth" component={Login} />
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact} />
         <Route component={NotFound} />
