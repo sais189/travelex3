@@ -26,7 +26,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      res.json(user);
+      
+      // Check if user should have admin role based on email
+      if (user && user.email === 'admins@globetrotter.com') {
+        const updatedUser = await storage.upsertUser({
+          ...user,
+          role: 'admin'
+        });
+        res.json(updatedUser);
+      } else {
+        res.json(user);
+      }
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
@@ -238,8 +248,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const booking = await storage.createBooking({
         ...validatedData,
         userId,
-        checkIn: new Date(validatedData.checkIn),
-        checkOut: new Date(validatedData.checkOut),
+        checkIn: validatedData.checkIn,
+        checkOut: validatedData.checkOut,
       });
 
       await storage.createActivityLog({

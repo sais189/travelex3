@@ -19,6 +19,7 @@ import NotFound from "@/pages/not-found";
 // Components
 import Navbar from "@/components/Navbar";
 import ChatBot from "@/components/ChatBot";
+import Footer from "@/components/Footer";
 
 function Router() {
   return (
@@ -36,6 +37,7 @@ function Router() {
         <Route path="/contact" component={Contact} />
         <Route component={NotFound} />
       </Switch>
+      <Footer />
       <ChatBot />
     </>
   );
