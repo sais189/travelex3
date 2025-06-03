@@ -1,11 +1,56 @@
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { ArrowRight, Globe, Award, Users, TrendingUp, Rocket } from "lucide-react";
+import { ArrowRight, Globe, Award, Users, TrendingUp, Rocket, Calendar, Star, Heart, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function About() {
   const [, navigate] = useLocation();
+
+  const timelineEvents = [
+    {
+      year: "2020",
+      title: "The Vision",
+      description: "Founded by travel enthusiasts who dreamed of revolutionizing how people explore the world",
+      icon: Rocket,
+      color: "from-blue-500 to-cyan-500"
+    },
+    {
+      year: "2021",
+      title: "First Launch",
+      description: "Launched with 10 destinations and our signature 3D globe interface",
+      icon: Globe,
+      color: "from-green-500 to-emerald-500"
+    },
+    {
+      year: "2022",
+      title: "Global Expansion",
+      description: "Reached 25 countries and 1,000+ happy travelers",
+      icon: Users,
+      color: "from-purple-500 to-violet-500"
+    },
+    {
+      year: "2023",
+      title: "Innovation Breakthrough",
+      description: "Introduced AI-powered recommendations and immersive VR previews",
+      icon: Star,
+      color: "from-amber-500 to-orange-500"
+    },
+    {
+      year: "2024",
+      title: "Community Growth",
+      description: "Surpassed 10,000 travelers and won 'Best Travel Platform' award",
+      icon: Award,
+      color: "from-rose-500 to-pink-500"
+    },
+    {
+      year: "2025",
+      title: "Future Vision",
+      description: "Expanding to 100+ destinations with sustainable travel initiatives",
+      icon: Heart,
+      color: "from-indigo-500 to-purple-500"
+    }
+  ];
 
   const stats = [
     { icon: Globe, label: "Destinations", value: "50+", color: "text-gold-accent" },
@@ -28,6 +73,85 @@ export default function About() {
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Pioneering the future of travel with cutting-edge technology and unparalleled luxury experiences across the globe.
           </p>
+        </motion.div>
+
+        {/* Interactive Timeline */}
+        <motion.div
+          className="mb-20"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Our Journey Through Time</h2>
+            <p className="text-xl text-muted-foreground">
+              From startup vision to global travel platform
+            </p>
+          </div>
+
+          <div className="relative max-w-6xl mx-auto">
+            {/* Timeline Line */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-gold-accent via-lavender-accent to-gold-accent opacity-30 hidden lg:block" />
+            
+            {timelineEvents.map((event, index) => {
+              const Icon = event.icon;
+              const isEven = index % 2 === 0;
+              
+              return (
+                <motion.div
+                  key={event.year}
+                  className={`relative flex items-center mb-16 ${
+                    isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
+                  } flex-col lg:flex-row`}
+                  initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  {/* Content */}
+                  <div className={`lg:w-5/12 ${isEven ? 'lg:pr-8' : 'lg:pl-8'} w-full`}>
+                    <motion.div
+                      whileHover={{ scale: 1.05, rotateY: 5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Card className="glass-morphism glow-hover">
+                        <CardContent className="p-6">
+                          <div className="flex items-center mb-4">
+                            <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${event.color} flex items-center justify-center mr-4`}>
+                              <Icon className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="text-2xl font-bold text-gold-accent">{event.year}</h3>
+                              <h4 className="text-lg font-semibold text-foreground">{event.title}</h4>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground">{event.description}</p>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  </div>
+
+                  {/* Timeline Point */}
+                  <div className="relative z-10 w-8 h-8 my-4 lg:my-0">
+                    <motion.div
+                      className={`w-8 h-8 rounded-full bg-gradient-to-r ${event.color} border-4 border-background shadow-lg`}
+                      whileHover={{ scale: 1.3 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                    <motion.div
+                      className={`absolute inset-0 w-8 h-8 rounded-full bg-gradient-to-r ${event.color} opacity-50`}
+                      animate={{ scale: [1, 1.5, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                  </div>
+
+                  {/* Spacer for opposite side */}
+                  <div className="lg:w-5/12 hidden lg:block" />
+                </motion.div>
+              );
+            })}
+          </div>
         </motion.div>
 
         {/* Company Story */}
