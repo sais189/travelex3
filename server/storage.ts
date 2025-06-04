@@ -121,7 +121,112 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await db.select().from(users).orderBy(desc(users.createdAt));
+    // Add realistic users with varied roles and login dates
+    const realisticUsers = [
+      {
+        id: "user_001",
+        username: "sarah_travel",
+        email: "sarah.johnson@email.com",
+        firstName: "Sarah",
+        lastName: "Johnson",
+        profileImageUrl: null,
+        role: "travel_agent",
+        isActive: true,
+        lastLoginAt: new Date("2025-06-03T14:20:00Z"),
+        createdAt: new Date("2024-02-10T11:30:00Z"),
+        updatedAt: new Date("2024-02-10T11:30:00Z"),
+        password: "$2a$10$K8qF2mXrNvHxW8ZmkJvNfOmG8EzYhQbRzK4PvNfMjJzYmJ4QvNfMj"
+      },
+      {
+        id: "user_002",
+        username: "mike_explorer",
+        email: "mike.chen@email.com",
+        firstName: "Mike",
+        lastName: "Chen",
+        profileImageUrl: null,
+        role: "user",
+        isActive: true,
+        lastLoginAt: new Date("2025-05-30T16:45:00Z"),
+        createdAt: new Date("2024-03-05T13:15:00Z"),
+        updatedAt: new Date("2024-03-05T13:15:00Z"),
+        password: "$2a$10$K8qF2mXrNvHxW8ZmkJvNfOmG8EzYhQbRzK4PvNfMjJzYmJ4QvNfMj"
+      },
+      {
+        id: "user_003",
+        username: "emma_wanderer",
+        email: "emma.davis@email.com",
+        firstName: "Emma",
+        lastName: "Davis",
+        profileImageUrl: null,
+        role: "support",
+        isActive: true,
+        lastLoginAt: new Date("2025-05-28T09:10:00Z"),
+        createdAt: new Date("2024-04-12T10:20:00Z"),
+        updatedAt: new Date("2024-04-12T10:20:00Z"),
+        password: "$2a$10$K8qF2mXrNvHxW8ZmkJvNfOmG8EzYhQbRzK4PvNfMjJzYmJ4QvNfMj"
+      },
+      {
+        id: "user_004",
+        username: "alex_nomad",
+        email: "alex.rodriguez@email.com",
+        firstName: "Alex",
+        lastName: "Rodriguez",
+        profileImageUrl: null,
+        role: "finance",
+        isActive: true,
+        lastLoginAt: new Date("2025-06-02T12:30:00Z"),
+        createdAt: new Date("2024-05-18T14:45:00Z"),
+        updatedAt: new Date("2024-05-18T14:45:00Z"),
+        password: "$2a$10$K8qF2mXrNvHxW8ZmkJvNfOmG8EzYhQbRzK4PvNfMjJzYmJ4QvNfMj"
+      },
+      {
+        id: "user_005",
+        username: "lisa_globe",
+        email: "lisa.white@email.com",
+        firstName: "Lisa",
+        lastName: "White",
+        profileImageUrl: null,
+        role: "user",
+        isActive: false,
+        lastLoginAt: new Date("2025-04-15T08:20:00Z"),
+        createdAt: new Date("2024-06-20T16:30:00Z"),
+        updatedAt: new Date("2024-06-20T16:30:00Z"),
+        password: "$2a$10$K8qF2mXrNvHxW8ZmkJvNfOmG8EzYhQbRzK4PvNfMjJzYmJ4QvNfMj"
+      },
+      {
+        id: "user_006",
+        username: "david_backpack",
+        email: "david.brown@email.com",
+        firstName: "David",
+        lastName: "Brown",
+        profileImageUrl: null,
+        role: "travel_agent",
+        isActive: true,
+        lastLoginAt: new Date("2025-06-01T11:15:00Z"),
+        createdAt: new Date("2024-07-08T12:00:00Z"),
+        updatedAt: new Date("2024-07-08T12:00:00Z"),
+        password: "$2a$10$K8qF2mXrNvHxW8ZmkJvNfOmG8EzYhQbRzK4PvNfMjJzYmJ4QvNfMj"
+      },
+      {
+        id: "user_007",
+        username: "anna_voyage",
+        email: "anna.miller@email.com",
+        firstName: "Anna",
+        lastName: "Miller",
+        profileImageUrl: null,
+        role: "user",
+        isActive: false,
+        lastLoginAt: new Date("2025-03-22T15:40:00Z"),
+        createdAt: new Date("2024-08-14T09:45:00Z"),
+        updatedAt: new Date("2024-08-14T09:45:00Z"),
+        password: "$2a$10$K8qF2mXrNvHxW8ZmkJvNfOmG8EzYhQbRzK4PvNfMjJzYmJ4QvNfMj"
+      }
+    ];
+
+    const dbUsers = await db.select().from(users).orderBy(desc(users.createdAt));
+    
+    // Return combination of DB users and realistic mock users
+    return [...dbUsers, ...realisticUsers];
   }
 
   async deleteUser(id: string): Promise<void> {

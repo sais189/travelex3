@@ -276,7 +276,8 @@ export default function AdminDashboard() {
                       border: '1px solid #d4af37',
                       borderRadius: '8px',
                       color: '#fff'
-                    }} 
+                    }}
+                    formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']}
                   />
                   <Area 
                     type="monotone" 
@@ -348,7 +349,11 @@ export default function AdminDashboard() {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={destinationData} layout="horizontal">
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis type="number" stroke="#9ca3af" />
+                  <XAxis 
+                    type="number" 
+                    stroke="#9ca3af" 
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  />
                   <YAxis dataKey="name" type="category" stroke="#9ca3af" width={120} />
                   <Tooltip 
                     contentStyle={{ 
@@ -356,7 +361,8 @@ export default function AdminDashboard() {
                       border: '1px solid #d4af37',
                       borderRadius: '8px',
                       color: '#fff'
-                    }} 
+                    }}
+                    formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']}
                   />
                   <Bar dataKey="revenue" fill="#d4af37" />
                 </BarChart>
@@ -377,14 +383,18 @@ export default function AdminDashboard() {
                 <LineChart data={revenueData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="month" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
+                  <YAxis 
+                    stroke="#9ca3af" 
+                    tickFormatter={(value) => `${(value / 1000).toFixed(1)}k`}
+                  />
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: '#1f2937', 
                       border: '1px solid #d4af37',
                       borderRadius: '8px',
                       color: '#fff'
-                    }} 
+                    }}
+                    formatter={(value) => [`${value.toLocaleString()}`, 'Bookings']}
                   />
                   <Line 
                     type="monotone" 
@@ -442,6 +452,9 @@ export default function AdminDashboard() {
                       <SelectItem value="all">All Roles</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
                       <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="travel_agent">Travel Agent</SelectItem>
+                      <SelectItem value="support">Support</SelectItem>
+                      <SelectItem value="finance">Finance</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -481,9 +494,18 @@ export default function AdminDashboard() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
+                            <Badge 
+                              variant={user.role === 'admin' ? 'default' : 'secondary'}
+                              className={
+                                user.role === 'admin' ? 'bg-red-600 text-white' :
+                                user.role === 'travel_agent' ? 'bg-blue-600 text-white' :
+                                user.role === 'support' ? 'bg-green-600 text-white' :
+                                user.role === 'finance' ? 'bg-purple-600 text-white' :
+                                'bg-gray-600 text-white'
+                              }
+                            >
                               {user.role === 'admin' && <Shield className="w-3 h-3 mr-1" />}
-                              {user.role}
+                              {user.role.replace('_', ' ')}
                             </Badge>
                           </TableCell>
                           <TableCell>
