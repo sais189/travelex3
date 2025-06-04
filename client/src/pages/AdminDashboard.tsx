@@ -132,13 +132,13 @@ export default function AdminDashboard() {
 
   // Prepare chart data
   const revenueData = [
-    { month: 'Jul', revenue: 3400, bookings: 2 },
-    { month: 'Aug', revenue: 1400, bookings: 1 },
-    { month: 'Sep', revenue: 2500, bookings: 1 },
-    { month: 'Oct', revenue: 1800, bookings: 1 },
-    { month: 'Nov', revenue: 5300, bookings: 2 },
-    { month: 'Dec', revenue: 7100, bookings: 3 },
-    { month: 'Jan', revenue: 1400, bookings: 1 },
+    { month: 'Jul', revenue: 325000, bookings: 2150 },
+    { month: 'Aug', revenue: 400000, bookings: 1980 },
+    { month: 'Sep', revenue: 380000, bookings: 1750 },
+    { month: 'Oct', revenue: 540000, bookings: 2600 },
+    { month: 'Nov', revenue: 900000, bookings: 4120 },
+    { month: 'Dec', revenue: 1200000, bookings: 5300 },
+    { month: 'Jan', revenue: 530000, bookings: 2550 },
   ];
 
   const destinationData = [
