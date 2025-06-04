@@ -29,15 +29,15 @@ export default function LocationSearchDropdown() {
   const [isFocused, setIsFocused] = useState(false);
 
   // Fetch destinations
-  const { data: destinations = [] } = useQuery({
+  const { data: destinations = [] } = useQuery<Destination[]>({
     queryKey: ['/api/destinations'],
   });
 
   // Get unique countries for filter
-  const countries = Array.from(new Set((destinations as Destination[]).map(dest => dest.country)));
+  const countries = Array.from(new Set(destinations.map(dest => dest.country)));
 
   // Filter destinations based on search term and country
-  const filteredDestinations = (destinations as Destination[]).filter((dest: Destination) => {
+  const filteredDestinations = destinations.filter((dest: Destination) => {
     const matchesSearch = dest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          dest.country.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCountry = selectedCountry === "all" || dest.country === selectedCountry;
@@ -206,6 +206,9 @@ export default function LocationSearchDropdown() {
                             </div>
                             <div className="text-xs text-muted-foreground">
                               {destination.country}
+                              {destination.distanceKm && (
+                                <span className="ml-2">• {parseFloat(destination.distanceKm).toLocaleString()} km</span>
+                              )}
                             </div>
                           </div>
                           <Badge variant="secondary" className="bg-gold-accent/20 text-gold-accent text-xs">
