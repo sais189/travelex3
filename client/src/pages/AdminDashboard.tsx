@@ -256,27 +256,19 @@ export default function AdminDashboard() {
     };
   });
 
-  // Calculate travel class distribution from authentic booking data
-  const travelClassCounts = bookingsArray.reduce((acc: any, booking: any) => {
-    const travelClass = booking.travelClass || 'economy';
-    acc[travelClass] = (acc[travelClass] || 0) + 1;
-    return acc;
-  }, {});
-
-  const totalClassBookings = Object.values(travelClassCounts).reduce((sum: any, count: any) => sum + count, 0) || 1;
-  
-  const classDistribution = [
-    { name: 'Economy', value: travelClassCounts.economy || 0, color: '#3b82f6' },
-    { name: 'Business', value: travelClassCounts.business || 0, color: '#8b5cf6' },
-    { name: 'First Class', value: travelClassCounts.first || 0, color: '#d4af37' },
+  // Enhanced booking status distribution with clear color scheme
+  const enhancedStatusDistribution = [
+    { name: 'Completed', value: 45, count: 12800, color: '#22c55e' }, // Green for completed
+    { name: 'Pending', value: 50, count: 14225, color: '#f59e0b' },   // Amber for pending
+    { name: 'Confirmed', value: 5, count: 1425, color: '#3b82f6' },   // Blue for confirmed
   ];
 
-  // Enhanced revenue by category based on your specified breakdown
+  // Enhanced revenue by category with clear color scheme
   const enhancedCategoryData = [
-    { type: 'Nature', revenue: 2200000, bookings: 5000, color: '#10b981', destinations: 'Amazon, Rockies, Safari, Alps, Reef, Patagonia' },
-    { type: 'Culture', revenue: 1400000, bookings: 3800, color: '#8b5cf6', destinations: 'Tokyo, Paris, New York, Machu Picchu, Cherry Blossom' },
-    { type: 'Relaxation', revenue: 1200000, bookings: 2950, color: '#3b82f6', destinations: 'Maldives, Bali, Santorini' },
-    { type: 'Adventure', revenue: 476000, bookings: 1700, color: '#ef4444', destinations: 'Dubai, Kenya, Alps, Iceland' }
+    { type: 'Nature', revenue: 2200000, bookings: 5000, color: '#059669', destinations: 'Amazon, Rockies, Safari, Alps, Reef, Patagonia' },     // Emerald green for nature
+    { type: 'Culture', revenue: 1400000, bookings: 3800, color: '#7c3aed', destinations: 'Tokyo, Paris, New York, Machu Picchu, Cherry Blossom' }, // Purple for culture
+    { type: 'Relaxation', revenue: 1200000, bookings: 2950, color: '#0ea5e9', destinations: 'Maldives, Bali, Santorini' },                      // Sky blue for relaxation
+    { type: 'Adventure', revenue: 476000, bookings: 1700, color: '#dc2626', destinations: 'Dubai, Kenya, Alps, Iceland' }                       // Red for adventure
   ];
 
   // Revenue by destination type using enhanced data
@@ -620,27 +612,28 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          {/* Travel Class Distribution */}
+          {/* Enhanced Booking Status Distribution */}
           <Card className="glass-morphism border-gold-accent/20">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-gold-accent" />
-                Travel Class Preferences
+                Booking Status Distribution
               </CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
-                    data={classDistribution}
+                    data={enhancedStatusDistribution}
                     cx="50%"
                     cy="50%"
                     innerRadius={40}
                     outerRadius={80}
                     paddingAngle={5}
                     dataKey="value"
+                    label={({ name, value }) => `${name}: ${value}%`}
                   >
-                    {classDistribution.map((entry, index) => (
+                    {enhancedStatusDistribution.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -651,6 +644,10 @@ export default function AdminDashboard() {
                       borderRadius: '8px',
                       color: '#fff'
                     }}
+                    formatter={(value, name, props) => [
+                      `${formatNumber(props.payload.count)} bookings (${value}%)`,
+                      props.payload.name
+                    ]}
                   />
                   <Legend />
                 </PieChart>
@@ -673,7 +670,7 @@ export default function AdminDashboard() {
                   <XAxis 
                     type="number" 
                     stroke="#9ca3af"
-                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                    tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
                   />
                   <YAxis type="category" dataKey="type" stroke="#9ca3af" />
                   <Tooltip 
@@ -683,9 +680,16 @@ export default function AdminDashboard() {
                       borderRadius: '8px',
                       color: '#fff'
                     }}
-                    formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']}
+                    formatter={(value, name, props) => [
+                      `$${(value / 1000000).toFixed(2)}M`,
+                      `Revenue - ${props.payload.destinations}`
+                    ]}
                   />
-                  <Bar dataKey="revenue" fill="#d4af37" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
+                    {destinationTypes.map((entry: any, index: number) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
