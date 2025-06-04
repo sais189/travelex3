@@ -531,6 +531,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = createBookingSchema.parse(req.body);
       console.log("Validated data:", validatedData);
       
+      // Check for duplicate booking
+      const isDuplicate = await storage.checkDuplicateBooking(
+        userId,
+        validatedData.destinationId,
+        validatedData.checkIn,
+        validatedData.checkOut
+      );
+      
+      if (isDuplicate) {
+        return res.status(409).json({ 
+          message: "You already have a booking for this destination with the same dates. Please choose different dates or destination." 
+        });
+      }
+      
       const booking = await storage.createBooking({
         ...validatedData,
         userId,

@@ -15,7 +15,7 @@ import {
   type DestinationWithStats,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, gte, lte, count, sum, sql } from "drizzle-orm";
+import { eq, desc, and, gte, lte, count, sum, sql, not } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
 export interface IStorage {
@@ -404,19 +404,20 @@ export class DatabaseStorage implements IStorage {
 
   async checkDuplicateBooking(userId: string, destinationId: number, checkIn: string, checkOut: string): Promise<boolean> {
     const existingBookings = await db
-      .select({ id: bookings.id })
+      .select({ id: bookings.id, status: bookings.status })
       .from(bookings)
       .where(
         and(
           eq(bookings.userId, userId),
           eq(bookings.destinationId, destinationId),
           eq(bookings.checkIn, checkIn),
-          eq(bookings.checkOut, checkOut),
-          ne(bookings.status, "cancelled")
+          eq(bookings.checkOut, checkOut)
         )
       );
     
-    return existingBookings.length > 0;
+    // Filter out cancelled bookings
+    const activeBookings = existingBookings.filter(booking => booking.status !== "cancelled");
+    return activeBookings.length > 0;
   }
 
   // Activity logs
