@@ -22,6 +22,76 @@ export default function Destinations() {
   const filteredDestinations = destinations.filter((destination) => {
     let matches = true;
 
+    // Region filter
+    if (regionFilter !== "all") {
+      const country = destination.country.toLowerCase();
+      switch (regionFilter) {
+        case "asia":
+          matches = matches && (
+            country.includes("japan") || 
+            country.includes("china") || 
+            country.includes("thailand") || 
+            country.includes("india") || 
+            country.includes("singapore") || 
+            country.includes("korea") || 
+            country.includes("vietnam") || 
+            country.includes("indonesia") ||
+            country.includes("malaysia") ||
+            country.includes("philippines")
+          );
+          break;
+        case "europe":
+          matches = matches && (
+            country.includes("france") || 
+            country.includes("italy") || 
+            country.includes("spain") || 
+            country.includes("greece") || 
+            country.includes("germany") || 
+            country.includes("uk") || 
+            country.includes("united kingdom") || 
+            country.includes("england") || 
+            country.includes("switzerland") || 
+            country.includes("austria") || 
+            country.includes("norway") || 
+            country.includes("sweden") || 
+            country.includes("iceland") ||
+            country.includes("netherlands") ||
+            country.includes("portugal")
+          );
+          break;
+        case "americas":
+          matches = matches && (
+            country.includes("usa") || 
+            country.includes("united states") || 
+            country.includes("canada") || 
+            country.includes("mexico") || 
+            country.includes("brazil") || 
+            country.includes("argentina") || 
+            country.includes("chile") || 
+            country.includes("peru") || 
+            country.includes("colombia") ||
+            country.includes("costa rica") ||
+            country.includes("ecuador")
+          );
+          break;
+        case "africa":
+          matches = matches && (
+            country.includes("south africa") || 
+            country.includes("morocco") || 
+            country.includes("egypt") || 
+            country.includes("kenya") || 
+            country.includes("tanzania") || 
+            country.includes("madagascar") || 
+            country.includes("namibia") || 
+            country.includes("botswana") ||
+            country.includes("zimbabwe") ||
+            country.includes("zambia")
+          );
+          break;
+      }
+    }
+
+    // Budget filter
     if (budgetFilter !== "all") {
       const price = parseFloat(destination.price);
       switch (budgetFilter) {
@@ -40,6 +110,7 @@ export default function Destinations() {
       }
     }
 
+    // Duration filter
     if (durationFilter !== "all") {
       switch (durationFilter) {
         case "3-5":
