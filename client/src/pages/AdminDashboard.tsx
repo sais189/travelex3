@@ -49,6 +49,12 @@ import {
   ResponsiveContainer 
 } from "recharts";
 
+interface Analytics {
+  revenue: { total: string; period: string };
+  bookings: { total: number; thisMonth: number; growth: number };
+  users: { total: number; active: number; growth: number };
+}
+
 interface User {
   id: string;
   username: string;
@@ -142,18 +148,18 @@ export default function AdminDashboard() {
   ];
 
   const destinationData = [
-    { name: 'Tokyo Adventure', bookings: 2, revenue: 5000, color: '#8884d8' },
-    { name: 'Santorini Sunset', bookings: 2, revenue: 3600, color: '#82ca9d' },
-    { name: 'Patagonia Trek', bookings: 1, revenue: 3200, color: '#ffc658' },
-    { name: 'Bali Serenity', bookings: 2, revenue: 2800, color: '#ff7300' },
-    { name: 'Iceland Northern Lights', bookings: 2, revenue: 5600, color: '#8dd1e1' },
-    { name: 'Safari Kenya', bookings: 1, revenue: 4200, color: '#d084d0' },
+    { name: 'Safari Kenya', bookings: 6800, revenue: 1200000, color: '#8884d8' },
+    { name: 'Iceland Northern Lights', bookings: 5450, revenue: 980000, color: '#82ca9d' },
+    { name: 'Bali Serenity', bookings: 4100, revenue: 720000, color: '#ffc658' },
+    { name: 'Patagonia Trek', bookings: 3200, revenue: 650000, color: '#ff7300' },
+    { name: 'Santorini Sunset', bookings: 2750, revenue: 520000, color: '#8dd1e1' },
+    { name: 'Tokyo Adventure', bookings: 2100, revenue: 380000, color: '#d084d0' },
   ];
 
   const statusData = [
-    { name: 'Completed', value: 4, color: '#10b981' },
-    { name: 'Confirmed', value: 5, color: '#3b82f6' },
-    { name: 'Pending', value: 1, color: '#f59e0b' },
+    { name: 'Completed', value: 65, color: '#10b981' },
+    { name: 'Confirmed', value: 25, color: '#3b82f6' },
+    { name: 'Pending', value: 10, color: '#f59e0b' },
   ];
 
   // Filter users
@@ -260,7 +266,10 @@ export default function AdminDashboard() {
                 <AreaChart data={revenueData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="month" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
+                  <YAxis 
+                    stroke="#9ca3af" 
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  />
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: '#1f2937', 
