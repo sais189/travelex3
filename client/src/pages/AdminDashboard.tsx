@@ -186,14 +186,40 @@ export default function AdminDashboard() {
     { month: 'Jan', revenue: 530000, bookings: 2550 },
   ];
 
-  // Process destinations data using only authentic API data
-  const destinationData = Array.isArray(destinations) ? destinations.slice(0, 6).map((dest: any) => ({
-    name: dest.name?.length > 15 ? dest.name.substring(0, 15) + '...' : dest.name || 'Unknown',
-    bookings: dest.bookingCount || 0,
-    revenue: parseFloat(dest.revenue || '0'),
-    rating: parseFloat(dest.rating || '0'),
-    price: parseFloat(dest.price || '0')
-  })) : [];
+  // Enhanced destination data with your specified booking performance metrics
+  const enhancedDestinationData = [
+    { name: 'Tokyo Cherry Blossom', bookings: 1300, revenue: 5330000, rating: 4.9, price: 4100 },
+    { name: 'Maldives Escape', bookings: 750, revenue: 5100000, rating: 4.8, price: 6800 },
+    { name: 'Canadian Rockies', bookings: 1200, revenue: 4560000, rating: 4.7, price: 3800 },
+    { name: 'Swiss Alps', bookings: 900, revenue: 4050000, rating: 4.8, price: 4500 },
+    { name: 'Safari Kenya', bookings: 850, revenue: 3570000, rating: 4.6, price: 4200 },
+    { name: 'Machu Picchu Trail', bookings: 1100, revenue: 3520000, rating: 4.7, price: 3200 }
+  ];
+
+  // Process destinations data using enhanced metrics with authentic API data fallback
+  const destinationData = Array.isArray(destinations) && destinations.length > 0 
+    ? destinations.slice(0, 6).map((dest: any, index: number) => {
+        const enhanced = enhancedDestinationData[index];
+        return {
+          name: dest.name?.length > 15 ? dest.name.substring(0, 15) + '...' : dest.name || 'Unknown',
+          bookings: enhanced?.bookings || dest.bookingCount || 0,
+          revenue: enhanced?.revenue || parseFloat(dest.revenue || '0'),
+          rating: parseFloat(dest.rating || '0'),
+          price: enhanced?.price || parseFloat(dest.price || '0')
+        };
+      })
+    : enhancedDestinationData.map(dest => ({
+        ...dest,
+        name: dest.name.length > 15 ? dest.name.substring(0, 15) + '...' : dest.name
+      }));
+
+  // Enhanced booking status distribution based on your specified metrics
+  const enhancedBookingStats = {
+    total: 28450,
+    completed: 12800, // 45%
+    pending: 14225,   // 50%
+    confirmed: 1425   // 5%
+  };
 
   // Calculate booking status distribution from authentic booking data
   const bookingsArray = Array.isArray(bookings) ? bookings : [];
@@ -203,17 +229,17 @@ export default function AdminDashboard() {
     return acc;
   }, {});
 
-  const totalBookingsCount = bookingsArray.length || 1;
+  const totalBookingsCount = bookingsArray.length > 0 ? bookingsArray.length : enhancedBookingStats.total;
   
-  // Use authentic data with fallback for better distribution visualization
-  const completedCount = statusCounts.completed || Math.floor(totalBookingsCount * 0.6);
-  const confirmedCount = statusCounts.confirmed || Math.floor(totalBookingsCount * 0.3);
-  const pendingCount = statusCounts.pending || Math.floor(totalBookingsCount * 0.1);
+  // Use enhanced metrics with authentic data integration
+  const completedCount = bookingsArray.length > 0 ? (statusCounts.completed || Math.floor(totalBookingsCount * 0.45)) : enhancedBookingStats.completed;
+  const pendingCount = bookingsArray.length > 0 ? (statusCounts.pending || Math.floor(totalBookingsCount * 0.50)) : enhancedBookingStats.pending;
+  const confirmedCount = bookingsArray.length > 0 ? (statusCounts.confirmed || Math.floor(totalBookingsCount * 0.05)) : enhancedBookingStats.confirmed;
   
   const statusData = [
-    { name: 'Completed', value: Math.round((completedCount / totalBookingsCount) * 100), color: '#10b981' },
-    { name: 'Confirmed', value: Math.round((confirmedCount / totalBookingsCount) * 100), color: '#3b82f6' },
-    { name: 'Pending', value: Math.round((pendingCount / totalBookingsCount) * 100), color: '#f59e0b' },
+    { name: 'Completed', value: 45, count: completedCount, color: '#10b981' },
+    { name: 'Pending', value: 50, count: pendingCount, color: '#f59e0b' },
+    { name: 'Confirmed', value: 5, count: confirmedCount, color: '#3b82f6' },
   ];
 
   // Calculate user registration trends from analytics data
@@ -245,38 +271,16 @@ export default function AdminDashboard() {
     { name: 'First Class', value: travelClassCounts.first || 0, color: '#d4af37' },
   ];
 
-  // Revenue by destination type using authentic destination data
-  const destinationTypes = Array.isArray(destinations) ? [
-    { 
-      type: 'Adventure', 
-      revenue: destinations.filter(d => d.name?.toLowerCase().includes('trek') || d.name?.toLowerCase().includes('safari')).reduce((sum, d) => sum + (parseFloat(d.price || '0') * 50), 0) || 1250000,
-      bookings: 3400, 
-      color: '#ef4444' 
-    },
-    { 
-      type: 'Relaxation', 
-      revenue: destinations.filter(d => d.name?.toLowerCase().includes('bali') || d.name?.toLowerCase().includes('santorini')).reduce((sum, d) => sum + (parseFloat(d.price || '0') * 40), 0) || 980000,
-      bookings: 2800, 
-      color: '#10b981' 
-    },
-    { 
-      type: 'Culture', 
-      revenue: destinations.filter(d => d.name?.toLowerCase().includes('tokyo') || d.name?.toLowerCase().includes('kyoto')).reduce((sum, d) => sum + (parseFloat(d.price || '0') * 35), 0) || 750000,
-      bookings: 2100, 
-      color: '#f59e0b' 
-    },
-    { 
-      type: 'Nature', 
-      revenue: destinations.filter(d => d.name?.toLowerCase().includes('iceland') || d.name?.toLowerCase().includes('patagonia')).reduce((sum, d) => sum + (parseFloat(d.price || '0') * 45), 0) || 1100000,
-      bookings: 3100, 
-      color: '#8b5cf6' 
-    },
-  ] : [
-    { type: 'Adventure', revenue: 1250000, bookings: 3400, color: '#ef4444' },
-    { type: 'Relaxation', revenue: 980000, bookings: 2800, color: '#10b981' },
-    { type: 'Culture', revenue: 750000, bookings: 2100, color: '#f59e0b' },
-    { type: 'Nature', revenue: 1100000, bookings: 3100, color: '#8b5cf6' },
+  // Enhanced revenue by category based on your specified breakdown
+  const enhancedCategoryData = [
+    { type: 'Nature', revenue: 2200000, bookings: 5000, color: '#10b981', destinations: 'Amazon, Rockies, Safari, Alps, Reef, Patagonia' },
+    { type: 'Culture', revenue: 1400000, bookings: 3800, color: '#8b5cf6', destinations: 'Tokyo, Paris, New York, Machu Picchu, Cherry Blossom' },
+    { type: 'Relaxation', revenue: 1200000, bookings: 2950, color: '#3b82f6', destinations: 'Maldives, Bali, Santorini' },
+    { type: 'Adventure', revenue: 476000, bookings: 1700, color: '#ef4444', destinations: 'Dubai, Kenya, Alps, Iceland' }
   ];
+
+  // Revenue by destination type using enhanced data
+  const destinationTypes = enhancedCategoryData;
 
   // Filter users
   const filteredUsers = (users as User[]).filter((user: User) => {
@@ -445,7 +449,11 @@ export default function AdminDashboard() {
                       border: '1px solid #d4af37',
                       borderRadius: '8px',
                       color: '#fff'
-                    }} 
+                    }}
+                    formatter={(value, name, props) => [
+                      `${formatNumber(props.payload.count)} bookings (${value}%)`,
+                      props.payload.name
+                    ]}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -453,13 +461,62 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
+        {/* Comprehensive Destination Performance Analysis */}
+        <Card className="glass-morphism border-gold-accent/20 mb-8">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-gold-accent" />
+              Complete Destination Performance Analysis
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {enhancedDestinationData.map((destination, index) => (
+                <div key={index} className="p-4 rounded-lg bg-white/5 border border-gold-accent/20">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-white text-lg">{destination.name}</h3>
+                    <div className="text-right">
+                      <div className="text-gold-accent font-bold">{destination.rating}/5</div>
+                      <div className="text-xs text-muted-foreground">Rating</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Bookings</span>
+                      <span className="text-white font-semibold">{formatNumber(destination.bookings)}</span>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Revenue</span>
+                      <span className="text-gold-accent font-bold">{formatCurrency(destination.revenue)}</span>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Avg Price</span>
+                      <span className="text-white">{formatCurrency(destination.price)}</span>
+                    </div>
+                    
+                    <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-gold-accent to-lavender-accent"
+                        style={{ width: `${(destination.bookings / 1300) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Destination Performance */}
+          {/* Destination Performance Chart */}
           <Card className="glass-morphism border-gold-accent/20">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-gold-accent" />
-                Destination Performance
+                Top 6 Destinations by Bookings
               </CardTitle>
             </CardHeader>
             <CardContent>
