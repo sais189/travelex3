@@ -476,7 +476,7 @@ export default function Admin() {
                                 ></div>
                               </div>
                               <span className="text-sm text-muted-foreground">
-                                {destination.bookingCount || 0}
+                                {formatNumber(destination.bookingCount || 0)}
                               </span>
                             </div>
                           </div>
@@ -606,13 +606,13 @@ export default function Admin() {
                         </div>
                         <p className="text-muted-foreground mb-4">{destination.shortDescription}</p>
                         <div className="flex justify-between items-center mb-4">
-                          <span className="text-gold-accent font-bold text-lg">${destination.price}</span>
+                          <span className="text-gold-accent font-bold text-lg">{formatCurrency(destination.price)}</span>
                           <Badge className="bg-mint-accent bg-opacity-20 text-mint-accent">
                             {destination.isActive ? 'Active' : 'Inactive'}
                           </Badge>
                         </div>
                         <div className="text-sm text-muted-foreground mb-4">
-                          Bookings: {destination.bookingCount || 0} | Revenue: ${destination.revenue || '0'}
+                          Bookings: {formatNumber(destination.bookingCount || 0)} | Revenue: {formatCurrency(destination.revenue || '0')}
                         </div>
                         <div className="flex space-x-2">
                           <Button
