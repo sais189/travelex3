@@ -74,7 +74,7 @@ export default function Admin() {
     enabled: isAuthenticated && user?.role === 'admin',
   });
 
-  // Destinations data
+  // Destinations data with stats
   const { data: destinations = [], isLoading: destinationsLoading } = useQuery<DestinationWithStats[]>({
     queryKey: ["/api/admin/destinations"],
     enabled: isAuthenticated && user?.role === 'admin',
@@ -243,10 +243,10 @@ export default function Admin() {
                 <Card className="glass-morphism">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <div className="text-3xl font-bold text-gold-accent">
-                        {analyticsLoading ? "..." : `$${parseInt(analytics?.revenue.total || "0").toLocaleString()}k`}
+                      <div className="text-5xl font-bold text-gold-accent">
+                        {analyticsLoading ? "..." : `$${Math.round(parseInt(analytics?.revenue.total || "0") / 1000)}k`}
                       </div>
-                      <DollarSign className="w-8 h-8 text-gold-accent" />
+                      <DollarSign className="w-12 h-12 text-gold-accent" />
                     </div>
                     <div className="text-muted-foreground">Monthly Revenue</div>
                     <div className="text-mint-accent text-sm mt-2">+12% from last month</div>
@@ -256,10 +256,10 @@ export default function Admin() {
                 <Card className="glass-morphism">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <div className="text-3xl font-bold text-lavender-accent">
+                      <div className="text-5xl font-bold text-lavender-accent">
                         {analyticsLoading ? "..." : analytics?.bookings.thisMonth || 0}
                       </div>
-                      <TrendingUp className="w-8 h-8 text-lavender-accent" />
+                      <TrendingUp className="w-12 h-12 text-lavender-accent" />
                     </div>
                     <div className="text-muted-foreground">New Bookings</div>
                     <div className="text-mint-accent text-sm mt-2">
@@ -271,10 +271,10 @@ export default function Admin() {
                 <Card className="glass-morphism">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <div className="text-3xl font-bold text-mint-accent">
+                      <div className="text-5xl font-bold text-mint-accent">
                         {analyticsLoading ? "..." : analytics?.users.active || 0}
                       </div>
-                      <Users className="w-8 h-8 text-mint-accent" />
+                      <Users className="w-12 h-12 text-mint-accent" />
                     </div>
                     <div className="text-muted-foreground">Active Users</div>
                     <div className="text-mint-accent text-sm mt-2">
@@ -286,8 +286,8 @@ export default function Admin() {
                 <Card className="glass-morphism">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <div className="text-3xl font-bold text-gold-accent">4.9</div>
-                      <Star className="w-8 h-8 text-gold-accent" />
+                      <div className="text-5xl font-bold text-gold-accent">4.9</div>
+                      <Star className="w-12 h-12 text-gold-accent" />
                     </div>
                     <div className="text-muted-foreground">Avg Rating</div>
                     <div className="text-mint-accent text-sm mt-2">+0.2 from last month</div>
@@ -308,26 +308,32 @@ export default function Admin() {
                     {destinationsLoading ? (
                       <Skeleton className="h-64 w-full" />
                     ) : (
-                      <ResponsiveContainer width="100%" height={300}>
+                      <ResponsiveContainer width="100%" height={350}>
                         <BarChart
                           data={destinations
-                            .filter(dest => dest.bookingCount && dest.bookingCount > 0)
-                            .slice(0, 6)
+                            .sort((a, b) => (b.bookingCount || 0) - (a.bookingCount || 0))
+                            .slice(0, 8)
                             .map(dest => ({
-                              name: dest.name.length > 12 ? dest.name.substring(0, 12) + '...' : dest.name,
+                              name: dest.name.length > 15 ? dest.name.substring(0, 15) + '...' : dest.name,
                               fullName: dest.name,
                               bookings: dest.bookingCount || 0,
                               revenue: parseFloat(dest.revenue || '0')
                             }))}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                          margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
                         >
                           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                           <XAxis 
                             dataKey="name" 
                             stroke="#9ca3af"
+                            tick={{ fontSize: 11 }}
+                            angle={-45}
+                            textAnchor="end"
+                            height={80}
+                          />
+                          <YAxis 
+                            stroke="#9ca3af"
                             tick={{ fontSize: 12 }}
                           />
-                          <YAxis stroke="#9ca3af" />
                           <Tooltip 
                             contentStyle={{ 
                               backgroundColor: '#1f2937', 
@@ -335,18 +341,13 @@ export default function Admin() {
                               borderRadius: '8px',
                               color: '#fff'
                             }}
-                            formatter={(value: any, name: string) => {
-                              if (name === 'revenue') {
-                                return [`$${value.toLocaleString()}`, 'Revenue'];
-                              }
-                              return [value, 'Bookings'];
-                            }}
+                            formatter={(value: any) => [value, 'Bookings']}
                             labelFormatter={(label: string) => {
                               const item = destinations.find(d => d.name.startsWith(label.replace('...', '')));
                               return item?.name || label;
                             }}
                           />
-                          <Bar dataKey="bookings" fill="#d4af37" />
+                          <Bar dataKey="bookings" fill="#d4af37" radius={[4, 4, 0, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     )}
@@ -364,25 +365,32 @@ export default function Admin() {
                     {destinationsLoading ? (
                       <Skeleton className="h-64 w-full" />
                     ) : (
-                      <ResponsiveContainer width="100%" height={300}>
+                      <ResponsiveContainer width="100%" height={350}>
                         <BarChart
                           data={destinations
-                            .filter(dest => dest.revenue && parseFloat(dest.revenue) > 0)
-                            .slice(0, 6)
+                            .sort((a, b) => parseFloat(b.revenue || '0') - parseFloat(a.revenue || '0'))
+                            .slice(0, 8)
                             .map(dest => ({
-                              name: dest.name.length > 12 ? dest.name.substring(0, 12) + '...' : dest.name,
+                              name: dest.name.length > 15 ? dest.name.substring(0, 15) + '...' : dest.name,
                               fullName: dest.name,
                               revenue: parseFloat(dest.revenue || '0')
                             }))}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                          margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
                         >
                           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                           <XAxis 
                             dataKey="name" 
                             stroke="#9ca3af"
-                            tick={{ fontSize: 12 }}
+                            tick={{ fontSize: 11 }}
+                            angle={-45}
+                            textAnchor="end"
+                            height={80}
                           />
-                          <YAxis stroke="#9ca3af" />
+                          <YAxis 
+                            stroke="#9ca3af"
+                            tick={{ fontSize: 12 }}
+                            tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                          />
                           <Tooltip 
                             contentStyle={{ 
                               backgroundColor: '#1f2937', 
@@ -396,7 +404,7 @@ export default function Admin() {
                               return item?.name || label;
                             }}
                           />
-                          <Bar dataKey="revenue" fill="#b794f6" />
+                          <Bar dataKey="revenue" fill="#b794f6" radius={[4, 4, 0, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     )}

@@ -361,8 +361,20 @@ export default function Payment() {
     upgrades: booking.upgrades || [],
   };
 
+  if (!clientSecret) {
+    return (
+      <div className="min-h-screen pt-32 pb-16 px-6 bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-center h-64">
+            <Loader2 className="w-8 h-8 animate-spin text-gold-accent" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Elements stripe={stripePromise} options={{ clientSecret: "" }}>
+    <Elements stripe={stripePromise} options={{ clientSecret }}>
       <PaymentForm paymentData={paymentData} />
     </Elements>
   );
