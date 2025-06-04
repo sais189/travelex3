@@ -1,15 +1,21 @@
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Search, Calendar, MapPin, Star, Plane } from "lucide-react";
+import { ArrowRight, Search, Calendar, MapPin, Star, Plane, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Globe3D from "@/components/Globe3D";
 import type { Destination } from "@shared/schema";
+import { useState } from "react";
 
 export default function Home() {
   const [, navigate] = useLocation();
+  const [open, setOpen] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
+  const [searchDate, setSearchDate] = useState("");
 
   const { data: destinations = [] } = useQuery<Destination[]>({
     queryKey: ["/api/destinations"],
@@ -18,7 +24,16 @@ export default function Home() {
   const featuredDestinations = destinations.slice(0, 4);
 
   const handleSearch = () => {
-    navigate("/destinations");
+    if (selectedDestination) {
+      navigate(`/booking/${selectedDestination.id}`);
+    } else {
+      navigate("/destinations");
+    }
+  };
+
+  const handleDestinationSelect = (destination: Destination) => {
+    setSelectedDestination(destination);
+    setOpen(false);
   };
 
   const handleBookNow = (destinationId: number) => {
@@ -55,16 +70,55 @@ export default function Home() {
               >
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
-                    <Input
-                      placeholder="Where to?"
-                      className="pl-10 bg-slate-panel border-border focus:border-gold-accent text-foreground"
-                    />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5 z-10" />
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={open}
+                          className="w-full justify-between pl-10 bg-slate-panel border-border hover:border-gold-accent text-left font-normal"
+                        >
+                          {selectedDestination
+                            ? selectedDestination.name
+                            : "Where to?"}
+                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0 bg-slate-panel border-border">
+                        <Command>
+                          <CommandInput placeholder="Search destinations..." className="h-9" />
+                          <CommandList>
+                            <CommandEmpty>No destinations found.</CommandEmpty>
+                            <CommandGroup>
+                              {destinations.map((destination) => (
+                                <CommandItem
+                                  key={destination.id}
+                                  value={destination.name}
+                                  onSelect={() => handleDestinationSelect(destination)}
+                                  className="cursor-pointer hover:bg-gold-accent/10"
+                                >
+                                  <div className="flex items-center space-x-3">
+                                    <MapPin className="w-4 h-4 text-gold-accent" />
+                                    <div>
+                                      <div className="font-medium">{destination.name}</div>
+                                      <div className="text-sm text-muted-foreground">{destination.country}</div>
+                                    </div>
+                                  </div>
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
                     <Input
                       type="date"
+                      value={searchDate}
+                      onChange={(e) => setSearchDate(e.target.value)}
                       className="pl-10 bg-slate-panel border-border focus:border-lavender-accent text-foreground"
                     />
                   </div>
@@ -73,7 +127,7 @@ export default function Home() {
                     className="bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground glow-hover"
                   >
                     <Search className="w-4 h-4 mr-2" />
-                    Search
+                    {selectedDestination ? "Book Now" : "Search"}
                   </Button>
                 </div>
               </motion.div>
