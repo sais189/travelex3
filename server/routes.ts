@@ -159,6 +159,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/admin/destinations', async (req, res) => {
+    try {
+      const sessionUser = (req as any).session?.user;
+      if (!sessionUser || sessionUser.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const destinations = await storage.getDestinationsWithStats();
+      res.json(destinations);
+    } catch (error) {
+      console.error("Destinations with stats error:", error);
+      res.status(500).json({ message: "Failed to fetch destinations" });
+    }
+  });
+
   app.get('/api/admin/users', async (req, res) => {
     try {
       const sessionUser = (req as any).session?.user;

@@ -31,6 +31,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
 import type { User, DestinationWithStats, ActivityLog, BookingWithDetails } from "@shared/schema";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface Analytics {
   revenue: { total: string; period: string };
@@ -172,8 +173,9 @@ export default function Admin() {
     );
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+  const formatDate = (dateString: string | Date) => {
+    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+    return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       hour: "2-digit",
@@ -289,6 +291,115 @@ export default function Admin() {
                     </div>
                     <div className="text-muted-foreground">Avg Rating</div>
                     <div className="text-mint-accent text-sm mt-2">+0.2 from last month</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Charts Section */}
+              <div className="grid lg:grid-cols-2 gap-8 mb-8">
+                <Card className="glass-morphism">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <MapPin className="w-5 h-5 text-gold-accent mr-2" />
+                      Destination Performance
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {destinationsLoading ? (
+                      <Skeleton className="h-64 w-full" />
+                    ) : (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                          data={destinations
+                            .filter(dest => dest.bookingCount && dest.bookingCount > 0)
+                            .slice(0, 6)
+                            .map(dest => ({
+                              name: dest.name.length > 12 ? dest.name.substring(0, 12) + '...' : dest.name,
+                              fullName: dest.name,
+                              bookings: dest.bookingCount || 0,
+                              revenue: parseFloat(dest.revenue || '0')
+                            }))}
+                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke="#9ca3af"
+                            tick={{ fontSize: 12 }}
+                          />
+                          <YAxis stroke="#9ca3af" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: '#1f2937', 
+                              border: '1px solid #d4af37',
+                              borderRadius: '8px',
+                              color: '#fff'
+                            }}
+                            formatter={(value: any, name: string) => {
+                              if (name === 'revenue') {
+                                return [`$${value.toLocaleString()}`, 'Revenue'];
+                              }
+                              return [value, 'Bookings'];
+                            }}
+                            labelFormatter={(label: string) => {
+                              const item = destinations.find(d => d.name.startsWith(label.replace('...', '')));
+                              return item?.name || label;
+                            }}
+                          />
+                          <Bar dataKey="bookings" fill="#d4af37" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="glass-morphism">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <TrendingUp className="w-5 h-5 text-lavender-accent mr-2" />
+                      Revenue by Destination
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {destinationsLoading ? (
+                      <Skeleton className="h-64 w-full" />
+                    ) : (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                          data={destinations
+                            .filter(dest => dest.revenue && parseFloat(dest.revenue) > 0)
+                            .slice(0, 6)
+                            .map(dest => ({
+                              name: dest.name.length > 12 ? dest.name.substring(0, 12) + '...' : dest.name,
+                              fullName: dest.name,
+                              revenue: parseFloat(dest.revenue || '0')
+                            }))}
+                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke="#9ca3af"
+                            tick={{ fontSize: 12 }}
+                          />
+                          <YAxis stroke="#9ca3af" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: '#1f2937', 
+                              border: '1px solid #b794f6',
+                              borderRadius: '8px',
+                              color: '#fff'
+                            }}
+                            formatter={(value: any) => [`$${value.toLocaleString()}`, 'Revenue']}
+                            labelFormatter={(label: string) => {
+                              const item = destinations.find(d => d.name.startsWith(label.replace('...', '')));
+                              return item?.name || label;
+                            }}
+                          />
+                          <Bar dataKey="revenue" fill="#b794f6" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    )}
                   </CardContent>
                 </Card>
               </div>
