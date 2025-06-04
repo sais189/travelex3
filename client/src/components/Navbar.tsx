@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
+import type { User } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Globe, 
@@ -18,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
-import LocationSearchDropdown from "@/components/LocationSearchDropdown";
+import DestinationDropdown from "@/components/DestinationDropdown";
 
 export default function Navbar() {
   const [location] = useLocation();
@@ -68,9 +69,9 @@ export default function Navbar() {
           </motion.div>
         </Link>
 
-        {/* Location Search */}
-        <div className="hidden lg:block flex-1 max-w-md mx-8">
-          <LocationSearchDropdown />
+        {/* Destination Dropdown */}
+        <div className="hidden lg:block flex-1 max-w-md mx-8 flex justify-center">
+          <DestinationDropdown />
         </div>
 
         {/* Desktop Navigation */}
