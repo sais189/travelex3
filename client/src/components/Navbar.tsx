@@ -55,8 +55,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-6">
-      <div className="glass-morphism rounded-3xl h-16 lg:h-20 flex items-center justify-between px-6 lg:px-8 transition-all duration-300 shadow-lg">
+    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-7xl px-6">
+      <div className="glass-morphism rounded-3xl h-16 lg:h-20 flex items-center justify-between px-8 lg:px-12 transition-all duration-300 shadow-lg">
         {/* Logo */}
         <Link href="/">
           <motion.div 
@@ -72,7 +72,7 @@ export default function Navbar() {
 
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-8">
+        <div className="hidden lg:flex items-center space-x-12">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
