@@ -69,7 +69,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center space-x-3 text-muted-foreground">
                 <MapPin className="w-4 h-4 text-gold-accent" />
-                <span>San Francisco, CA</span>
+                <span>419A Windsor Rd, Baulkham Hills NSW 2153, Australia</span>
               </div>
             </div>
           </div>
