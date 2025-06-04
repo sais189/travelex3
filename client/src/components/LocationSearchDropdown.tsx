@@ -18,6 +18,7 @@ interface Destination {
   price: string;
   rating: string;
   reviewCount: number;
+  distanceKm?: string;
 }
 
 export default function LocationSearchDropdown() {

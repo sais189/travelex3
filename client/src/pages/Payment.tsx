@@ -280,6 +280,7 @@ export default function Payment() {
   const [, navigate] = useLocation();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
+  const [clientSecret, setClientSecret] = useState("");
 
   const bookingId = params?.bookingId ? parseInt(params.bookingId) : 0;
 
@@ -292,6 +293,29 @@ export default function Payment() {
     },
     enabled: !!bookingId && isAuthenticated,
   });
+
+  // Create payment intent when booking is loaded
+  useEffect(() => {
+    if (booking && !clientSecret) {
+      const createPaymentIntent = async () => {
+        try {
+          const response = await apiRequest("POST", "/api/create-payment-intent", {
+            amount: parseFloat(booking.totalAmount),
+            bookingId: booking.id,
+          });
+          const data = await response.json();
+          setClientSecret(data.clientSecret);
+        } catch (error) {
+          toast({
+            title: "Payment Setup Failed",
+            description: "Unable to initialize payment. Please try again.",
+            variant: "destructive",
+          });
+        }
+      };
+      createPaymentIntent();
+    }
+  }, [booking, clientSecret, toast]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
