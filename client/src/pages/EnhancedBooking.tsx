@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useRoute } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import {
   Calendar,
   Users,
@@ -28,8 +26,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { format, addDays } from "date-fns";
 
-// Load Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
+
 
 interface Destination {
   id: number;
@@ -69,8 +66,6 @@ export default function EnhancedBooking() {
   const [guests, setGuests] = useState(2);
   const [travelClass, setTravelClass] = useState("economy");
   const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([]);
-  const [clientSecret, setClientSecret] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const destinationId = params?.id ? parseInt(params.id) : 0;
 
@@ -129,36 +124,15 @@ export default function EnhancedBooking() {
     onSuccess: (data) => {
       toast({
         title: "Booking Created!",
-        description: "Your booking has been created successfully",
+        description: "Redirecting to secure payment...",
       });
-      // Create payment intent
-      createPaymentIntent.mutate(data.id);
+      // Redirect to payment page
+      navigate(`/payment/${data.id}`);
     },
     onError: (error: any) => {
       toast({
         title: "Booking Failed",
         description: error.message || "Failed to create booking",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Create payment intent mutation
-  const createPaymentIntent = useMutation({
-    mutationFn: async (bookingId: number) => {
-      const response = await apiRequest("POST", "/api/create-payment-intent", {
-        amount: calculateTotal(),
-        bookingId
-      });
-      return response.json();
-    },
-    onSuccess: (data) => {
-      setClientSecret(data.clientSecret);
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Payment Setup Failed",
-        description: error.message || "Failed to setup payment",
         variant: "destructive",
       });
     },
@@ -210,27 +184,7 @@ export default function EnhancedBooking() {
     );
   }
 
-  if (clientSecret) {
-    return (
-      <div className="min-h-screen pt-32 pb-16 px-6 bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black">
-        <div className="max-w-2xl mx-auto">
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <PaymentForm 
-              destination={destination} 
-              total={calculateTotal()}
-              onSuccess={() => {
-                toast({
-                  title: "Payment Successful!",
-                  description: "Your booking has been confirmed",
-                });
-                navigate("/my-trips");
-              }}
-            />
-          </Elements>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-screen pt-32 pb-16 px-6 bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black">
@@ -479,26 +433,3 @@ export default function EnhancedBooking() {
   );
 }
 
-// Payment form component (simplified for now)
-function PaymentForm({ destination, total, onSuccess }: any) {
-  return (
-    <Card className="glass-morphism border-gold-accent/20">
-      <CardHeader>
-        <CardTitle>Complete Payment</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="p-4 bg-muted rounded-lg">
-            <div className="flex justify-between items-center">
-              <span>{destination.name}</span>
-              <span className="font-bold">${total.toFixed(2)}</span>
-            </div>
-          </div>
-          <Button onClick={onSuccess} className="w-full">
-            Complete Payment (Demo)
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
