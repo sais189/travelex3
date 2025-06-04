@@ -69,10 +69,7 @@ export default function Navbar() {
           </motion.div>
         </Link>
 
-        {/* Destination Dropdown */}
-        <div className="hidden lg:block flex-1 max-w-md mx-8 flex justify-center">
-          <DestinationDropdown />
-        </div>
+
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center space-x-8">
