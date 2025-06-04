@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useRoute } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { stripePromise } from "@/lib/stripeConfig";
+import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+// Initialize Stripe
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
 import {
   ArrowLeft,
   CreditCard,
@@ -99,17 +102,13 @@ function PaymentForm({ paymentData }: { paymentData: PaymentData }) {
 
     setIsProcessing(true);
 
-    const cardElement = elements.getElement(CardElement);
-    if (!cardElement) {
-      setIsProcessing(false);
-      return;
-    }
-
     try {
-      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardElement,
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/my-trips`,
         },
+        redirect: "if_required",
       });
 
       if (error) {
@@ -118,8 +117,12 @@ function PaymentForm({ paymentData }: { paymentData: PaymentData }) {
           description: error.message || "An error occurred during payment.",
           variant: "destructive",
         });
-      } else if (paymentIntent.status === "succeeded") {
-        confirmPayment(paymentIntent.id);
+      } else {
+        toast({
+          title: "Payment Successful!",
+          description: "Your trip has been booked successfully.",
+        });
+        navigate("/my-trips");
       }
     } catch (error) {
       toast({
@@ -132,21 +135,8 @@ function PaymentForm({ paymentData }: { paymentData: PaymentData }) {
     }
   };
 
-  const cardElementOptions = {
-    style: {
-      base: {
-        fontSize: "16px",
-        color: "#ffffff",
-        "::placeholder": {
-          color: "#9ca3af",
-        },
-        backgroundColor: "transparent",
-      },
-      invalid: {
-        color: "#ef4444",
-      },
-    },
-    hidePostalCode: true,
+  const paymentElementOptions = {
+    layout: "tabs" as const,
   };
 
   return (
@@ -244,7 +234,7 @@ function PaymentForm({ paymentData }: { paymentData: PaymentData }) {
                 <form onSubmit={handlePayment} className="space-y-6">
                   <div className="space-y-4">
                     <div className="p-4 border border-border rounded-lg bg-background/20">
-                      <CardElement options={cardElementOptions} />
+                      <PaymentElement options={paymentElementOptions} />
                     </div>
                     
                     <div className="flex items-center text-sm text-muted-foreground">

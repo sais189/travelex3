@@ -541,7 +541,7 @@ export default function Admin() {
                                 </Badge>
                               </TableCell>
                               <TableCell className="text-muted-foreground">
-                                {formatDate(user.createdAt!)}
+                                {formatDate(user.createdAt || new Date())}
                               </TableCell>
                               <TableCell>
                                 <Button
@@ -665,7 +665,7 @@ export default function Admin() {
                             </div>
                           </div>
                           <div className="text-sm text-muted-foreground">
-                            {formatDate(log.createdAt!)}
+                            {formatDate(log.createdAt || new Date())}
                           </div>
                         </div>
                       ))}
