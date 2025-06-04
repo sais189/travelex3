@@ -30,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
+import { formatNumber, formatCurrency } from "@/lib/utils";
 import type { User, DestinationWithStats, ActivityLog, BookingWithDetails } from "@shared/schema";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -244,7 +245,7 @@ export default function Admin() {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="text-5xl font-bold text-gold-accent">
-                        {analyticsLoading ? "..." : `$${Math.round(parseInt(analytics?.revenue.total || "0") / 1000)}k`}
+                        {analyticsLoading ? "..." : formatCurrency(analytics?.revenue.total || "0")}
                       </div>
                       <DollarSign className="w-12 h-12 text-gold-accent" />
                     </div>
@@ -257,7 +258,7 @@ export default function Admin() {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="text-5xl font-bold text-lavender-accent">
-                        {analyticsLoading ? "..." : analytics?.bookings.thisMonth || 0}
+                        {analyticsLoading ? "..." : formatNumber(analytics?.bookings.thisMonth || 0)}
                       </div>
                       <TrendingUp className="w-12 h-12 text-lavender-accent" />
                     </div>
@@ -272,7 +273,7 @@ export default function Admin() {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="text-5xl font-bold text-mint-accent">
-                        {analyticsLoading ? "..." : analytics?.users.active || 0}
+                        {analyticsLoading ? "..." : formatNumber(analytics?.users.active || 0)}
                       </div>
                       <Users className="w-12 h-12 text-mint-accent" />
                     </div>

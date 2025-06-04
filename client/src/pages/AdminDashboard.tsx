@@ -30,6 +30,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { formatNumber, formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { 
   LineChart, 
@@ -261,28 +262,28 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Users"
-            value={analytics?.users?.total || 0}
+            value={formatNumber(analytics?.users?.total || 0)}
             icon={Users}
             change={analytics?.users?.growth || 0}
             color="bg-gradient-to-r from-blue-500 to-blue-600"
           />
           <StatCard
             title="Active Users"
-            value={analytics?.users?.active || 0}
+            value={formatNumber(analytics?.users?.active || 0)}
             icon={Activity}
             change={15}
             color="bg-gradient-to-r from-green-500 to-green-600"
           />
           <StatCard
             title="Total Bookings"
-            value={analytics?.bookings?.total || 0}
+            value={formatNumber(analytics?.bookings?.total || 0)}
             icon={Calendar}
             change={analytics?.bookings?.growth || 0}
             color="bg-gradient-to-r from-purple-500 to-purple-600"
           />
           <StatCard
             title="Revenue"
-            value={analytics?.revenue?.total ? `$${analytics.revenue.total}` : '$0'}
+            value={analytics?.revenue?.total ? formatCurrency(analytics.revenue.total) : '$0'}
             icon={DollarSign}
             change={15}
             color="bg-gradient-to-r from-gold-500 to-gold-600"
