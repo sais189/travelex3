@@ -167,7 +167,7 @@ export default function Destinations() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden h-full">
+              <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden h-full flex flex-col">
                 <div className="relative h-64">
                   <img
                     src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
@@ -183,35 +183,39 @@ export default function Destinations() {
                 </div>
                 <CardContent className="p-6 flex-1 flex flex-col">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-2xl font-semibold">{destination.name}</h3>
-                    <div className="flex items-center">
+                    <h3 className="text-xl font-semibold line-clamp-2">{destination.name}</h3>
+                    <div className="flex items-center ml-2">
                       <Star className="w-4 h-4 text-gold-accent mr-1 fill-current" />
                       <span className="text-sm">{destination.rating}</span>
                     </div>
                   </div>
-                  <p className="text-muted-foreground mb-4 flex-1">
-                    {destination.shortDescription || destination.description.slice(0, 120) + "..."}
+                  <p className="text-muted-foreground mb-4 flex-1 text-sm leading-relaxed line-clamp-3">
+                    {destination.description.slice(0, 120)}...
                   </p>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-3xl font-bold text-gold-accent">
-                      ${destination.price}
-                    </span>
-                    <span className="text-sm text-muted-foreground">per person</span>
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-bold text-gold-accent">
+                        ${parseFloat(destination.price).toLocaleString()}
+                      </span>
+                      <span className="text-sm text-muted-foreground">per person</span>
+                    </div>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Clock className="w-4 h-4 mr-2" />
+                      <span>{destination.duration} days, {destination.duration - 1} nights</span>
+                    </div>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Users className="w-4 h-4 mr-2" />
+                      <span>Up to {destination.maxGuests} guests</span>
+                    </div>
                   </div>
-                  <div className="flex items-center mb-4 text-sm text-muted-foreground">
-                    <Clock className="w-4 h-4 mr-2" />
-                    <span>{destination.duration} days, {destination.duration - 1} nights</span>
+                  <div className="mt-auto">
+                    <Button
+                      onClick={() => handleBookNow(destination.id)}
+                      className="w-full h-12 bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground font-semibold text-base"
+                    >
+                      Book Now
+                    </Button>
                   </div>
-                  <div className="flex items-center mb-6 text-sm text-muted-foreground">
-                    <Users className="w-4 h-4 mr-2" />
-                    <span>Up to {destination.maxGuests} guests</span>
-                  </div>
-                  <Button
-                    onClick={() => handleBookNow(destination.id)}
-                    className="w-full bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground"
-                  >
-                    Book Now
-                  </Button>
                 </CardContent>
               </Card>
             </motion.div>
