@@ -273,26 +273,25 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getDestinationsWithStats(): Promise<DestinationWithStats[]> {
-    // Return realistic destination performance data
-    const destinationStats = [
-      { name: "Safari Kenya", bookingCount: 6800, revenue: "1200000" },
-      { name: "Iceland Northern Lights", bookingCount: 5450, revenue: "980000" },
-      { name: "Bali Serenity", bookingCount: 4100, revenue: "720000" },
-      { name: "Patagonia Trek", bookingCount: 3200, revenue: "650000" },
-      { name: "Santorini Sunset", bookingCount: 2750, revenue: "520000" },
-      { name: "Tokyo Adventure", bookingCount: 2100, revenue: "380000" },
-    ];
-
     const allDestinations = await db.select().from(destinations);
     
+    // Calculate authentic booking statistics from the bookings table
+    const bookingStats = await db
+      .select({
+        destinationId: bookings.destinationId,
+        bookingCount: sql<number>`count(*)`,
+        revenue: sql<string>`sum(${bookings.totalAmount})`
+      })
+      .from(bookings)
+      .groupBy(bookings.destinationId);
+    
     return allDestinations.map(dest => {
-      const stats = destinationStats.find(s => dest.name.includes(s.name.split(' ')[0])) || 
-                   { bookingCount: Math.floor(Math.random() * 1000), revenue: (Math.random() * 100000).toFixed(0) };
+      const stats = bookingStats.find(s => s.destinationId === dest.id);
       
       return {
         ...dest,
-        bookingCount: stats.bookingCount,
-        revenue: stats.revenue,
+        bookingCount: stats?.bookingCount || 0,
+        revenue: stats?.revenue || "0",
       };
     });
   }
