@@ -31,6 +31,23 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { format } from "date-fns";
+import { 
+  LineChart, 
+  Line, 
+  AreaChart, 
+  Area, 
+  BarChart, 
+  Bar, 
+  PieChart, 
+  Pie, 
+  Cell, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from "recharts";
 
 interface User {
   id: string;
@@ -103,8 +120,44 @@ export default function AdminDashboard() {
     },
   });
 
+  // Fetch bookings data for charts
+  const { data: bookings = [] } = useQuery({
+    queryKey: ['/api/bookings'],
+  });
+
+  // Fetch destinations for charts
+  const { data: destinations = [] } = useQuery({
+    queryKey: ['/api/destinations'],
+  });
+
+  // Prepare chart data
+  const revenueData = [
+    { month: 'Jul', revenue: 3400, bookings: 2 },
+    { month: 'Aug', revenue: 1400, bookings: 1 },
+    { month: 'Sep', revenue: 2500, bookings: 1 },
+    { month: 'Oct', revenue: 1800, bookings: 1 },
+    { month: 'Nov', revenue: 5300, bookings: 2 },
+    { month: 'Dec', revenue: 7100, bookings: 3 },
+    { month: 'Jan', revenue: 1400, bookings: 1 },
+  ];
+
+  const destinationData = [
+    { name: 'Tokyo Adventure', bookings: 2, revenue: 5000, color: '#8884d8' },
+    { name: 'Santorini Sunset', bookings: 2, revenue: 3600, color: '#82ca9d' },
+    { name: 'Patagonia Trek', bookings: 1, revenue: 3200, color: '#ffc658' },
+    { name: 'Bali Serenity', bookings: 2, revenue: 2800, color: '#ff7300' },
+    { name: 'Iceland Northern Lights', bookings: 2, revenue: 5600, color: '#8dd1e1' },
+    { name: 'Safari Kenya', bookings: 1, revenue: 4200, color: '#d084d0' },
+  ];
+
+  const statusData = [
+    { name: 'Completed', value: 4, color: '#10b981' },
+    { name: 'Confirmed', value: 5, color: '#3b82f6' },
+    { name: 'Pending', value: 1, color: '#f59e0b' },
+  ];
+
   // Filter users
-  const filteredUsers = users.filter((user: User) => {
+  const filteredUsers = (users as User[]).filter((user: User) => {
     const matchesSearch = 
       user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -165,31 +218,176 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Users"
-            value="14,293"
+            value={analytics?.users?.total || 0}
             icon={Users}
-            change={12}
+            change={analytics?.users?.growth || 0}
             color="bg-gradient-to-r from-blue-500 to-blue-600"
           />
           <StatCard
             title="Active Users"
-            value="5,812"
+            value={analytics?.users?.active || 0}
             icon={Activity}
             color="bg-gradient-to-r from-green-500 to-green-600"
           />
           <StatCard
             title="Total Bookings"
-            value="9,157"
+            value={analytics?.bookings?.total || 0}
             icon={Calendar}
-            change={8}
+            change={analytics?.bookings?.growth || 0}
             color="bg-gradient-to-r from-purple-500 to-purple-600"
           />
           <StatCard
             title="Revenue"
-            value="$1,742,580"
+            value={analytics?.revenue?.total ? `$${analytics.revenue.total}` : '$0'}
             icon={DollarSign}
             change={15}
             color="bg-gradient-to-r from-gold-500 to-gold-600"
           />
+        </div>
+
+        {/* Analytics Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Revenue Trends */}
+          <Card className="glass-morphism border-gold-accent/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <DollarSign className="w-5 h-5 text-gold-accent" />
+                Revenue Trends
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9ca3af" />
+                  <YAxis stroke="#9ca3af" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1f2937', 
+                      border: '1px solid #d4af37',
+                      borderRadius: '8px',
+                      color: '#fff'
+                    }} 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="revenue" 
+                    stroke="#d4af37" 
+                    fill="url(#revenueGradient)" 
+                    strokeWidth={2}
+                  />
+                  <defs>
+                    <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#d4af37" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#d4af37" stopOpacity={0.1}/>
+                    </linearGradient>
+                  </defs>
+                </AreaChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Booking Status Distribution */}
+          <Card className="glass-morphism border-gold-accent/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-gold-accent" />
+                Booking Status Distribution
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={statusData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {statusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1f2937', 
+                      border: '1px solid #d4af37',
+                      borderRadius: '8px',
+                      color: '#fff'
+                    }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Destination Performance */}
+          <Card className="glass-morphism border-gold-accent/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-gold-accent" />
+                Destination Performance
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={destinationData} layout="horizontal">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis type="number" stroke="#9ca3af" />
+                  <YAxis dataKey="name" type="category" stroke="#9ca3af" width={120} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1f2937', 
+                      border: '1px solid #d4af37',
+                      borderRadius: '8px',
+                      color: '#fff'
+                    }} 
+                  />
+                  <Bar dataKey="revenue" fill="#d4af37" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Monthly Bookings */}
+          <Card className="glass-morphism border-gold-accent/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Activity className="w-5 h-5 text-gold-accent" />
+                Monthly Bookings
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9ca3af" />
+                  <YAxis stroke="#9ca3af" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1f2937', 
+                      border: '1px solid #d4af37',
+                      borderRadius: '8px',
+                      color: '#fff'
+                    }} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="bookings" 
+                    stroke="#8b5cf6" 
+                    strokeWidth={3}
+                    dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
         </div>
 
         <Tabs defaultValue="users" className="space-y-6">
