@@ -52,6 +52,7 @@ export const destinations = pgTable("destinations", {
   imageUrl: varchar("image_url", { length: 500 }),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   duration: integer("duration").notNull(), // in days
+  distanceKm: decimal("distance_km", { precision: 8, scale: 2 }), // distance in kilometers
   rating: decimal("rating", { precision: 3, scale: 2 }).default("0"),
   reviewCount: integer("review_count").default(0),
   maxGuests: integer("max_guests").default(2),
