@@ -270,6 +270,7 @@ export default function AdminDashboard() {
             title="Active Users"
             value={analytics?.users?.active || 0}
             icon={Activity}
+            change={15}
             color="bg-gradient-to-r from-green-500 to-green-600"
           />
           <StatCard
@@ -384,14 +385,20 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={destinationData} layout="horizontal">
+                <BarChart data={destinationData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis 
-                    type="number" 
-                    stroke="#9ca3af" 
-                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                    dataKey="name" 
+                    stroke="#9ca3af"
+                    tick={{ fontSize: 11 }}
+                    angle={-45}
+                    textAnchor="end"
+                    height={80}
                   />
-                  <YAxis dataKey="name" type="category" stroke="#9ca3af" width={120} />
+                  <YAxis 
+                    stroke="#9ca3af" 
+                    tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+                  />
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: '#1f2937', 
@@ -399,9 +406,9 @@ export default function AdminDashboard() {
                       borderRadius: '8px',
                       color: '#fff'
                     }}
-                    formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']}
+                    formatter={(value) => [`${value.toLocaleString()}`, 'Bookings']}
                   />
-                  <Bar dataKey="revenue" fill="#d4af37" />
+                  <Bar dataKey="bookings" fill="#d4af37" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

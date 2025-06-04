@@ -257,6 +257,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const newUser = await storage.createUser({
+        id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         username,
         email,
         firstName,
