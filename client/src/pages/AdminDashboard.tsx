@@ -263,6 +263,16 @@ export default function AdminDashboard() {
     { name: 'Confirmed', value: 5, count: 1425, color: '#3b82f6' },   // Blue for confirmed
   ];
 
+  // Projected bookings and revenue data for next 6 months (12% YoY growth)
+  const projectedData = [
+    { month: 'July', projectedBookings: 3500, projectedRevenue: 650000 },
+    { month: 'August', projectedBookings: 3400, projectedRevenue: 630000 },
+    { month: 'September', projectedBookings: 3200, projectedRevenue: 600000 },
+    { month: 'October', projectedBookings: 4600, projectedRevenue: 870000 },
+    { month: 'November', projectedBookings: 5800, projectedRevenue: 1100000 },
+    { month: 'December', projectedBookings: 6500, projectedRevenue: 1250000 },
+  ];
+
   // Enhanced revenue by category with clear color scheme
   const enhancedCategoryData = [
     { type: 'Nature', revenue: 2200000, bookings: 5000, color: '#059669', destinations: 'Amazon, Rockies, Safari, Alps, Reef, Patagonia' },     // Emerald green for nature
@@ -656,6 +666,66 @@ export default function AdminDashboard() {
                   />
                   <Legend />
                 </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Projected Bookings & Revenue */}
+          <Card className="glass-morphism border-gold-accent/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Activity className="w-5 h-5 text-gold-accent" />
+                Projected Bookings & Revenue (Next 6 Months)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={projectedData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9ca3af" tick={{ fontSize: 11 }} />
+                  <YAxis 
+                    yAxisId="bookings"
+                    orientation="left"
+                    stroke="#8b5cf6"
+                    tickFormatter={(value) => `${(value / 1000).toFixed(1)}k`}
+                    tick={{ fontSize: 11 }}
+                  />
+                  <YAxis 
+                    yAxisId="revenue"
+                    orientation="right"
+                    stroke="#d4af37"
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                    tick={{ fontSize: 11 }}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1f2937', 
+                      border: '1px solid #d4af37',
+                      borderRadius: '8px',
+                      color: '#fff'
+                    }}
+                    formatter={(value: any, name: string) => [
+                      name === 'projectedBookings' ? `${value.toLocaleString()} bookings` : `$${value.toLocaleString()}`,
+                      name === 'projectedBookings' ? 'Projected Bookings' : 'Projected Revenue'
+                    ]}
+                  />
+                  <Line 
+                    yAxisId="revenue"
+                    type="monotone" 
+                    dataKey="projectedRevenue" 
+                    stroke="#d4af37" 
+                    strokeWidth={2}
+                    dot={{ fill: '#d4af37', strokeWidth: 2, r: 4 }}
+                  />
+                  <Line 
+                    yAxisId="bookings"
+                    type="monotone" 
+                    dataKey="projectedBookings" 
+                    stroke="#8b5cf6" 
+                    strokeWidth={2}
+                    dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
+                  />
+                </LineChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
