@@ -613,8 +613,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/bookings/:id/cancel', isAuthenticated, async (req: any, res) => {
+  app.put('/api/bookings/:id/cancel', async (req: any, res) => {
     try {
+      // Check both session-based and Replit auth
+      const sessionUser = req.session?.user;
+      const replitUser = req.user?.claims?.sub;
+      const userId = sessionUser?.id || replitUser;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
       const id = parseInt(req.params.id);
       const booking = await storage.getBooking(id);
       
@@ -623,14 +632,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if user owns this booking
-      if (booking.userId !== req.user.claims.sub) {
+      if (booking.userId !== userId) {
         return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Check if booking can be cancelled (not already cancelled or completed)
+      if (booking.status === "cancelled") {
+        return res.status(400).json({ message: "Booking is already cancelled" });
+      }
+
+      if (booking.status === "completed") {
+        return res.status(400).json({ message: "Cannot cancel a completed trip" });
       }
 
       await storage.cancelBooking(id);
       
       await storage.createActivityLog({
-        userId: req.user.claims.sub,
+        userId,
         action: "booking_cancelled",
         description: `Cancelled booking ID: ${id}`,
         metadata: { bookingId: id },
