@@ -362,7 +362,7 @@ export default function Payment() {
   };
 
   return (
-    <Elements stripe={stripePromise}>
+    <Elements stripe={stripePromise} options={{ clientSecret: "" }}>
       <PaymentForm paymentData={paymentData} />
     </Elements>
   );
