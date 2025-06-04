@@ -81,17 +81,17 @@ export default function AdminDashboard() {
   const { toast } = useToast();
 
   // Fetch analytics data
-  const { data: analytics } = useQuery({
+  const { data: analytics } = useQuery<Analytics>({
     queryKey: ['/api/admin/analytics'],
   });
 
   // Fetch users
-  const { data: users = [], refetch: refetchUsers } = useQuery({
+  const { data: users = [], refetch: refetchUsers } = useQuery<User[]>({
     queryKey: ['/api/admin/users'],
   });
 
   // Fetch activity logs
-  const { data: activityLogs = [] } = useQuery({
+  const { data: activityLogs = [] } = useQuery<ActivityLog[]>({
     queryKey: ['/api/admin/activity-logs'],
   });
 
