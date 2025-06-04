@@ -468,8 +468,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/bookings/:id', isAuthenticated, async (req: any, res) => {
+  app.get('/api/bookings/:id', async (req: any, res) => {
     try {
+      // Check both session-based and Replit auth
+      const sessionUser = req.session?.user;
+      const replitUser = req.user?.claims?.sub;
+      const userId = sessionUser?.id || replitUser;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       const id = parseInt(req.params.id);
       const booking = await storage.getBooking(id);
       
@@ -478,8 +487,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if user owns this booking or is admin
-      const user = await storage.getUser(req.user.claims.sub);
-      if (booking.userId !== req.user.claims.sub && user?.role !== 'admin') {
+      const user = await storage.getUser(userId);
+      if (booking.userId !== userId && user?.role !== 'admin') {
         return res.status(403).json({ message: "Access denied" });
       }
 
