@@ -71,6 +71,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Username/Password signup
+  app.post('/api/auth/signup', async (req, res) => {
+    try {
+      const { username, email, firstName, lastName, password } = req.body;
+      
+      if (!username || !email || !firstName || !lastName || !password) {
+        return res.status(400).json({ message: "All fields are required" });
+      }
+
+      // Check if user already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(409).json({ message: "Username already exists" });
+      }
+
+      // Create new user
+      const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const newUser = await storage.createUser({
+        id: userId,
+        username,
+        email,
+        firstName,
+        lastName,
+        password,
+        role: 'user',
+        isActive: true
+      });
+
+      // Set session
+      (req as any).session.user = newUser;
+      
+      res.status(201).json({ user: newUser, message: "Account created successfully" });
+    } catch (error) {
+      console.error("Signup error:", error);
+      res.status(500).json({ message: "Account creation failed" });
+    }
+  });
+
   // Get current user for session-based auth
   app.get('/api/auth/session', async (req, res) => {
     try {

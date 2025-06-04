@@ -179,10 +179,27 @@ export default function Login() {
               </motion.form>
 
               <motion.div
-                className="mt-6 p-4 bg-gradient-to-r from-gold-accent/10 to-lavender-accent/10 rounded-lg border border-gold-accent/20"
+                className="mt-6 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
+              >
+                <p className="text-white/70">
+                  Don't have an account?{" "}
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="text-gold-accent hover:text-gold-accent/80 font-semibold transition-colors"
+                  >
+                    Sign up here
+                  </button>
+                </p>
+              </motion.div>
+
+              <motion.div
+                className="mt-6 p-4 bg-gradient-to-r from-gold-accent/10 to-lavender-accent/10 rounded-lg border border-gold-accent/20"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
               >
                 <h4 className="font-semibold text-gold-accent mb-2">Demo Credentials:</h4>
                 <div className="text-sm text-muted-foreground space-y-1">

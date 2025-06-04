@@ -13,6 +13,7 @@ import Payment from "@/pages/Payment";
 import MyTrips from "@/pages/MyTrips";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
@@ -35,6 +36,7 @@ function Router() {
         <Route path="/admin" component={AdminDashboard} />
         <Route path="/admin/:tab" component={AdminDashboard} />
         <Route path="/auth" component={Login} />
+        <Route path="/signup" component={Signup} />
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact} />
         <Route component={NotFound} />
