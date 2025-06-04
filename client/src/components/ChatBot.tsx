@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,42 @@ export default function ChatBot() {
     return null;
   }
 
+  useEffect(() => {
+    const handleOpenChatBot = (event: CustomEvent) => {
+      setIsOpen(true);
+      
+      // If there's a message in the event detail, simulate user sending it
+      if (event.detail?.message) {
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          text: event.detail.message,
+          isBot: false,
+          timestamp: new Date(),
+        };
+        
+        setMessages(prev => [...prev, userMessage]);
+        
+        // Get bot response
+        setTimeout(() => {
+          const botResponse = getBotResponse(event.detail.message);
+          const botMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            text: botResponse,
+            isBot: true,
+            timestamp: new Date(),
+          };
+          setMessages(prev => [...prev, botMessage]);
+        }, 1000);
+      }
+    };
+
+    window.addEventListener('openChatBot', handleOpenChatBot as EventListener);
+    
+    return () => {
+      window.removeEventListener('openChatBot', handleOpenChatBot as EventListener);
+    };
+  }, []);
+
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
 
@@ -59,12 +95,37 @@ export default function ChatBot() {
   const getBotResponse = (input: string): string => {
     const lowerInput = input.toLowerCase();
 
+    if (lowerInput.includes("faq") || lowerInput.includes("frequently asked")) {
+      return `Here are our most frequently asked questions:
+
+📍 **Booking & Payments**
+• How do I book a trip? - Visit our destinations page and click "Book Now"
+• What payment methods do you accept? - We accept all major credit cards and PayPal
+• Can I modify my booking? - Yes, modifications can be made up to 7 days before departure
+
+🌍 **Travel Information**
+• What's included in packages? - Accommodation, meals, activities, and local transportation
+• Do I need travel insurance? - We recommend travel insurance for all international trips
+• What about visa requirements? - We provide visa guidance, but obtaining visas is your responsibility
+
+💰 **Pricing & Refunds**
+• What are your prices? - Packages range from $1,599 to $3,299 depending on destination
+• What's your refund policy? - Full refunds available up to 48 hours before departure
+• Are there group discounts? - Yes, 10% discount for groups of 6+ people
+
+📞 **Contact & Support**
+• How can I contact support? - Phone: 0491906089 or email: contact@globetrotter.com
+• What are your business hours? - Mon-Fri 9AM-6PM, Sat 10AM-4PM, Emergency support 24/7
+
+Need specific help with any of these topics?`;
+    }
+
     if (lowerInput.includes("price") || lowerInput.includes("cost") || lowerInput.includes("budget")) {
-      return "I can help you find destinations within your budget! Our packages range from $1,599 (Bali) to $3,299 (Maldives). What's your preferred price range?";
+      return "I can help you find destinations within your budget! Our packages range from $1,599 (Bali Cultural Experience) to $3,299 (Maldives Luxury Resort). What's your preferred price range?";
     }
     
     if (lowerInput.includes("destination") || lowerInput.includes("where")) {
-      return "We have amazing destinations including Maldives, Swiss Alps, Bali, Santorini, Iceland, and New Zealand. Each offers unique experiences. What type of adventure interests you?";
+      return "We have amazing destinations including Maldives, Swiss Alps, Bali, Santorini, Iceland, Parisian Culture Tour, and New Zealand. Each offers unique experiences. What type of adventure interests you?";
     }
 
     if (lowerInput.includes("book") || lowerInput.includes("reservation")) {
@@ -72,14 +133,18 @@ export default function ChatBot() {
     }
 
     if (lowerInput.includes("refund") || lowerInput.includes("cancel")) {
-      return "Our refund policy allows full refunds up to 48 hours before departure. For cancellations, please visit your 'My Trips' section or contact our support team.";
+      return "Our refund policy allows full refunds up to 48 hours before departure. For cancellations, please visit your 'My Trips' section or contact our support team at 0491906089.";
+    }
+
+    if (lowerInput.includes("contact") || lowerInput.includes("phone") || lowerInput.includes("address")) {
+      return "You can reach us at:\n📞 Phone: 0491906089\n📧 Email: contact@globetrotter.com\n📍 Address: 419A Windsor Rd, Baulkham Hills NSW 2153, Australia\n\nBusiness Hours: Mon-Fri 9AM-6PM, Sat 10AM-4PM, Emergency support available 24/7";
     }
 
     if (lowerInput.includes("help") || lowerInput.includes("support")) {
-      return "I'm here to help! I can assist with destination recommendations, pricing information, booking process, and travel policies. What specific information do you need?";
+      return "I'm here to help! I can assist with destination recommendations, pricing information, booking process, and travel policies. You can also type 'FAQ' to see frequently asked questions. What specific information do you need?";
     }
 
-    return "That's a great question! I can help you with destination recommendations, pricing, booking assistance, and travel information. Is there something specific you'd like to know about our travel packages?";
+    return "That's a great question! I can help you with destination recommendations, pricing, booking assistance, and travel information. Type 'FAQ' for common questions or ask me anything specific about our travel packages!";
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

@@ -34,6 +34,18 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleChatBotClick = () => {
+    // Dispatch a custom event to trigger the chatbot
+    window.dispatchEvent(new CustomEvent('openChatBot'));
+  };
+
+  const handleFAQClick = () => {
+    // Dispatch a custom event to open chatbot with FAQ message
+    window.dispatchEvent(new CustomEvent('openChatBot', { 
+      detail: { message: 'Can you show me the frequently asked questions?' }
+    }));
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -70,14 +82,14 @@ export default function Contact() {
     {
       icon: MapPin,
       title: "Address",
-      content: "123 Travel Street, Adventure City, AC 12345",
+      content: "419A Windsor Rd, Baulkham Hills NSW 2153, Australia",
       color: "text-gold-accent",
       bgColor: "bg-gold-accent",
     },
     {
       icon: Phone,
       title: "Phone",
-      content: "+1 (555) 123-4567",
+      content: "0491906089",
       color: "text-lavender-accent",
       bgColor: "bg-lavender-accent",
     },
@@ -334,6 +346,7 @@ export default function Contact() {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={handleFAQClick}
                       className="border-gold-accent text-gold-accent hover:bg-gold-accent hover:text-primary-foreground"
                     >
                       View FAQ
@@ -341,6 +354,7 @@ export default function Contact() {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={handleChatBotClick}
                       className="border-lavender-accent text-lavender-accent hover:bg-lavender-accent hover:text-primary-foreground"
                     >
                       Live Chat
