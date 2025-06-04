@@ -44,6 +44,7 @@ export interface IStorage {
   getBooking(id: number): Promise<BookingWithDetails | undefined>;
   updateBooking(id: number, booking: Partial<InsertBooking>): Promise<Booking>;
   cancelBooking(id: number): Promise<void>;
+  checkDuplicateBooking(userId: string, destinationId: number, checkIn: string, checkOut: string): Promise<boolean>;
 
   // Activity logs
   createActivityLog(log: InsertActivityLog): Promise<ActivityLog>;
@@ -399,6 +400,23 @@ export class DatabaseStorage implements IStorage {
       .update(bookings)
       .set({ status: "cancelled", updatedAt: new Date() })
       .where(eq(bookings.id, id));
+  }
+
+  async checkDuplicateBooking(userId: string, destinationId: number, checkIn: string, checkOut: string): Promise<boolean> {
+    const existingBookings = await db
+      .select({ id: bookings.id })
+      .from(bookings)
+      .where(
+        and(
+          eq(bookings.userId, userId),
+          eq(bookings.destinationId, destinationId),
+          eq(bookings.checkIn, checkIn),
+          eq(bookings.checkOut, checkOut),
+          ne(bookings.status, "cancelled")
+        )
+      );
+    
+    return existingBookings.length > 0;
   }
 
   // Activity logs
