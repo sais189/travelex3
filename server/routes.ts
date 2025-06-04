@@ -13,6 +13,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 const createBookingSchema = insertBookingSchema.extend({
   checkIn: z.string().transform((val) => new Date(val).toISOString().split('T')[0]),
   checkOut: z.string().transform((val) => new Date(val).toISOString().split('T')[0]),
+  totalAmount: z.number().transform((val) => val.toString()),
+}).omit({
+  userId: true, // We'll add this from the authenticated user
 });
 
 const updateDestinationSchema = insertDestinationSchema.partial();
@@ -416,16 +419,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = sessionUser?.id || replitUser;
       
       if (!userId) {
+        console.log("Auth debug - sessionUser:", sessionUser);
+        console.log("Auth debug - replitUser:", replitUser);
+        console.log("Auth debug - req.user:", req.user);
         return res.status(401).json({ message: "Unauthorized" });
       }
       
+      console.log("Creating booking with userId:", userId);
+      console.log("Request body:", req.body);
+      
       const validatedData = createBookingSchema.parse(req.body);
+      console.log("Validated data:", validatedData);
       
       const booking = await storage.createBooking({
         ...validatedData,
         userId,
-        checkIn: validatedData.checkIn,
-        checkOut: validatedData.checkOut,
       });
 
       await storage.createActivityLog({
