@@ -186,7 +186,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredDestinations.map((destination, index) => (
               <motion.div
                 key={destination.id}
@@ -194,9 +194,10 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
+                className="h-full"
               >
-                <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden">
-                  <div className="relative h-48">
+                <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden h-full flex flex-col">
+                  <div className="relative h-48 flex-shrink-0">
                     <img
                       src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
                       alt={destination.name}
@@ -205,22 +206,30 @@ export default function Home() {
                     <div className="absolute top-4 right-4">
                       <div className="flex items-center space-x-1 bg-black bg-opacity-50 rounded-full px-2 py-1">
                         <Star className="w-3 h-3 text-gold-accent fill-current" />
-                        <span className="text-xs text-white">{destination.rating}</span>
+                        <span className="text-xs text-white font-medium">{destination.rating}</span>
                       </div>
                     </div>
                   </div>
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{destination.name}</h3>
-                    <p className="text-muted-foreground mb-4 text-sm">
-                      {destination.shortDescription || destination.description.slice(0, 100) + "..."}
-                    </p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gold-accent font-bold text-lg">
-                        ${destination.price}
-                      </span>
+                  <CardContent className="p-6 flex-1 flex flex-col">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold mb-2 line-clamp-2 min-h-[3.5rem]">
+                        {destination.name}
+                      </h3>
+                      <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-3 min-h-[4rem]">
+                        {destination.shortDescription || destination.description.slice(0, 100) + "..."}
+                      </p>
+                    </div>
+                    <div className="flex justify-between items-center mt-auto pt-4">
+                      <div className="flex flex-col">
+                        <span className="text-gold-accent font-bold text-xl">
+                          ${parseFloat(destination.price).toLocaleString()}
+                        </span>
+                        <span className="text-xs text-muted-foreground">per person</span>
+                      </div>
                       <Button
                         onClick={() => handleBookNow(destination.id)}
-                        className="bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground"
+                        className="bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground transition-all duration-200 px-6"
+                        size="sm"
                       >
                         Book Now
                       </Button>
