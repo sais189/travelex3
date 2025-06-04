@@ -410,31 +410,31 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          {/* Booking Status Distribution */}
+          {/* Revenue by Category */}
           <Card className="glass-morphism border-gold-accent/20">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-gold-accent" />
-                Booking Status Distribution
+                <DollarSign className="w-5 h-5 text-gold-accent" />
+                Revenue by Category
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={statusData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
+              <ResponsiveContainer width="100%" height={350}>
+                <BarChart data={destinationTypes} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis 
+                    dataKey="type" 
+                    stroke="#9ca3af"
+                    tick={{ fontSize: 12, fill: '#9ca3af' }}
+                    angle={0}
+                    textAnchor="middle"
+                    height={60}
+                  />
+                  <YAxis 
+                    stroke="#9ca3af" 
+                    tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
+                    tick={{ fontSize: 12, fill: '#9ca3af' }}
+                  />
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: '#1f2937', 
@@ -442,12 +442,17 @@ export default function AdminDashboard() {
                       borderRadius: '8px',
                       color: '#fff'
                     }}
-                    formatter={(value, name, props) => [
-                      `${formatNumber(props.payload.count)} bookings (${value}%)`,
-                      props.payload.name
+                    formatter={(value: any) => [
+                      `$${(value / 1000000).toFixed(2)}M`,
+                      'Revenue'
                     ]}
                   />
-                </PieChart>
+                  <Bar dataKey="revenue" radius={[4, 4, 0, 0]}>
+                    {destinationTypes.map((entry: any, index: number) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
@@ -655,45 +660,7 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          {/* Destination Types Revenue */}
-          <Card className="glass-morphism border-gold-accent/20">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-gold-accent" />
-                Revenue by Category
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={destinationTypes} layout="horizontal">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis 
-                    type="number" 
-                    stroke="#9ca3af"
-                    tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
-                  />
-                  <YAxis type="category" dataKey="type" stroke="#9ca3af" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1f2937', 
-                      border: '1px solid #d4af37',
-                      borderRadius: '8px',
-                      color: '#fff'
-                    }}
-                    formatter={(value, name, props) => [
-                      `$${(value / 1000000).toFixed(2)}M`,
-                      `Revenue - ${props.payload.destinations}`
-                    ]}
-                  />
-                  <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
-                    {destinationTypes.map((entry: any, index: number) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+
         </div>
 
         {/* Performance Metrics Grid */}
