@@ -25,11 +25,6 @@ export default function ChatBot() {
   ]);
   const [inputValue, setInputValue] = useState("");
 
-  // Don't show chatbot on admin pages or 404
-  if (location.startsWith("/admin") || location === "/404") {
-    return null;
-  }
-
   useEffect(() => {
     const handleOpenChatBot = (event: CustomEvent) => {
       setIsOpen(true);
@@ -152,6 +147,11 @@ Need specific help with any of these topics?`;
       handleSendMessage();
     }
   };
+
+  // Don't show chatbot on admin pages or 404
+  if (location.startsWith("/admin") || location === "/404") {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-6 right-6 z-40">
