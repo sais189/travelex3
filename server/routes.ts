@@ -408,9 +408,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Bookings routes
-  app.post('/api/bookings', isAuthenticated, async (req: any, res) => {
+  app.post('/api/bookings', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      // Check both session-based and Replit auth
+      const sessionUser = req.session?.user;
+      const replitUser = req.user?.claims?.sub;
+      const userId = sessionUser?.id || replitUser;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       const validatedData = createBookingSchema.parse(req.body);
       
       const booking = await storage.createBooking({
@@ -434,9 +442,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/bookings', isAuthenticated, async (req: any, res) => {
+  app.get('/api/bookings', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const sessionUser = req.session?.user;
+      const replitUser = req.user?.claims?.sub;
+      const userId = sessionUser?.id || replitUser;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       const bookings = await storage.getUserBookings(userId);
       res.json(bookings);
     } catch (error) {
@@ -498,8 +513,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Stripe payment routes
-  app.post("/api/create-payment-intent", isAuthenticated, async (req, res) => {
+  app.post("/api/create-payment-intent", async (req: any, res) => {
     try {
+      const sessionUser = req.session?.user;
+      const replitUser = req.user?.claims?.sub;
+      const userId = sessionUser?.id || replitUser;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       const { amount, bookingId } = req.body;
       
       if (!amount || amount <= 0) {
@@ -511,7 +534,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         currency: "usd",
         metadata: {
           bookingId: bookingId?.toString() || "",
-          userId: req.user.claims.sub,
+          userId,
         },
       });
 
@@ -522,8 +545,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/confirm-payment", isAuthenticated, async (req, res) => {
+  app.post("/api/confirm-payment", async (req: any, res) => {
     try {
+      const sessionUser = req.session?.user;
+      const replitUser = req.user?.claims?.sub;
+      const userId = sessionUser?.id || replitUser;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       const { paymentIntentId, bookingId } = req.body;
       
       // Verify payment with Stripe
@@ -538,7 +569,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         await storage.createActivityLog({
-          userId: req.user.claims.sub,
+          userId,
           action: "payment_completed",
           description: `Payment completed for booking ID: ${bookingId}`,
           metadata: { bookingId, paymentIntentId },

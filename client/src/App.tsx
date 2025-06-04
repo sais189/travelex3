@@ -9,6 +9,7 @@ import { ThemeProvider } from "next-themes";
 import Home from "@/pages/Home";
 import Destinations from "@/pages/Destinations";
 import EnhancedBooking from "@/pages/EnhancedBooking";
+import Payment from "@/pages/Payment";
 import MyTrips from "@/pages/MyTrips";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Login from "@/pages/Login";
@@ -29,6 +30,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/destinations" component={Destinations} />
         <Route path="/booking/:id" component={EnhancedBooking} />
+        <Route path="/payment/:bookingId" component={Payment} />
         <Route path="/my-trips" component={MyTrips} />
         <Route path="/admin" component={AdminDashboard} />
         <Route path="/admin/:tab" component={AdminDashboard} />
