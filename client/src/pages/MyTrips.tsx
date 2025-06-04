@@ -183,7 +183,12 @@ export default function MyTrips() {
 
   const totalTrips = bookings.length;
   const countriesVisited = new Set(bookings.map(b => b.destination.country)).size;
-  const totalMiles = Math.round(totalTrips * 1500 + Math.random() * 5000); // Estimated
+  const totalKilometers = Math.round(
+    bookings.reduce((total, booking) => {
+      const distance = booking.destination.distanceKm ? parseFloat(booking.destination.distanceKm) : 0;
+      return total + distance;
+    }, 0)
+  );
 
   const BookingCard = ({ booking }: { booking: BookingWithDetails }) => (
     <motion.div
@@ -421,8 +426,8 @@ export default function MyTrips() {
                     <Award className="w-6 h-6 text-mint-accent" />
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-mint-accent mb-2">{totalMiles.toLocaleString()}k</div>
-                <div className="text-muted-foreground">Miles Traveled</div>
+                <div className="text-3xl font-bold text-mint-accent mb-2">{totalKilometers.toLocaleString()}</div>
+                <div className="text-muted-foreground">Kilometers Traveled</div>
               </CardContent>
             </Card>
           </motion.div>
