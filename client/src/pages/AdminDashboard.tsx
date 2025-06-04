@@ -84,6 +84,15 @@ export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  const [newUser, setNewUser] = useState({
+    username: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    role: "user",
+    password: ""
+  });
   const { toast } = useToast();
 
   // Fetch analytics data
@@ -123,6 +132,34 @@ export default function AdminDashboard() {
       });
       refetchUsers();
       queryClient.invalidateQueries({ queryKey: ['/api/admin/activity-logs'] });
+    },
+  });
+
+  const addUser = useMutation({
+    mutationFn: (userData: typeof newUser) => apiRequest("POST", "/api/admin/users", userData),
+    onSuccess: () => {
+      toast({
+        title: "User created",
+        description: "New user has been created successfully",
+      });
+      setShowAddUserDialog(false);
+      setNewUser({
+        username: "",
+        email: "",
+        firstName: "",
+        lastName: "",
+        role: "user",
+        password: ""
+      });
+      refetchUsers();
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/activity-logs'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error creating user",
+        description: error.message || "Failed to create user",
+        variant: "destructive",
+      });
     },
   });
 
@@ -410,10 +447,9 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="users">User Management</TabsTrigger>
             <TabsTrigger value="activity">Activity Logs</TabsTrigger>
-            <TabsTrigger value="system">System Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="users" className="space-y-6">
@@ -424,10 +460,95 @@ export default function AdminDashboard() {
                     <Users className="w-5 h-5" />
                     <span>User Management</span>
                   </CardTitle>
-                  <Button className="bg-gradient-to-r from-gold-accent to-lavender-accent">
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Add User
-                  </Button>
+                  <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-gradient-to-r from-gold-accent to-lavender-accent">
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Add User
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px] glass-morphism border-gold-accent/20">
+                      <DialogHeader>
+                        <DialogTitle>Add New User</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">First Name</label>
+                            <Input
+                              value={newUser.firstName}
+                              onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
+                              placeholder="Enter first name"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Last Name</label>
+                            <Input
+                              value={newUser.lastName}
+                              onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+                              placeholder="Enter last name"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Username</label>
+                          <Input
+                            value={newUser.username}
+                            onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+                            placeholder="Enter username"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Email</label>
+                          <Input
+                            type="email"
+                            value={newUser.email}
+                            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                            placeholder="Enter email address"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Role</label>
+                          <Select value={newUser.role} onValueChange={(value) => setNewUser({ ...newUser, role: value })}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="user">User</SelectItem>
+                              <SelectItem value="travel_agent">Travel Agent</SelectItem>
+                              <SelectItem value="support">Support</SelectItem>
+                              <SelectItem value="finance">Finance</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Password</label>
+                          <Input
+                            type="password"
+                            value={newUser.password}
+                            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                            placeholder="Enter password"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setShowAddUserDialog(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          onClick={() => addUser.mutate(newUser)}
+                          disabled={addUser.isPending || !newUser.username || !newUser.email || !newUser.password}
+                          className="bg-gradient-to-r from-gold-accent to-lavender-accent"
+                        >
+                          {addUser.isPending ? "Creating..." : "Create User"}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardHeader>
               <CardContent>
@@ -604,32 +725,7 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="system" className="space-y-6">
-            <Card className="glass-morphism border-gold-accent/20">
-              <CardHeader>
-                <CardTitle>System Settings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-medium mb-4">Database Management</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <Button variant="outline">Backup Database</Button>
-                      <Button variant="outline">Export Users</Button>
-                      <Button variant="outline">System Health Check</Button>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium mb-4">Security Settings</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Button variant="outline">Reset All Sessions</Button>
-                      <Button variant="outline">Update Security Policies</Button>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+
         </Tabs>
       </div>
     </div>
