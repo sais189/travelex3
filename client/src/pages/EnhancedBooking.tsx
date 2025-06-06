@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useRoute } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
@@ -13,7 +14,21 @@ import {
   ArrowLeft,
   ChevronDown,
   Gift,
-  Shield
+  Shield,
+  Camera,
+  Mountain,
+  Waves,
+  TreePine,
+  Coffee,
+  Heart,
+  Sparkles,
+  Zap,
+  Navigation,
+  Music,
+  Volume2,
+  VolumeX,
+  Play,
+  Pause
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -66,6 +81,12 @@ export default function EnhancedBooking() {
   const [travelClass, setTravelClass] = useState("economy");
   const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([]);
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
+  const [activeItineraryDay, setActiveItineraryDay] = useState(1);
+  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const destinationId = params?.id ? parseInt(params.id) : 0;
 
@@ -100,6 +121,107 @@ export default function EnhancedBooking() {
     setCheckIn(format(defaultCheckIn, 'yyyy-MM-dd'));
     setCheckOut(format(defaultCheckOut, 'yyyy-MM-dd'));
   }, [destination]);
+
+  // Scroll tracking for parallax effects
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Mock destination data with interactive features
+  const mockItinerary = [
+    {
+      day: 1,
+      title: "Arrival & City Exploration",
+      description: "Welcome to your adventure! Start with a guided city tour and cultural immersion.",
+      imageUrl: destination?.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
+      activities: ["Airport transfer", "Welcome dinner", "City orientation walk"]
+    },
+    {
+      day: 2,
+      title: "Main Attraction Experience",
+      description: "Discover the highlight attractions that make this destination unique.",
+      imageUrl: destination?.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
+      activities: ["Guided tour", "Photography session", "Local cuisine tasting"]
+    },
+    {
+      day: 3,
+      title: "Adventure & Activities",
+      description: "Engage in thrilling activities and create unforgettable memories.",
+      imageUrl: destination?.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
+      activities: ["Adventure sports", "Nature exploration", "Cultural workshops"]
+    }
+  ];
+
+  const mockHotspots = [
+    {
+      id: "spot1",
+      x: 25,
+      y: 40,
+      icon: "🏔️",
+      title: "Mountain Vista",
+      description: "Breathtaking panoramic views of the surrounding peaks and valleys."
+    },
+    {
+      id: "spot2",
+      x: 60,
+      y: 30,
+      icon: "🌊",
+      title: "Crystal Lake",
+      description: "Pristine waters perfect for reflection and peaceful moments."
+    },
+    {
+      id: "spot3",
+      x: 80,
+      y: 60,
+      icon: "🌲",
+      title: "Ancient Forest",
+      description: "Walk among centuries-old trees in this mystical forest sanctuary."
+    }
+  ];
+
+  const expandableSections = [
+    {
+      id: "included",
+      title: "What's Included",
+      icon: Check,
+      content: [
+        "All accommodation (4-5 star hotels)",
+        "Daily breakfast and selected meals",
+        "Professional local guide",
+        "Transportation during the tour",
+        "Entrance fees to attractions",
+        "Travel insurance coverage"
+      ]
+    },
+    {
+      id: "packing",
+      title: "Packing Tips",
+      icon: Gift,
+      content: [
+        "Comfortable walking shoes",
+        "Weather-appropriate clothing",
+        "Camera and extra batteries",
+        "Sunscreen and sunglasses",
+        "Personal medications",
+        "Power bank and adapters"
+      ]
+    },
+    {
+      id: "requirements",
+      title: "Travel Requirements",
+      icon: Shield,
+      content: [
+        "Valid passport (6+ months remaining)",
+        "Travel visa (if required)",
+        "COVID-19 vaccination certificate",
+        "Travel insurance documentation",
+        "Emergency contact information",
+        "Copy of booking confirmation"
+      ]
+    }
+  ];
 
   // Calculate total price
   const calculateTotal = () => {
@@ -186,294 +308,948 @@ export default function EnhancedBooking() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black">
-      {/* Hero Section */}
+      {/* Cinematic Hero Section with Parallax */}
       <section className="relative h-screen overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
+        {/* Parallax Background */}
+        <motion.div 
+          className="absolute inset-0"
+          style={{
+            transform: `translateY(${scrollY * 0.5}px)`
+          }}
+        >
           <img
             src={destination.imageUrl}
             alt={destination.name}
-            className="w-full h-full object-cover"
+            className="w-full h-[120%] object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-        </div>
+          
+          {/* Destination-specific animated elements */}
+          {destination.name.toLowerCase().includes('iceland') && (
+            <div className="absolute inset-0">
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-green-400/20 via-blue-500/20 to-purple-600/20"
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                style={{ backgroundSize: "200% 200%" }}
+              />
+            </div>
+          )}
+        </motion.div>
 
-        {/* Hero Content */}
+        {/* Hero Content with Staggered Animations */}
         <div className="relative z-10 flex items-center justify-center h-full px-6">
           <div className="text-center text-white max-w-4xl">
-            <div className="mb-6">
-              <Button 
-                variant="ghost" 
-                onClick={() => navigate("/destinations")}
-                className="mb-8 text-white/80 hover:text-white border border-white/20 hover:border-white/40"
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="mb-6"
+            >
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Destinations
-              </Button>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => navigate("/destinations")}
+                  className="mb-8 text-white/80 hover:text-white border border-white/20 hover:border-white/40 group"
+                >
+                  <motion.div
+                    whileHover={{ x: -5 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                  </motion.div>
+                  Back to Destinations
+                </Button>
+              </motion.div>
               
-              <h1 className="text-6xl md:text-8xl font-bold mb-4 leading-tight text-white">
+              <motion.h1 
+                className="text-6xl md:text-8xl font-bold mb-4 leading-tight text-white"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 1 }}
+              >
                 {destination.name}
-              </h1>
+              </motion.h1>
               
-              <div className="flex items-center justify-center space-x-6 mb-6">
-                <div className="flex items-center bg-black/30 rounded-full px-4 py-2 backdrop-blur-sm">
+              <motion.div 
+                className="flex items-center justify-center space-x-6 mb-6"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+              >
+                <motion.div 
+                  className="flex items-center bg-black/30 rounded-full px-4 py-2 backdrop-blur-sm"
+                  whileHover={{ scale: 1.05, backgroundColor: "rgba(0,0,0,0.5)" }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <Star className="w-5 h-5 text-gold-accent fill-current mr-2" />
                   <span className="text-xl font-semibold">★ {destination.rating}</span>
-                </div>
-                <div className="flex items-center bg-black/30 rounded-full px-4 py-2 backdrop-blur-sm">
+                </motion.div>
+                <motion.div 
+                  className="flex items-center bg-black/30 rounded-full px-4 py-2 backdrop-blur-sm"
+                  whileHover={{ scale: 1.05, backgroundColor: "rgba(0,0,0,0.5)" }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <MapPin className="w-5 h-5 text-lavender-accent mr-2" />
                   <span className="text-xl">{destination.country}</span>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
 
-              <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed text-white/90">
+              <motion.p 
+                className="text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed text-white/90"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.8 }}
+              >
                 {destination.description}
-              </p>
+              </motion.p>
               
-              <div className="inline-block">
-                <Button
-                  onClick={() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="bg-gradient-to-r from-gold-accent to-lavender-accent hover:from-gold-accent/80 hover:to-lavender-accent/80 text-white font-semibold text-lg px-8 py-4 rounded-full"
+              <motion.div 
+                className="inline-block"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.3, duration: 0.8, type: "spring" }}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  Book This Adventure
-                  <ChevronDown className="w-5 h-5 ml-2" />
-                </Button>
+                  <Button
+                    onClick={() => document.getElementById('itinerary-section')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="bg-gradient-to-r from-gold-accent to-lavender-accent hover:from-gold-accent/80 hover:to-lavender-accent/80 text-white font-semibold text-lg px-8 py-4 rounded-full"
+                  >
+                    Explore This Adventure
+                    <motion.div
+                      animate={{ y: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ChevronDown className="w-5 h-5 ml-2" />
+                    </motion.div>
+                  </Button>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <ChevronDown className="w-8 h-8 text-white/60" />
+        </motion.div>
+
+        {/* Ambient Audio Control */}
+        <motion.div
+          className="absolute top-32 right-6 z-20"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 2 }}
+        >
+          <motion.button
+            onClick={() => setAudioEnabled(!audioEnabled)}
+            className="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white/80 hover:text-white hover:bg-black/50 transition-all"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            {audioEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+          </motion.button>
+        </motion.div>
+      </section>
+
+      {/* Day-by-Day Itinerary with Sliding Transitions */}
+      <section id="itinerary-section" className="py-20 px-6 bg-gradient-to-br from-black/10 via-transparent to-black/10">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
+              Your Journey Unfolds
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Explore each day of your adventure through an immersive timeline
+            </p>
+          </motion.div>
+
+          {/* Day Tabs with Timeline */}
+          <div className="space-y-12">
+            <div className="flex justify-center">
+              <div className="relative flex space-x-1 bg-black/20 rounded-full p-1 backdrop-blur-sm">
+                {mockItinerary.map((day, index) => (
+                  <motion.button
+                    key={day.day}
+                    onClick={() => setActiveItineraryDay(day.day)}
+                    className={`relative px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                      activeItineraryDay === day.day
+                        ? 'text-white shadow-lg'
+                        : 'text-muted-foreground hover:text-gold-accent hover:bg-white/10'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {activeItineraryDay === day.day && (
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-gold-accent to-lavender-accent rounded-full"
+                        layoutId="activeTab"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">Day {day.day}</span>
+                  </motion.button>
+                ))}
               </div>
             </div>
+
+            {/* Active Day Content with Slide Transitions */}
+            <AnimatePresence mode="wait">
+              {mockItinerary.map((day) => 
+                activeItineraryDay === day.day && (
+                  <motion.div
+                    key={day.day}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className="max-w-4xl mx-auto"
+                  >
+                    <Card className="glass-morphism border-gold-accent/20 overflow-hidden">
+                      <div className="grid md:grid-cols-2 gap-0">
+                        <motion.div 
+                          className="relative h-80 md:h-auto"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <img
+                            src={day.imageUrl}
+                            alt={day.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                          <motion.div 
+                            className="absolute bottom-6 left-6 text-white"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                          >
+                            <div className="inline-block bg-gold-accent/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm mb-2">
+                              Day {day.day}
+                            </div>
+                          </motion.div>
+                        </motion.div>
+                        <div className="p-8 flex flex-col justify-center">
+                          <motion.h3
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4 }}
+                            className="text-3xl font-bold mb-4 text-gold-accent"
+                          >
+                            {day.title}
+                          </motion.h3>
+                          <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="text-muted-foreground text-lg leading-relaxed mb-6"
+                          >
+                            {day.description}
+                          </motion.p>
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6 }}
+                            className="space-y-2"
+                          >
+                            <h4 className="font-semibold text-lavender-accent mb-3">Activities:</h4>
+                            {day.activities.map((activity, idx) => (
+                              <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.7 + idx * 0.1 }}
+                                className="flex items-center text-sm"
+                              >
+                                <div className="w-2 h-2 bg-gold-accent rounded-full mr-3" />
+                                {activity}
+                              </motion.div>
+                            ))}
+                          </motion.div>
+                        </div>
+                      </div>
+                    </Card>
+                  </motion.div>
+                )
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </section>
 
-      {/* Booking Section */}
-      <section id="booking-form" className="py-20 px-6">
+      {/* Interactive Hotspot Map */}
+      <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
+              Explore Interactive Highlights
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Discover key locations and experiences in their natural setting
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="relative rounded-2xl overflow-hidden shadow-2xl"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <div className="relative h-[600px] w-full">
+              <img
+                src={destination.imageUrl}
+                alt={destination.name}
+                className="w-full h-full object-cover"
+              />
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+              
+              {/* Interactive Hotspots */}
+              {mockHotspots.map((hotspot, index) => (
+                <motion.div
+                  key={hotspot.id}
+                  initial={{ opacity: 0, scale: 0 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.3, duration: 0.6, type: "spring" }}
+                  viewport={{ once: true }}
+                  className="absolute cursor-pointer group"
+                  style={{
+                    left: `${hotspot.x}%`,
+                    top: `${hotspot.y}%`,
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                  onMouseEnter={() => setActiveHotspot(hotspot.id)}
+                  onMouseLeave={() => setActiveHotspot(null)}
+                >
+                  <motion.div
+                    className="relative"
+                    animate={{
+                      scale: activeHotspot === hotspot.id ? 1.2 : 1,
+                      y: [0, -10, 0]
+                    }}
+                    transition={{
+                      scale: { duration: 0.3 },
+                      y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                    }}
+                  >
+                    {/* Pulsing Ring */}
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-gold-accent/30"
+                      animate={{
+                        scale: [1, 1.8, 1],
+                        opacity: [0.5, 0, 0.5]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    
+                    <motion.div 
+                      className="relative w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border-2 border-gold-accent/50 group-hover:border-gold-accent transition-colors duration-300"
+                      whileHover={{ rotate: [0, 5, -5, 0] }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <span className="text-2xl">{hotspot.icon}</span>
+                    </motion.div>
+                  </motion.div>
+
+                  {/* Tooltip */}
+                  <AnimatePresence>
+                    {activeHotspot === hotspot.id && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 20, scale: 0.8 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute top-20 left-1/2 transform -translate-x-1/2 z-10"
+                      >
+                        <div className="bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl border border-gold-accent/20 max-w-xs">
+                          <div className="text-center">
+                            <h3 className="font-bold text-lg text-gray-800 mb-2">
+                              {hotspot.title}
+                            </h3>
+                            <p className="text-sm text-gray-600 leading-relaxed">
+                              {hotspot.description}
+                            </p>
+                          </div>
+                          
+                          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                            <div className="w-4 h-4 bg-white/95 rotate-45 border-l border-t border-gold-accent/20"></div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+
+              {/* Instruction Text */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 1.5 }}
+                viewport={{ once: true }}
+                className="absolute bottom-6 left-6 text-white/80 text-sm backdrop-blur-sm bg-black/20 rounded-full px-4 py-2"
+              >
+                Hover over the icons to explore highlights
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Expandable Information Accordions */}
+      <section className="py-20 px-6 bg-gradient-to-br from-black/10 via-transparent to-black/10">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
+              Trip Information
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Everything you need to know for your perfect adventure
+            </p>
+          </motion.div>
+
+          <div className="space-y-4">
+            {expandableSections.map((section, index) => {
+              const Icon = section.icon;
+              const isExpanded = expandedSection === section.id;
+              
+              return (
+                <motion.div
+                  key={section.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <Card className="glass-morphism border-gold-accent/20 overflow-hidden">
+                    <motion.button
+                      onClick={() => setExpandedSection(isExpanded ? null : section.id)}
+                      className="w-full p-6 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <motion.div
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="p-2 bg-gold-accent/20 rounded-full"
+                        >
+                          <Icon className="w-5 h-5 text-gold-accent" />
+                        </motion.div>
+                        <h3 className="text-xl font-semibold">{section.title}</h3>
+                      </div>
+                      <motion.div
+                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                      </motion.div>
+                    </motion.button>
+                    
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-6 pb-6 pt-0">
+                            <div className="space-y-3">
+                              {section.content.map((item, idx) => (
+                                <motion.div
+                                  key={idx}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: idx * 0.1 }}
+                                  className="flex items-center text-muted-foreground"
+                                >
+                                  <div className="w-2 h-2 bg-lavender-accent rounded-full mr-3 flex-shrink-0" />
+                                  <span>{item}</span>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Booking Section with Blur Transitions */}
+      <section id="booking-form" className="py-20 px-6 relative">
+        <motion.div 
+          className="max-w-6xl mx-auto"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          viewport={{ once: true }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
             <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
               Complete Your Booking
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Secure your adventure with our seamless booking experience
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Trip Summary */}
-            <div>
-              <Card className="glass-morphism border-gold-accent/20 mb-8">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <MapPin className="w-5 h-5 text-gold-accent" />
-                    <span>Trip Summary</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="relative rounded-xl overflow-hidden">
-                    <img
-                      src={destination.imageUrl}
-                      alt={destination.name}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <h3 className="text-xl font-bold">{destination.name}</h3>
-                      <p className="text-sm opacity-90">{destination.country}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-2 text-lavender-accent" />
-                      <span>{destination.duration} days</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 mr-2 text-gold-accent fill-current" />
-                      <span>{destination.rating} rating</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="w-4 h-4 mr-2 text-lavender-accent" />
-                      <span>Up to {destination.maxGuests} guests</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Check className="w-4 h-4 mr-2 text-green-500" />
-                      <span>All inclusive</span>
-                    </div>
-                  </div>
+            {/* Trip Summary with Hover Effects */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.02, rotateY: 2 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card className="glass-morphism border-gold-accent/20 mb-8 overflow-hidden">
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <motion.div
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <MapPin className="w-5 h-5 text-gold-accent" />
+                      </motion.div>
+                      <span>Trip Summary</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <motion.div 
+                      className="relative rounded-xl overflow-hidden"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <img
+                        src={destination.imageUrl}
+                        alt={destination.name}
+                        className="w-full h-48 object-cover"
+                      />
+                      <motion.div 
+                        className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
+                        whileHover={{ opacity: 0.8 }}
+                      />
+                      <motion.div 
+                        className="absolute bottom-4 left-4 text-white"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <h3 className="text-xl font-bold">{destination.name}</h3>
+                        <p className="text-sm opacity-90">{destination.country}</p>
+                      </motion.div>
+                    </motion.div>
+                    
+                    <motion.div 
+                      className="grid grid-cols-2 gap-4 text-sm"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.7, staggerChildren: 0.1 }}
+                    >
+                      {[
+                        { icon: Clock, text: `${destination.duration} days`, color: "text-lavender-accent" },
+                        { icon: Star, text: `${destination.rating} rating`, color: "text-gold-accent fill-current" },
+                        { icon: Users, text: `Up to ${destination.maxGuests} guests`, color: "text-lavender-accent" },
+                        { icon: Check, text: "All inclusive", color: "text-green-500" }
+                      ].map((item, idx) => (
+                        <motion.div
+                          key={idx}
+                          className="flex items-center"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.8 + idx * 0.1 }}
+                          whileHover={{ scale: 1.05, x: 5 }}
+                        >
+                          <item.icon className={`w-4 h-4 mr-2 ${item.color}`} />
+                          <span>{item.text}</span>
+                        </motion.div>
+                      ))}
+                    </motion.div>
 
-                  <div className="text-center py-4 border-t border-gold-accent/20">
-                    <div className="text-3xl font-bold text-gold-accent">
-                      ${destination.price}
-                    </div>
-                    <div className="text-sm text-muted-foreground">per person</div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                    <motion.div 
+                      className="text-center py-4 border-t border-gold-accent/20"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 1.2, type: "spring" }}
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <motion.div 
+                        className="text-3xl font-bold text-gold-accent"
+                        animate={{ textShadow: ["0 0 10px rgba(255,215,0,0.5)", "0 0 20px rgba(255,215,0,0.8)", "0 0 10px rgba(255,215,0,0.5)"] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        ${destination.price}
+                      </motion.div>
+                      <div className="text-sm text-muted-foreground">per person</div>
+                    </motion.div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </motion.div>
 
-            {/* Booking Form */}
-            <div>
+            {/* Enhanced Booking Form */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
               <Card className="glass-morphism border-gold-accent/20">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <Calendar className="w-5 h-5 text-gold-accent" />
+                    <motion.div
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <Calendar className="w-5 h-5 text-gold-accent" />
+                    </motion.div>
                     <span>Booking Details</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Date Selection */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="check-in">Check-in Date</Label>
-                      <Input
-                        id="check-in"
-                        type="date"
-                        value={checkIn}
-                        onChange={(e) => setCheckIn(e.target.value)}
-                        className="glass-input"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="check-out">Check-out Date</Label>
-                      <Input
-                        id="check-out"
-                        type="date"
-                        value={checkOut}
-                        onChange={(e) => setCheckOut(e.target.value)}
-                        className="glass-input"
-                      />
-                    </div>
-                  </div>
+                  {/* Date Selection with Microinteractions */}
+                  <motion.div 
+                    className="grid grid-cols-2 gap-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    {[
+                      { id: "check-in", label: "Check-in Date", value: checkIn, onChange: setCheckIn },
+                      { id: "check-out", label: "Check-out Date", value: checkOut, onChange: setCheckOut }
+                    ].map((field, idx) => (
+                      <motion.div 
+                        key={field.id}
+                        className="space-y-2"
+                        whileHover={{ scale: 1.02 }}
+                        whileFocus={{ scale: 1.02 }}
+                      >
+                        <Label htmlFor={field.id}>{field.label}</Label>
+                        <motion.div
+                          whileFocus={{ boxShadow: "0 0 0 2px rgba(255,215,0,0.3)" }}
+                        >
+                          <Input
+                            id={field.id}
+                            type="date"
+                            value={field.value}
+                            onChange={(e) => field.onChange(e.target.value)}
+                            className="glass-input"
+                          />
+                        </motion.div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
 
-                  {/* Guests */}
-                  <div className="space-y-2">
+                  {/* Guests Selection */}
+                  <motion.div 
+                    className="space-y-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 }}
+                  >
                     <Label htmlFor="guests">Number of Guests</Label>
-                    <Select value={guests.toString()} onValueChange={(value) => setGuests(parseInt(value))}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.from({ length: destination.maxGuests }, (_, i) => i + 1).map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            {num} {num === 1 ? 'Guest' : 'Guests'}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                    <motion.div whileHover={{ scale: 1.02 }}>
+                      <Select value={guests.toString()} onValueChange={(value) => setGuests(parseInt(value))}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: destination.maxGuests }, (_, i) => i + 1).map((num) => (
+                            <SelectItem key={num} value={num.toString()}>
+                              {num} {num === 1 ? 'Guest' : 'Guests'}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </motion.div>
+                  </motion.div>
 
-                  {/* Travel Class */}
-                  <div className="space-y-2">
+                  {/* Travel Class with Animation */}
+                  <motion.div 
+                    className="space-y-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.0 }}
+                  >
                     <Label>Travel Class</Label>
                     <div className="grid grid-cols-2 gap-2">
-                      {travelClasses.map((cls) => (
-                        <Button
+                      {travelClasses.map((cls, idx) => (
+                        <motion.div
                           key={cls.value}
-                          variant={travelClass === cls.value ? "default" : "outline"}
-                          onClick={() => setTravelClass(cls.value)}
-                          className="justify-start"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 1.1 + idx * 0.1 }}
                         >
-                          <div className="text-left">
-                            <div className="font-medium">{cls.label}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {cls.price > 0 ? `+$${cls.price}` : 'Included'}
+                          <Button
+                            variant={travelClass === cls.value ? "default" : "outline"}
+                            onClick={() => setTravelClass(cls.value)}
+                            className="justify-start w-full"
+                          >
+                            <div className="text-left">
+                              <div className="font-medium">{cls.label}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {cls.price > 0 ? `+$${cls.price}` : 'Included'}
+                              </div>
                             </div>
-                          </div>
-                        </Button>
+                          </Button>
+                        </motion.div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
 
-                  {/* Upgrades */}
-                  <div className="space-y-2">
+                  {/* Upgrades with Staggered Animation */}
+                  <motion.div 
+                    className="space-y-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.2 }}
+                  >
                     <Label>Add-ons & Upgrades</Label>
                     <div className="space-y-2">
-                      {upgrades.map((upgrade) => {
+                      {upgrades.map((upgrade, idx) => {
                         const Icon = upgrade.icon;
                         const isSelected = selectedUpgrades.includes(upgrade.id);
                         return (
-                          <Button
+                          <motion.div
                             key={upgrade.id}
-                            variant={isSelected ? "default" : "outline"}
-                            onClick={() => handleUpgradeToggle(upgrade.id)}
-                            className="w-full justify-between h-auto p-4"
+                            initial={{ opacity: 0, x: -30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 1.3 + idx * 0.1 }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                           >
-                            <div className="flex items-center">
-                              <Icon className="w-4 h-4 mr-3" />
-                              <span className="font-medium">{upgrade.name}</span>
-                            </div>
-                            <span className="text-sm">${upgrade.price}</span>
-                          </Button>
+                            <Button
+                              variant={isSelected ? "default" : "outline"}
+                              onClick={() => handleUpgradeToggle(upgrade.id)}
+                              className="w-full justify-between h-auto p-4"
+                            >
+                              <div className="flex items-center">
+                                <motion.div
+                                  animate={isSelected ? { rotate: 360 } : {}}
+                                  transition={{ duration: 0.5 }}
+                                >
+                                  <Icon className="w-4 h-4 mr-3" />
+                                </motion.div>
+                                <span className="font-medium">{upgrade.name}</span>
+                              </div>
+                              <motion.span 
+                                className="text-sm"
+                                animate={isSelected ? { scale: [1, 1.2, 1] } : {}}
+                                transition={{ duration: 0.3 }}
+                              >
+                                ${upgrade.price}
+                              </motion.span>
+                            </Button>
+                          </motion.div>
                         );
                       })}
                     </div>
-                  </div>
+                  </motion.div>
 
-                  {/* Price Breakdown */}
-                  <div className="space-y-2">
-                    <Button
-                      variant="ghost"
-                      onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-                      className="w-full justify-between"
-                    >
-                      <span>Price Breakdown</span>
-                      <ChevronDown className={`w-4 h-4 transition-transform ${showPriceBreakdown ? 'rotate-180' : ''}`} />
-                    </Button>
+                  {/* Price Breakdown Accordion */}
+                  <motion.div 
+                    className="space-y-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.6 }}
+                  >
+                    <motion.div whileHover={{ scale: 1.01 }}>
+                      <Button
+                        variant="ghost"
+                        onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
+                        className="w-full justify-between"
+                      >
+                        <span>Price Breakdown</span>
+                        <motion.div
+                          animate={{ rotate: showPriceBreakdown ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </motion.div>
+                      </Button>
+                    </motion.div>
                     
-                    {showPriceBreakdown && (
-                      <div className="bg-black/20 rounded-lg p-4 space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span>Base price ({guests} guests)</span>
-                          <span>${(parseFloat(destination.price) * guests).toFixed(2)}</span>
-                        </div>
-                        {travelClass !== "economy" && (
-                          <div className="flex justify-between">
-                            <span>Class upgrade</span>
-                            <span>${(travelClasses.find(tc => tc.value === travelClass)?.price || 0) * guests}</span>
+                    <AnimatePresence>
+                      {showPriceBreakdown && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="bg-black/20 rounded-lg p-4 space-y-2 text-sm">
+                            {[
+                              { label: `Base price (${guests} guests)`, value: `$${(parseFloat(destination.price) * guests).toFixed(2)}` },
+                              ...(travelClass !== "economy" ? [{ 
+                                label: "Class upgrade", 
+                                value: `$${(travelClasses.find(tc => tc.value === travelClass)?.price || 0) * guests}` 
+                              }] : []),
+                              ...selectedUpgrades.map(upgradeId => {
+                                const upgrade = upgrades.find(u => u.id === upgradeId);
+                                return upgrade ? { label: upgrade.name, value: `$${upgrade.price}` } : null;
+                              }).filter((item): item is {label: string; value: string} => item !== null)
+                            ].map((item, idx) => (
+                              <motion.div
+                                key={idx}
+                                className="flex justify-between"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: idx * 0.1 }}
+                              >
+                                <span>{item.label}</span>
+                                <span>{item.value}</span>
+                              </motion.div>
+                            ))}
+                            <Separator />
+                            <motion.div 
+                              className="flex justify-between font-semibold"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring" }}
+                            >
+                              <span>Total</span>
+                              <span>${calculateTotal().toFixed(2)}</span>
+                            </motion.div>
                           </div>
-                        )}
-                        {selectedUpgrades.map((upgradeId) => {
-                          const upgrade = upgrades.find(u => u.id === upgradeId);
-                          return upgrade ? (
-                            <div key={upgradeId} className="flex justify-between">
-                              <span>{upgrade.name}</span>
-                              <span>${upgrade.price}</span>
-                            </div>
-                          ) : null;
-                        })}
-                        <Separator />
-                        <div className="flex justify-between font-semibold">
-                          <span>Total</span>
-                          <span>${calculateTotal().toFixed(2)}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Book Now Button */}
-                  <div>
-                    <Button
-                      onClick={handleBookNow}
-                      disabled={createBooking.isPending || !checkIn || !checkOut}
-                      className="w-full h-12 bg-gradient-to-r from-gold-accent to-lavender-accent hover:from-gold-accent/80 hover:to-lavender-accent/80 text-white font-semibold transition-all duration-300"
-                    >
-                      {createBooking.isPending ? (
-                        <div className="flex items-center space-x-2">
-                          <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
-                          <span>Processing...</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center space-x-2">
-                          <CreditCard className="w-4 h-4" />
-                          <span>Book Now - ${calculateTotal().toFixed(2)}</span>
-                        </div>
+                        </motion.div>
                       )}
-                    </Button>
-                  </div>
+                    </AnimatePresence>
+                  </motion.div>
+
+                  {/* Enhanced Book Now Button */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.8, type: "spring" }}
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Button
+                        onClick={handleBookNow}
+                        disabled={createBooking.isPending || !checkIn || !checkOut}
+                        className="w-full h-12 bg-gradient-to-r from-gold-accent to-lavender-accent hover:from-gold-accent/80 hover:to-lavender-accent/80 text-white font-semibold transition-all duration-300 relative overflow-hidden"
+                      >
+                        {createBooking.isPending ? (
+                          <motion.div 
+                            className="flex items-center space-x-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                          >
+                            <motion.div 
+                              className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            />
+                            <span>Processing...</span>
+                          </motion.div>
+                        ) : (
+                          <motion.div 
+                            className="flex items-center space-x-2"
+                            whileHover={{ x: 2 }}
+                          >
+                            <CreditCard className="w-4 h-4" />
+                            <span>Book Now - ${calculateTotal().toFixed(2)}</span>
+                          </motion.div>
+                        )}
+                        
+                        {/* Shimmer effect */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                          animate={{ x: ["-100%", "100%"] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                          style={{ transform: "skewX(-20deg)" }}
+                        />
+                      </Button>
+                    </motion.div>
+                  </motion.div>
                 </CardContent>
               </Card>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
+
+      {/* Sticky Navigation/CTA */}
+      <motion.div
+        className="fixed bottom-6 right-6 z-50"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: scrollY > 1000 ? 1 : 0, scale: scrollY > 1000 ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <motion.button
+          onClick={() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' })}
+          className="bg-gradient-to-r from-gold-accent to-lavender-accent text-white rounded-full p-4 shadow-lg backdrop-blur-sm border border-white/20"
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          whileTap={{ scale: 0.9 }}
+          animate={{ y: [0, -5, 0] }}
+          transition={{ y: { duration: 2, repeat: Infinity } }}
+        >
+          <div className="flex items-center space-x-2">
+            <CreditCard className="w-5 h-5" />
+            <span className="font-semibold">${calculateTotal().toFixed(2)}</span>
+          </div>
+        </motion.button>
+      </motion.div>
     </div>
   );
 }
