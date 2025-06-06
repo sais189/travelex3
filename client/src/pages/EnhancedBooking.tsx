@@ -41,6 +41,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { format, addDays } from "date-fns";
+import { RobustImage } from "@/components/ui/robust-image";
 
 interface Destination {
   id: number;
@@ -161,21 +162,21 @@ export default function EnhancedBooking() {
           day: 1,
           title: "Arrival & Reykjavik Discovery",
           description: "Welcome to Iceland! Begin with colorful Reykjavik streets and traditional Icelandic culture.",
-          imageUrl: "https://images.unsplash.com/photo-1539704892725-de45bc5b63c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1539704892725-de45bc5b63c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Airport transfer", "Reykjavik walking tour", "Traditional dinner"]
         },
         {
           day: 2,
           title: "Northern Lights Hunting",
           description: "Chase the mystical Aurora Borealis across Iceland's pristine wilderness.",
-          imageUrl: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Aurora photography workshop", "Hot springs visit", "Night sky expedition"]
         },
         {
           day: 3,
           title: "Glacier & Geothermal Wonders",
           description: "Explore ancient glaciers and powerful geysers in Iceland's dramatic landscape.",
-          imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Glacier hiking", "Geysir eruption viewing", "Blue Lagoon relaxation"]
         }
       ];
@@ -509,25 +510,13 @@ export default function EnhancedBooking() {
             transform: `translateY(${scrollY * 0.5}px)`
           }}
         >
-          {!imageLoaded && !imageLoadError && (
-            <div className="w-full h-[120%] bg-gradient-to-br from-blue-600 via-purple-600 to-teal-600 animate-pulse flex items-center justify-center">
-              <div className="text-white text-lg">Loading beautiful destination...</div>
-            </div>
-          )}
-          {imageLoadError && (
-            <div className="w-full h-[120%] bg-gradient-to-br from-blue-600 via-purple-600 to-teal-600 flex items-center justify-center">
-              <div className="text-center text-white">
-                <h3 className="text-2xl font-bold mb-2">{destination.name}</h3>
-                <p className="text-lg opacity-90">Experience awaits in {destination.country}</p>
-              </div>
-            </div>
-          )}
-          <img
+          <RobustImage
             src={destination.imageUrl}
             alt={destination.name}
-            className={`w-full h-[120%] object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-            onLoad={() => setImageLoaded(true)}
-            onError={() => setImageLoadError(true)}
+            className="w-full h-[120%]"
+            fallbackTitle={destination.name}
+            fallbackSubtitle={`Experience awaits in ${destination.country}`}
+            retryable={true}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           
@@ -781,19 +770,14 @@ export default function EnhancedBooking() {
                         viewport={{ once: true }}
                         whileHover={{ scale: 1.05 }}
                       >
-                        <div className="w-full h-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center">
-                          <img
-                            src={day.imageUrl}
-                            alt={day.title}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                              const parent = target.parentElement as HTMLElement;
-                              parent.innerHTML = `<div class="text-center text-slate-600 dark:text-slate-300"><h4 class="font-semibold">${day.title}</h4><p class="text-sm mt-1">Day ${day.day} Experience</p></div>`;
-                            }}
-                          />
-                        </div>
+                        <RobustImage
+                          src={day.imageUrl}
+                          alt={day.title}
+                          className="w-full h-full"
+                          fallbackTitle={day.title}
+                          fallbackSubtitle={`Day ${day.day} Experience`}
+                          retryable={true}
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                         
                         {/* Floating day badge */}
