@@ -1290,7 +1290,7 @@ export default function EnhancedBooking() {
         </div>
       </section>
       {/* Interactive Hotspot Map with Split Scroll Reveal */}
-      <section className="py-20 px-6 relative overflow-hidden">
+      <section className="py-20 px-6 relative overflow-visible">
         {/* Fixed background layer */}
         <motion.div 
           className="absolute inset-0 opacity-30"
@@ -1302,7 +1302,7 @@ export default function EnhancedBooking() {
           }}
         />
         
-        <div className="relative z-10 max-w-6xl mx-auto">
+        <div className="relative z-10 max-w-6xl mx-auto px-8 py-8">
           {/* Split layout - Left: Title slides from left, Right: Description from right */}
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
             <motion.div
@@ -1335,13 +1335,13 @@ export default function EnhancedBooking() {
           </div>
 
           <motion.div 
-            className="relative rounded-2xl overflow-hidden shadow-2xl"
+            className="relative rounded-2xl overflow-visible shadow-2xl"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <div className="relative h-[600px] w-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
+            <div className="relative h-[600px] w-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl overflow-hidden">
               <img
                 src={destination.imageUrl}
                 alt={destination.name}
@@ -1406,7 +1406,7 @@ export default function EnhancedBooking() {
                     </motion.div>
                   </motion.div>
 
-                  {/* Tooltip */}
+                  {/* Smart Tooltip with Dynamic Positioning */}
                   <AnimatePresence>
                     {activeHotspot === hotspot.id && (
                       <motion.div
@@ -1414,21 +1414,54 @@ export default function EnhancedBooking() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.8 }}
                         transition={{ duration: 0.3 }}
-                        className="absolute top-20 left-1/2 transform -translate-x-1/2 z-10"
+                        className={`absolute z-50 ${
+                          // Dynamic positioning based on hotspot location
+                          hotspot.y < 30 
+                            ? 'top-20' // Show below if hotspot is near top
+                            : hotspot.y > 70 
+                            ? 'bottom-20' // Show above if hotspot is near bottom
+                            : 'top-20' // Default to below
+                        } ${
+                          hotspot.x < 30 
+                            ? 'left-0' // Align left if hotspot is near left edge
+                            : hotspot.x > 70 
+                            ? 'right-0' // Align right if hotspot is near right edge
+                            : 'left-1/2 transform -translate-x-1/2' // Center if in middle
+                        }`}
+                        style={{
+                          // Ensure tooltip stays within viewport bounds
+                          maxWidth: '280px',
+                          minWidth: '220px',
+                          // Prevent tooltip from going off-screen
+                          left: hotspot.x > 80 ? 'auto' : undefined,
+                          right: hotspot.x > 80 ? '0' : undefined,
+                          transform: hotspot.x > 30 && hotspot.x < 70 ? 'translateX(-50%)' : undefined
+                        }}
                       >
-                        <div className="bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl border border-gold-accent/20 max-w-xs">
+                        <div className="bg-white/98 backdrop-blur-md rounded-xl p-5 shadow-2xl border border-gold-accent/30 relative">
                           <div className="text-center">
-                            <h3 className="font-bold text-lg text-gray-800 mb-2">
+                            <h3 className="font-bold text-lg text-gray-800 mb-3 leading-tight">
                               {hotspot.title}
                             </h3>
-                            <p className="text-sm text-gray-600 leading-relaxed">
+                            <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
                               {hotspot.description}
                             </p>
                           </div>
                           
-                          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                            <div className="w-4 h-4 bg-white/95 rotate-45 border-l border-t border-gold-accent/20"></div>
-                          </div>
+                          {/* Dynamic Arrow Positioning */}
+                          <div className={`absolute w-4 h-4 bg-white/98 rotate-45 border ${
+                            hotspot.y < 30 
+                              ? '-top-2 border-l border-t' // Arrow pointing up
+                              : hotspot.y > 70 
+                              ? '-bottom-2 border-r border-b' // Arrow pointing down
+                              : '-top-2 border-l border-t' // Default arrow pointing up
+                          } border-gold-accent/30 ${
+                            hotspot.x < 30 
+                              ? 'left-6' // Arrow on left side
+                              : hotspot.x > 70 
+                              ? 'right-6' // Arrow on right side
+                              : 'left-1/2 transform -translate-x-1/2' // Centered arrow
+                          }`}></div>
                         </div>
                       </motion.div>
                     )}
