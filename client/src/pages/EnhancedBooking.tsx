@@ -468,7 +468,6 @@ export default function EnhancedBooking() {
           </motion.button>
         </motion.div>
       </section>
-
       {/* Day-by-Day Itinerary with Sliding Transitions */}
       <section id="itinerary-section" className="py-20 px-6 bg-gradient-to-br from-black/10 via-transparent to-black/10">
         <div className="max-w-6xl mx-auto">
@@ -602,7 +601,6 @@ export default function EnhancedBooking() {
           </div>
         </div>
       </section>
-
       {/* Interactive Hotspot Map */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
@@ -728,7 +726,6 @@ export default function EnhancedBooking() {
           </motion.div>
         </div>
       </section>
-
       {/* Expandable Information Accordions */}
       <section className="py-20 px-6 bg-gradient-to-br from-black/10 via-transparent to-black/10">
         <div className="max-w-4xl mx-auto">
@@ -820,11 +817,10 @@ export default function EnhancedBooking() {
           </div>
         </div>
       </section>
-
       {/* Enhanced Booking Section with Blur Transitions */}
       <section id="booking-form" className="py-20 px-6 relative">
         <motion.div 
-          className="max-w-6xl mx-auto"
+          className="max-w-6xl mx-auto text-[20px]"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
@@ -1228,7 +1224,6 @@ export default function EnhancedBooking() {
           </div>
         </motion.div>
       </section>
-
       {/* Sticky Navigation/CTA */}
       <motion.div
         className="fixed bottom-6 right-6 z-50"
