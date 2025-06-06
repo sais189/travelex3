@@ -186,21 +186,21 @@ export default function EnhancedBooking() {
           day: 1,
           title: "Arrival & Oia Village",
           description: "Discover the iconic blue domes and whitewashed buildings of magical Santorini.",
-          imageUrl: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Village exploration", "Sunset viewing", "Traditional taverna dinner"]
         },
         {
           day: 2,
           title: "Volcanic Wine Tour",
           description: "Taste exceptional wines grown in volcanic soil with stunning caldera views.",
-          imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Winery visits", "Volcanic landscape tour", "Local cheese tasting"]
         },
         {
           day: 3,
           title: "Aegean Sea Adventure",
           description: "Sail the crystal-clear waters and discover hidden beaches and sea caves.",
-          imageUrl: "https://images.unsplash.com/photo-1544970850-7ad5ac882d5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1544970850-7ad5ac882d5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Catamaran sailing", "Snorkeling excursion", "Beach relaxation"]
         }
       ];
@@ -210,21 +210,21 @@ export default function EnhancedBooking() {
           day: 1,
           title: "Cherry Blossom Discovery",
           description: "Immerse yourself in Japan's most beautiful season with blooming sakura trees.",
-          imageUrl: "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Hanami picnic", "Temple visits", "Traditional tea ceremony"]
         },
         {
           day: 2,
           title: "Modern Tokyo Experience",
           description: "Explore the vibrant energy of contemporary Tokyo's districts and technology.",
-          imageUrl: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Shibuya crossing", "Technology museums", "Ramen tasting tour"]
         },
         {
           day: 3,
           title: "Cultural Heritage Journey",
           description: "Connect with Japan's rich history through ancient traditions and crafts.",
-          imageUrl: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Pottery workshop", "Kimono experience", "Garden meditation"]
         }
       ];
@@ -234,21 +234,21 @@ export default function EnhancedBooking() {
           day: 1,
           title: "Fjord Arrival & Bergen",
           description: "Begin your Norwegian adventure in the colorful wooden houses of historic Bergen.",
-          imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Bergen fish market", "Funicular railway", "Historic district walk"]
         },
         {
           day: 2,
           title: "Geirangerfjord Cruise",
           description: "Sail through UNESCO World Heritage fjords with cascading waterfalls.",
-          imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Fjord cruise", "Waterfall viewing", "Mountain hiking"]
         },
         {
           day: 3,
           title: "Arctic Wildlife & Midnight Sun",
           description: "Experience the unique Arctic ecosystem and endless daylight phenomenon.",
-          imageUrl: "https://images.unsplash.com/photo-1516822003754-d86e59f32c8e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1516822003754-d86e59f32c8e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Wildlife spotting", "Midnight sun photography", "Sami culture experience"]
         }
       ];
@@ -259,21 +259,21 @@ export default function EnhancedBooking() {
           day: 1,
           title: "Arrival & City Exploration",
           description: "Welcome to your adventure! Start with a guided city tour and cultural immersion.",
-          imageUrl: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Airport transfer", "Welcome dinner", "City orientation walk"]
         },
         {
           day: 2,
           title: "Main Attraction Experience",
           description: "Discover the highlight attractions that make this destination unique.",
-          imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Guided tour", "Photography session", "Local cuisine tasting"]
         },
         {
           day: 3,
           title: "Adventure & Activities",
           description: "Engage in thrilling activities and create unforgettable memories.",
-          imageUrl: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
           activities: ["Adventure sports", "Nature exploration", "Cultural workshops"]
         }
       ];

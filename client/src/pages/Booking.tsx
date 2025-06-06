@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { loadStripe } from "@stripe/stripe-js";
+import { RobustImage } from "@/components/ui/robust-image";
 import type { Destination } from "@shared/schema";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
@@ -229,10 +230,13 @@ export default function Booking() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <img
+            <RobustImage
               src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
               alt={destination.name}
-              className="w-full h-80 object-cover rounded-2xl mb-6 shadow-lg"
+              className="w-full h-80 rounded-2xl mb-6 shadow-lg"
+              fallbackTitle={destination.name}
+              fallbackSubtitle={`Experience ${destination.country}`}
+              retryable={true}
             />
 
             <h1 className="text-4xl font-bold mb-4">{destination.name}</h1>
