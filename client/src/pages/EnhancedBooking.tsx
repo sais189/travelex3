@@ -96,6 +96,7 @@ export default function EnhancedBooking() {
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
+  const [activeItineraryDay, setActiveItineraryDay] = useState(1);
 
   const destinationId = params?.id ? parseInt(params.id) : 0;
 
@@ -325,24 +326,36 @@ export default function EnhancedBooking() {
                 Back to Destinations
               </Button>
               
-              <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
+              <h1 className={`text-6xl md:text-8xl font-bold mb-4 leading-tight ${
+                destination.name.toLowerCase().includes('cherry') ? 'font-serif text-pink-100' :
+                destination.name.toLowerCase().includes('iceland') ? 'font-bold text-blue-100' :
+                destination.name.toLowerCase().includes('santorini') ? 'font-light text-blue-50' :
+                'text-white'
+              }`}>
                 {destination.name}
               </h1>
               
-              <div className="flex items-center justify-center space-x-6 mb-8">
-                <div className="flex items-center bg-black/30 rounded-full px-4 py-2">
+              <div className="flex items-center justify-center space-x-6 mb-6">
+                <div className="flex items-center bg-black/30 rounded-full px-4 py-2 backdrop-blur-sm">
                   <Star className="w-5 h-5 text-gold-accent fill-current mr-2" />
-                  <span className="text-xl font-semibold">{destination.rating}</span>
-                  <span className="text-sm text-white/80 ml-2">({destination.reviewCount} reviews)</span>
+                  <span className="text-xl font-semibold">★ {destination.rating}</span>
                 </div>
-                <div className="flex items-center bg-black/30 rounded-full px-4 py-2">
+                <div className="flex items-center bg-black/30 rounded-full px-4 py-2 backdrop-blur-sm">
                   <MapPin className="w-5 h-5 text-lavender-accent mr-2" />
                   <span className="text-xl">{destination.country}</span>
                 </div>
               </div>
-              
-              <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-                {destination.description}
+
+              <p className={`text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed ${
+                destination.name.toLowerCase().includes('cherry') ? 'text-pink-100/90 italic' :
+                destination.name.toLowerCase().includes('iceland') ? 'text-blue-100/90 font-medium' :
+                destination.name.toLowerCase().includes('santorini') ? 'text-blue-50/90' :
+                'text-white/90'
+              }`}>
+                {destination.name.toLowerCase().includes('cherry') ? 'Wander through Japan\'s blooming beauty' :
+                 destination.name.toLowerCase().includes('iceland') ? 'Witness nature\'s most spectacular light show' :
+                 destination.name.toLowerCase().includes('santorini') ? 'Experience the magic of the Aegean paradise' :
+                 'Discover your next unforgettable adventure'}
               </p>
               
               <motion.div
@@ -371,6 +384,116 @@ export default function EnhancedBooking() {
         >
           <ChevronDown className="w-8 h-8 text-white/60" />
         </motion.div>
+      </section>
+
+      {/* Dynamic Itinerary Tab System */}
+      <section className="py-20 px-6 bg-gradient-to-br from-black/10 via-transparent to-black/10">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
+              Your Journey Unfolds
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Explore each day of your adventure at your own pace
+            </p>
+          </motion.div>
+
+          {destination.itinerary && (
+            <div className="space-y-8">
+              {/* Day Tabs */}
+              <div className="flex justify-center">
+                <div className="flex space-x-1 bg-black/20 rounded-full p-1 backdrop-blur-sm">
+                  {destination.itinerary.map((day: any, index: number) => (
+                    <motion.button
+                      key={day.day}
+                      onClick={() => setActiveItineraryDay(day.day)}
+                      className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                        activeItineraryDay === day.day
+                          ? 'bg-gradient-to-r from-gold-accent to-lavender-accent text-white shadow-lg'
+                          : 'text-muted-foreground hover:text-gold-accent hover:bg-white/10'
+                      }`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      Day {day.day}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Active Day Content */}
+              <AnimatePresence mode="wait">
+                {destination.itinerary.map((day: any) => 
+                  activeItineraryDay === day.day && (
+                    <motion.div
+                      key={day.day}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      transition={{ duration: 0.5 }}
+                      className="max-w-4xl mx-auto"
+                    >
+                      <Card className="glass-morphism border-gold-accent/20 overflow-hidden">
+                        <div className="grid md:grid-cols-2 gap-0">
+                          <div className="relative h-80 md:h-auto">
+                            <img
+                              src={day.imageUrl}
+                              alt={day.title}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                            <div className="absolute bottom-6 left-6 text-white">
+                              <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="inline-block bg-gold-accent/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm mb-2"
+                              >
+                                Day {day.day}
+                              </motion.div>
+                            </div>
+                          </div>
+                          <div className="p-8 flex flex-col justify-center">
+                            <motion.h3
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.3 }}
+                              className={`text-3xl font-bold mb-4 ${
+                                destination.name.toLowerCase().includes('cherry') ? 'text-pink-600' :
+                                destination.name.toLowerCase().includes('iceland') ? 'text-blue-600' :
+                                destination.name.toLowerCase().includes('santorini') ? 'text-blue-500' :
+                                'text-gold-accent'
+                              }`}
+                            >
+                              {day.title}
+                            </motion.h3>
+                            <motion.p
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.4 }}
+                              className="text-muted-foreground text-lg leading-relaxed"
+                            >
+                              {day.description}
+                            </motion.p>
+                          </div>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  )
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Interactive Trip Highlights Section */}
@@ -547,9 +670,46 @@ export default function EnhancedBooking() {
                         <Check className="w-8 h-8 text-green-600" />
                       </motion.div>
                       <h3 className="text-2xl font-bold text-white mb-2">Booking Confirmed!</h3>
-                      <p className="text-white/90">
-                        Hi {user?.firstName || user?.username}, your {destination.name} adventure is locked in!
+                      <p className="text-white/90 mb-4">
+                        {destination.name.toLowerCase().includes('cherry') ? `Hi ${user?.firstName || user?.username}, you're off to Tokyo!` :
+                         destination.name.toLowerCase().includes('iceland') ? `Hi ${user?.firstName || user?.username}, your Northern Lights adventure awaits!` :
+                         destination.name.toLowerCase().includes('santorini') ? `Hi ${user?.firstName || user?.username}, your Greek island escape is confirmed!` :
+                         `Hi ${user?.firstName || user?.username}, your ${destination.name} adventure is locked in!`}
                       </p>
+                      
+                      {/* Destination-specific animations */}
+                      {destination.name.toLowerCase().includes('cherry') && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: [0, 1.2, 1] }}
+                          transition={{ delay: 0.6, duration: 1 }}
+                          className="text-6xl"
+                        >
+                          🌸
+                        </motion.div>
+                      )}
+                      
+                      {destination.name.toLowerCase().includes('iceland') && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0, 1, 0.8, 1] }}
+                          transition={{ delay: 0.6, duration: 2, repeat: 2 }}
+                          className="text-6xl"
+                        >
+                          🌌
+                        </motion.div>
+                      )}
+                      
+                      {destination.name.toLowerCase().includes('santorini') && (
+                        <motion.div
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ delay: 0.6, duration: 1 }}
+                          className="text-6xl"
+                        >
+                          🌅
+                        </motion.div>
+                      )}
                     </motion.div>
                   </motion.div>
                 )}
