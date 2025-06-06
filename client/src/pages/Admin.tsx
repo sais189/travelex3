@@ -525,8 +525,8 @@ export default function Admin() {
                             </TableRow>
                           ))
                         ) : (
-                          users.map((user) => (
-                            <TableRow key={user.id}>
+                          users.map((user, index) => (
+                            <TableRow key={`${user.id}-${index}`}>
                               <TableCell>
                                 <div className="flex items-center space-x-3">
                                   {user.profileImageUrl ? (
