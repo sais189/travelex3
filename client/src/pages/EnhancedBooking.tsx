@@ -806,33 +806,49 @@ export default function EnhancedBooking() {
                     </div>
                   </div>
 
-                  {/* Upgrades with icons */}
+                  {/* Upgrades with toggle switches */}
                   <div>
                     <Label className="flex items-center mb-3">
                       <Sparkles className="w-4 h-4 mr-2 text-lavender-accent" />
                       Optional Upgrades
                     </Label>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {upgrades.map(upgrade => {
                         const IconComponent = upgrade.icon;
+                        const isSelected = selectedUpgrades.includes(upgrade.id);
                         return (
                           <motion.div
                             key={upgrade.id}
-                            className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 ${
-                              selectedUpgrades.includes(upgrade.id)
-                                ? 'border-gold-accent bg-gold-accent/10 shadow-lg'
-                                : 'border-muted hover:border-gold-accent/50 hover:bg-gold-accent/5'
-                            }`}
-                            onClick={() => handleUpgradeToggle(upgrade.id)}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            className="p-4 border rounded-lg transition-all duration-200 border-muted hover:border-gold-accent/50"
+                            whileHover={{ scale: 1.01 }}
                           >
                             <div className="flex items-center justify-between">
-                              <div className="flex items-center">
-                                <IconComponent className="w-4 h-4 mr-2 text-gold-accent" />
-                                <span className="font-medium">{upgrade.name}</span>
+                              <div className="flex items-center flex-1">
+                                <IconComponent className="w-5 h-5 mr-3 text-gold-accent" />
+                                <div className="flex-1">
+                                  <div className="font-medium">✓ {upgrade.name}</div>
+                                  <div className="text-sm text-muted-foreground">${upgrade.price}</div>
+                                </div>
                               </div>
-                              <span className="text-sm text-muted-foreground">+${upgrade.price}</span>
+                              
+                              {/* Toggle Switch */}
+                              <motion.button
+                                onClick={() => handleUpgradeToggle(upgrade.id)}
+                                className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
+                                  isSelected 
+                                    ? 'bg-gradient-to-r from-gold-accent to-lavender-accent' 
+                                    : 'bg-muted'
+                                }`}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                <motion.div
+                                  className="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-lg"
+                                  animate={{
+                                    x: isSelected ? 26 : 2,
+                                  }}
+                                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                />
+                              </motion.button>
                             </div>
                           </motion.div>
                         );
@@ -889,7 +905,15 @@ export default function EnhancedBooking() {
                     
                     <div className="flex justify-between text-lg font-bold pt-2 border-t border-gold-accent/20">
                       <span>Total</span>
-                      <span className="text-gold-accent">${calculateTotal().toFixed(2)}</span>
+                      <motion.span 
+                        key={calculateTotal()}
+                        initial={{ scale: 1.2, color: "#fbbf24" }}
+                        animate={{ scale: 1, color: "#d4af37" }}
+                        transition={{ duration: 0.3 }}
+                        className="text-gold-accent"
+                      >
+                        ${calculateTotal().toFixed(2)}
+                      </motion.span>
                     </div>
                   </div>
 
