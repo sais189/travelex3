@@ -537,89 +537,6 @@ export default function EnhancedBooking() {
 
   const mockHotspots = getDestinationHotspots();
 
-  // Get activity-specific icons based on destination and activity type
-  const getActivityIcon = (activity: string, destinationName: string) => {
-    const activityLower = activity.toLowerCase();
-    const destLower = destinationName.toLowerCase();
-    
-    // Safari/Kenya specific icons
-    if (destLower.includes('kenya') || destLower.includes('safari')) {
-      if (activityLower.includes('game') || activityLower.includes('drive')) return "🦁";
-      if (activityLower.includes('wildlife') || activityLower.includes('animal')) return "🐘";
-      if (activityLower.includes('culture') || activityLower.includes('village')) return "🏺";
-      if (activityLower.includes('sunset') || activityLower.includes('sunrise')) return "🌅";
-      if (activityLower.includes('camp') || activityLower.includes('lodge')) return "🏕️";
-      return "🦓";
-    }
-    
-    // Iceland specific icons
-    if (destLower.includes('iceland')) {
-      if (activityLower.includes('northern') || activityLower.includes('aurora')) return "❄️";
-      if (activityLower.includes('glacier') || activityLower.includes('ice')) return "🧊";
-      if (activityLower.includes('hot') || activityLower.includes('spring')) return "♨️";
-      if (activityLower.includes('geyser') || activityLower.includes('geothermal')) return "🌋";
-      if (activityLower.includes('reykjavik') || activityLower.includes('city')) return "🏘️";
-      if (activityLower.includes('blue lagoon')) return "💎";
-      return "❄️";
-    }
-    
-    // Greece/Santorini specific icons
-    if (destLower.includes('santorini') || destLower.includes('greece')) {
-      if (activityLower.includes('sunset') || activityLower.includes('oia')) return "🌅";
-      if (activityLower.includes('wine') || activityLower.includes('winery')) return "🍷";
-      if (activityLower.includes('sailing') || activityLower.includes('boat')) return "⛵";
-      if (activityLower.includes('village') || activityLower.includes('town')) return "🏛️";
-      if (activityLower.includes('beach') || activityLower.includes('swimming')) return "🏖️";
-      if (activityLower.includes('food') || activityLower.includes('taverna')) return "🍽️";
-      return "🌅";
-    }
-    
-    // Japan/Tokyo specific icons
-    if (destLower.includes('tokyo') || destLower.includes('japan')) {
-      if (activityLower.includes('cherry') || activityLower.includes('sakura')) return "🌸";
-      if (activityLower.includes('temple') || activityLower.includes('shrine')) return "🏯";
-      if (activityLower.includes('sushi') || activityLower.includes('ramen')) return "🍣";
-      if (activityLower.includes('tea') || activityLower.includes('ceremony')) return "🍵";
-      if (activityLower.includes('garden') || activityLower.includes('bamboo')) return "🎋";
-      if (activityLower.includes('technology') || activityLower.includes('museum')) return "🏢";
-      if (activityLower.includes('kimono') || activityLower.includes('pottery')) return "🎨";
-      return "🌸";
-    }
-    
-    // Norway/Fjord specific icons
-    if (destLower.includes('norway') || destLower.includes('fjord')) {
-      if (activityLower.includes('fjord') || activityLower.includes('cruise')) return "🏔️";
-      if (activityLower.includes('whale') || activityLower.includes('wildlife')) return "🐋";
-      if (activityLower.includes('midnight') || activityLower.includes('sun')) return "🌌";
-      if (activityLower.includes('ski') || activityLower.includes('mountain')) return "🎿";
-      if (activityLower.includes('fish') || activityLower.includes('market')) return "🐟";
-      if (activityLower.includes('sami') || activityLower.includes('culture')) return "🦌";
-      return "🏔️";
-    }
-    
-    // Croatia/Island specific icons
-    if (destLower.includes('croatia') || destLower.includes('island')) {
-      if (activityLower.includes('sailing') || activityLower.includes('boat')) return "⛵";
-      if (activityLower.includes('beach') || activityLower.includes('swimming')) return "🏖️";
-      if (activityLower.includes('diving') || activityLower.includes('snorkel')) return "🐠";
-      if (activityLower.includes('town') || activityLower.includes('historic')) return "🏰";
-      if (activityLower.includes('cave') || activityLower.includes('underwater')) return "🕳️";
-      return "⛵";
-    }
-    
-    // Generic activity icons
-    if (activityLower.includes('transfer') || activityLower.includes('airport')) return "✈️";
-    if (activityLower.includes('dinner') || activityLower.includes('food')) return "🍽️";
-    if (activityLower.includes('tour') || activityLower.includes('walk')) return "🚶";
-    if (activityLower.includes('photo') || activityLower.includes('camera')) return "📸";
-    if (activityLower.includes('spa') || activityLower.includes('relax')) return "💆";
-    if (activityLower.includes('adventure') || activityLower.includes('sport')) return "🎯";
-    if (activityLower.includes('cultural') || activityLower.includes('heritage')) return "🏛️";
-    if (activityLower.includes('nature') || activityLower.includes('hiking')) return "🌿";
-    
-    return "⭐"; // Default icon
-  };
-
   const expandableSections = [
     {
       id: "included",
@@ -1270,12 +1187,10 @@ export default function EnhancedBooking() {
                               whileHover={{ x: 10, scale: 1.02 }}
                             >
                               <motion.div 
-                                className="text-xl mr-4 flex-shrink-0"
-                                whileHover={{ scale: 1.3, rotate: 10 }}
+                                className="w-3 h-3 bg-gradient-to-r from-gold-accent to-lavender-accent rounded-full mr-4 flex-shrink-0"
+                                whileHover={{ scale: 1.3 }}
                                 transition={{ type: "spring", stiffness: 400 }}
-                              >
-                                {getActivityIcon(activity, destination.name)}
-                              </motion.div>
+                              />
                               <span>{activity}</span>
                             </motion.div>
                           ))}
@@ -1438,18 +1353,18 @@ export default function EnhancedBooking() {
                           transform: hotspot.x > 30 && hotspot.x < 70 ? 'translateX(-50%)' : undefined
                         }}
                       >
-                        <div className="bg-white/98 backdrop-blur-md rounded-xl p-5 shadow-2xl border border-gold-accent/30 relative">
+                        <div className="bg-white backdrop-blur-md rounded-xl p-5 shadow-2xl border border-gold-accent/30 relative">
                           <div className="text-center">
-                            <h3 className="font-bold text-lg text-gray-800 mb-3 leading-tight">
+                            <h3 className="font-bold text-lg text-gray-900 mb-3 leading-tight">
                               {hotspot.title}
                             </h3>
-                            <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+                            <p className="text-sm text-gray-800 leading-relaxed line-clamp-3">
                               {hotspot.description}
                             </p>
                           </div>
                           
                           {/* Dynamic Arrow Positioning */}
-                          <div className={`absolute w-4 h-4 bg-white/98 rotate-45 border ${
+                          <div className={`absolute w-4 h-4 bg-white rotate-45 border ${
                             hotspot.y < 30 
                               ? '-top-2 border-l border-t' // Arrow pointing up
                               : hotspot.y > 70 
