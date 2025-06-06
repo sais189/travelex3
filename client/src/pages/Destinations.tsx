@@ -239,11 +239,21 @@ export default function Destinations() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
               <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden h-full flex flex-col">
-                <div className="relative h-64">
+                <div className="relative h-64 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
                   <img
-                    src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
+                    src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"}
                     alt={destination.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-opacity duration-300"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+                      target.onerror = () => {
+                        target.style.display = 'none';
+                        const parent = target.parentElement as HTMLElement;
+                        parent.classList.add('flex', 'items-center', 'justify-center');
+                        parent.innerHTML = `<div class="text-center text-slate-600 dark:text-slate-400"><h3 class="font-semibold text-lg">${destination.name}</h3><p class="text-sm mt-1">${destination.country}</p></div>`;
+                      };
+                    }}
                   />
                   <div className="absolute top-4 right-4">
                     <div className="flex items-center space-x-1 bg-black bg-opacity-50 rounded-full px-2 py-1">

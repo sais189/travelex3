@@ -88,6 +88,8 @@ export default function EnhancedBooking() {
   const [scrollY, setScrollY] = useState(0);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [currentScrollStage, setCurrentScrollStage] = useState(0);
+  const [imageLoadError, setImageLoadError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const destinationId = params?.id ? parseInt(params.id) : 0;
 
@@ -507,10 +509,25 @@ export default function EnhancedBooking() {
             transform: `translateY(${scrollY * 0.5}px)`
           }}
         >
+          {!imageLoaded && !imageLoadError && (
+            <div className="w-full h-[120%] bg-gradient-to-br from-blue-600 via-purple-600 to-teal-600 animate-pulse flex items-center justify-center">
+              <div className="text-white text-lg">Loading beautiful destination...</div>
+            </div>
+          )}
+          {imageLoadError && (
+            <div className="w-full h-[120%] bg-gradient-to-br from-blue-600 via-purple-600 to-teal-600 flex items-center justify-center">
+              <div className="text-center text-white">
+                <h3 className="text-2xl font-bold mb-2">{destination.name}</h3>
+                <p className="text-lg opacity-90">Experience awaits in {destination.country}</p>
+              </div>
+            </div>
+          )}
           <img
             src={destination.imageUrl}
             alt={destination.name}
-            className="w-full h-[120%] object-cover"
+            className={`w-full h-[120%] object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageLoadError(true)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           
@@ -764,11 +781,19 @@ export default function EnhancedBooking() {
                         viewport={{ once: true }}
                         whileHover={{ scale: 1.05 }}
                       >
-                        <img
-                          src={day.imageUrl}
-                          alt={day.title}
-                          className="w-full h-full object-cover"
-                        />
+                        <div className="w-full h-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center">
+                          <img
+                            src={day.imageUrl}
+                            alt={day.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement as HTMLElement;
+                              parent.innerHTML = `<div class="text-center text-slate-600 dark:text-slate-300"><h4 class="font-semibold">${day.title}</h4><p class="text-sm mt-1">Day ${day.day} Experience</p></div>`;
+                            }}
+                          />
+                        </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                         
                         {/* Floating day badge */}
@@ -927,11 +952,20 @@ export default function EnhancedBooking() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <div className="relative h-[600px] w-full">
+            <div className="relative h-[600px] w-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
               <img
                 src={destination.imageUrl}
                 alt={destination.name}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.parentElement?.classList.add('flex', 'items-center', 'justify-center');
+                  const fallback = document.createElement('div');
+                  fallback.className = 'text-center text-slate-600 dark:text-slate-400';
+                  fallback.innerHTML = `<h3 class="text-2xl font-bold mb-2">${destination.name}</h3><p class="text-lg">Beautiful destination in ${destination.country}</p>`;
+                  target.parentElement?.appendChild(fallback);
+                }}
               />
               
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
