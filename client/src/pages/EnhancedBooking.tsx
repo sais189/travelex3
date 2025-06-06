@@ -739,7 +739,7 @@ export default function EnhancedBooking() {
             <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
               Trip Information
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-2xl font-bold text-foreground max-w-2xl mx-auto">
               Everything you need to know for your perfect adventure
             </p>
           </motion.div>
@@ -836,7 +836,7 @@ export default function EnhancedBooking() {
             <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
               Complete Your Booking
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-2xl font-bold text-foreground max-w-2xl mx-auto">
               Secure your adventure with our seamless booking experience
             </p>
           </motion.div>
@@ -1224,27 +1224,7 @@ export default function EnhancedBooking() {
           </div>
         </motion.div>
       </section>
-      {/* Sticky Navigation/CTA */}
-      <motion.div
-        className="fixed bottom-6 right-6 z-50"
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: scrollY > 1000 ? 1 : 0, scale: scrollY > 1000 ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <motion.button
-          onClick={() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' })}
-          className="bg-gradient-to-r from-gold-accent to-lavender-accent text-white rounded-full p-4 shadow-lg backdrop-blur-sm border border-white/20"
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          whileTap={{ scale: 0.9 }}
-          animate={{ y: [0, -5, 0] }}
-          transition={{ y: { duration: 2, repeat: Infinity } }}
-        >
-          <div className="flex items-center space-x-2">
-            <CreditCard className="w-5 h-5" />
-            <span className="font-semibold">${calculateTotal().toFixed(2)}</span>
-          </div>
-        </motion.button>
-      </motion.div>
+      
     </div>
   );
 }
