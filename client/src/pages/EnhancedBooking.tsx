@@ -282,32 +282,343 @@ export default function EnhancedBooking() {
 
   const mockItinerary = getItineraryData();
 
-  const mockHotspots = [
-    {
-      id: "spot1",
-      x: 25,
-      y: 40,
-      icon: "🏔️",
-      title: "Mountain Vista",
-      description: "Breathtaking panoramic views of the surrounding peaks and valleys."
-    },
-    {
-      id: "spot2",
-      x: 60,
-      y: 30,
-      icon: "🌊",
-      title: "Crystal Lake",
-      description: "Pristine waters perfect for reflection and peaceful moments."
-    },
-    {
-      id: "spot3",
-      x: 80,
-      y: 60,
-      icon: "🌲",
-      title: "Ancient Forest",
-      description: "Walk among centuries-old trees in this mystical forest sanctuary."
+  // Generate destination-specific interactive hotspots
+  const getDestinationHotspots = () => {
+    const destinationName = destination?.name.toLowerCase() || '';
+    
+    if (destinationName.includes('kenya') || destinationName.includes('safari')) {
+      return [
+        {
+          id: "spot1",
+          x: 25,
+          y: 40,
+          icon: "🦁",
+          title: "Lion Pride Territory",
+          description: "Witness majestic lions in their natural habitat during game drives."
+        },
+        {
+          id: "spot2",
+          x: 60,
+          y: 30,
+          icon: "🐘",
+          title: "Elephant Migration Route",
+          description: "Experience the incredible elephant herds on their ancient migration paths."
+        },
+        {
+          id: "spot3",
+          x: 80,
+          y: 60,
+          icon: "🦒",
+          title: "Giraffe Sanctuary",
+          description: "Get up close with the tallest animals on Earth in protected reserves."
+        },
+        {
+          id: "spot4",
+          x: 45,
+          y: 70,
+          icon: "🦓",
+          title: "Zebra Plains",
+          description: "Marvel at thousands of zebras grazing across the endless savanna."
+        }
+      ];
+    } else if (destinationName.includes('iceland')) {
+      return [
+        {
+          id: "spot1",
+          x: 25,
+          y: 40,
+          icon: "❄️",
+          title: "Northern Lights",
+          description: "Witness the magical Aurora Borealis dancing across the arctic sky."
+        },
+        {
+          id: "spot2",
+          x: 60,
+          y: 30,
+          icon: "🌋",
+          title: "Active Geysers",
+          description: "Watch powerful geothermal eruptions shooting hot water skyward."
+        },
+        {
+          id: "spot3",
+          x: 80,
+          y: 60,
+          icon: "🧊",
+          title: "Glacier Caves",
+          description: "Explore stunning blue ice formations in ancient glacier caves."
+        },
+        {
+          id: "spot4",
+          x: 45,
+          y: 70,
+          icon: "♨️",
+          title: "Hot Springs",
+          description: "Relax in natural geothermal pools surrounded by dramatic landscapes."
+        }
+      ];
+    } else if (destinationName.includes('santorini') || destinationName.includes('greece')) {
+      return [
+        {
+          id: "spot1",
+          x: 25,
+          y: 40,
+          icon: "🏛️",
+          title: "Ancient Ruins",
+          description: "Discover 3,000-year-old archaeological sites with stunning views."
+        },
+        {
+          id: "spot2",
+          x: 60,
+          y: 30,
+          icon: "🌅",
+          title: "Oia Sunset",
+          description: "Experience the world's most famous sunset from clifftop villages."
+        },
+        {
+          id: "spot3",
+          x: 80,
+          y: 60,
+          icon: "🍷",
+          title: "Volcanic Wineries",
+          description: "Taste unique wines grown in volcanic soil with caldera views."
+        },
+        {
+          id: "spot4",
+          x: 45,
+          y: 70,
+          icon: "⛵",
+          title: "Aegean Sailing",
+          description: "Sail crystal-clear waters to hidden beaches and sea caves."
+        }
+      ];
+    } else if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
+      return [
+        {
+          id: "spot1",
+          x: 25,
+          y: 40,
+          icon: "🌸",
+          title: "Cherry Blossoms",
+          description: "Experience the magical sakura season in traditional gardens."
+        },
+        {
+          id: "spot2",
+          x: 60,
+          y: 30,
+          icon: "🏯",
+          title: "Historic Temples",
+          description: "Visit ancient temples and shrines in the heart of modern Tokyo."
+        },
+        {
+          id: "spot3",
+          x: 80,
+          y: 60,
+          icon: "🍣",
+          title: "Tsukiji Market",
+          description: "Discover the world's largest fish market and authentic sushi culture."
+        },
+        {
+          id: "spot4",
+          x: 45,
+          y: 70,
+          icon: "🎋",
+          title: "Bamboo Forests",
+          description: "Walk through mystical bamboo groves in serene temple grounds."
+        }
+      ];
+    } else if (destinationName.includes('norway') || destinationName.includes('fjord')) {
+      return [
+        {
+          id: "spot1",
+          x: 25,
+          y: 40,
+          icon: "🏔️",
+          title: "Dramatic Fjords",
+          description: "Cruise through UNESCO World Heritage fjords with towering cliffs."
+        },
+        {
+          id: "spot2",
+          x: 60,
+          y: 30,
+          icon: "🐋",
+          title: "Whale Watching",
+          description: "Spot orcas, humpback whales, and arctic wildlife in their habitat."
+        },
+        {
+          id: "spot3",
+          x: 80,
+          y: 60,
+          icon: "🌌",
+          title: "Midnight Sun",
+          description: "Experience the phenomenon of 24-hour daylight in summer."
+        },
+        {
+          id: "spot4",
+          x: 45,
+          y: 70,
+          icon: "🎿",
+          title: "Alpine Adventures",
+          description: "Enjoy world-class skiing and mountain hiking opportunities."
+        }
+      ];
+    } else if (destinationName.includes('croatia') || destinationName.includes('island')) {
+      return [
+        {
+          id: "spot1",
+          x: 25,
+          y: 40,
+          icon: "🏖️",
+          title: "Pristine Beaches",
+          description: "Relax on crystal-clear beaches with turquoise Adriatic waters."
+        },
+        {
+          id: "spot2",
+          x: 60,
+          y: 30,
+          icon: "⛵",
+          title: "Island Hopping",
+          description: "Sail between over 1,000 islands each with unique character."
+        },
+        {
+          id: "spot3",
+          x: 80,
+          y: 60,
+          icon: "🏰",
+          title: "Medieval Towns",
+          description: "Explore UNESCO-protected old towns with ancient stone walls."
+        },
+        {
+          id: "spot4",
+          x: 45,
+          y: 70,
+          icon: "🐠",
+          title: "Underwater Caves",
+          description: "Dive in the clearest waters to discover hidden underwater worlds."
+        }
+      ];
+    } else {
+      // Default varied hotspots for other destinations
+      return [
+        {
+          id: "spot1",
+          x: 25,
+          y: 40,
+          icon: "🏔️",
+          title: "Scenic Viewpoint",
+          description: "Breathtaking panoramic views of the surrounding landscape."
+        },
+        {
+          id: "spot2",
+          x: 60,
+          y: 30,
+          icon: "🌊",
+          title: "Natural Wonder",
+          description: "Discover the natural beauty that makes this destination special."
+        },
+        {
+          id: "spot3",
+          x: 80,
+          y: 60,
+          icon: "🎯",
+          title: "Cultural Experience",
+          description: "Immerse yourself in local traditions and authentic culture."
+        },
+        {
+          id: "spot4",
+          x: 45,
+          y: 70,
+          icon: "📸",
+          title: "Photo Opportunity",
+          description: "Capture unforgettable moments at this iconic location."
+        }
+      ];
     }
-  ];
+  };
+
+  const mockHotspots = getDestinationHotspots();
+
+  // Get activity-specific icons based on destination and activity type
+  const getActivityIcon = (activity: string, destinationName: string) => {
+    const activityLower = activity.toLowerCase();
+    const destLower = destinationName.toLowerCase();
+    
+    // Safari/Kenya specific icons
+    if (destLower.includes('kenya') || destLower.includes('safari')) {
+      if (activityLower.includes('game') || activityLower.includes('drive')) return "🦁";
+      if (activityLower.includes('wildlife') || activityLower.includes('animal')) return "🐘";
+      if (activityLower.includes('culture') || activityLower.includes('village')) return "🏺";
+      if (activityLower.includes('sunset') || activityLower.includes('sunrise')) return "🌅";
+      if (activityLower.includes('camp') || activityLower.includes('lodge')) return "🏕️";
+      return "🦓";
+    }
+    
+    // Iceland specific icons
+    if (destLower.includes('iceland')) {
+      if (activityLower.includes('northern') || activityLower.includes('aurora')) return "❄️";
+      if (activityLower.includes('glacier') || activityLower.includes('ice')) return "🧊";
+      if (activityLower.includes('hot') || activityLower.includes('spring')) return "♨️";
+      if (activityLower.includes('geyser') || activityLower.includes('geothermal')) return "🌋";
+      if (activityLower.includes('reykjavik') || activityLower.includes('city')) return "🏘️";
+      if (activityLower.includes('blue lagoon')) return "💎";
+      return "❄️";
+    }
+    
+    // Greece/Santorini specific icons
+    if (destLower.includes('santorini') || destLower.includes('greece')) {
+      if (activityLower.includes('sunset') || activityLower.includes('oia')) return "🌅";
+      if (activityLower.includes('wine') || activityLower.includes('winery')) return "🍷";
+      if (activityLower.includes('sailing') || activityLower.includes('boat')) return "⛵";
+      if (activityLower.includes('village') || activityLower.includes('town')) return "🏛️";
+      if (activityLower.includes('beach') || activityLower.includes('swimming')) return "🏖️";
+      if (activityLower.includes('food') || activityLower.includes('taverna')) return "🍽️";
+      return "🌅";
+    }
+    
+    // Japan/Tokyo specific icons
+    if (destLower.includes('tokyo') || destLower.includes('japan')) {
+      if (activityLower.includes('cherry') || activityLower.includes('sakura')) return "🌸";
+      if (activityLower.includes('temple') || activityLower.includes('shrine')) return "🏯";
+      if (activityLower.includes('sushi') || activityLower.includes('ramen')) return "🍣";
+      if (activityLower.includes('tea') || activityLower.includes('ceremony')) return "🍵";
+      if (activityLower.includes('garden') || activityLower.includes('bamboo')) return "🎋";
+      if (activityLower.includes('technology') || activityLower.includes('museum')) return "🏢";
+      if (activityLower.includes('kimono') || activityLower.includes('pottery')) return "🎨";
+      return "🌸";
+    }
+    
+    // Norway/Fjord specific icons
+    if (destLower.includes('norway') || destLower.includes('fjord')) {
+      if (activityLower.includes('fjord') || activityLower.includes('cruise')) return "🏔️";
+      if (activityLower.includes('whale') || activityLower.includes('wildlife')) return "🐋";
+      if (activityLower.includes('midnight') || activityLower.includes('sun')) return "🌌";
+      if (activityLower.includes('ski') || activityLower.includes('mountain')) return "🎿";
+      if (activityLower.includes('fish') || activityLower.includes('market')) return "🐟";
+      if (activityLower.includes('sami') || activityLower.includes('culture')) return "🦌";
+      return "🏔️";
+    }
+    
+    // Croatia/Island specific icons
+    if (destLower.includes('croatia') || destLower.includes('island')) {
+      if (activityLower.includes('sailing') || activityLower.includes('boat')) return "⛵";
+      if (activityLower.includes('beach') || activityLower.includes('swimming')) return "🏖️";
+      if (activityLower.includes('diving') || activityLower.includes('snorkel')) return "🐠";
+      if (activityLower.includes('town') || activityLower.includes('historic')) return "🏰";
+      if (activityLower.includes('cave') || activityLower.includes('underwater')) return "🕳️";
+      return "⛵";
+    }
+    
+    // Generic activity icons
+    if (activityLower.includes('transfer') || activityLower.includes('airport')) return "✈️";
+    if (activityLower.includes('dinner') || activityLower.includes('food')) return "🍽️";
+    if (activityLower.includes('tour') || activityLower.includes('walk')) return "🚶";
+    if (activityLower.includes('photo') || activityLower.includes('camera')) return "📸";
+    if (activityLower.includes('spa') || activityLower.includes('relax')) return "💆";
+    if (activityLower.includes('adventure') || activityLower.includes('sport')) return "🎯";
+    if (activityLower.includes('cultural') || activityLower.includes('heritage')) return "🏛️";
+    if (activityLower.includes('nature') || activityLower.includes('hiking')) return "🌿";
+    
+    return "⭐"; // Default icon
+  };
 
   const expandableSections = [
     {
@@ -794,7 +1105,7 @@ export default function EnhancedBooking() {
                         </motion.div>
 
                         {/* Destination-specific floating elements */}
-                        {destination.name.toLowerCase().includes('iceland') && index === 0 && (
+                        {destination.name.toLowerCase().includes('iceland') && (
                           <motion.div
                             className="absolute top-1/2 right-8 text-6xl"
                             animate={{ 
@@ -804,10 +1115,101 @@ export default function EnhancedBooking() {
                             transition={{ 
                               duration: 4, 
                               repeat: Infinity,
-                              ease: "easeInOut"
+                              ease: "easeInOut",
+                              delay: index * 0.5
                             }}
                           >
-                            ❄️
+                            {index === 0 ? '❄️' : index === 1 ? '🌋' : '🧊'}
+                          </motion.div>
+                        )}
+                        
+                        {(destination.name.toLowerCase().includes('kenya') || destination.name.toLowerCase().includes('safari')) && (
+                          <motion.div
+                            className="absolute top-1/4 right-6 text-5xl"
+                            animate={{ 
+                              x: [0, 10, 0],
+                              y: [0, -5, 0]
+                            }}
+                            transition={{ 
+                              duration: 3, 
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                              delay: index * 0.7
+                            }}
+                          >
+                            {index === 0 ? '🦁' : index === 1 ? '🐘' : '🦒'}
+                          </motion.div>
+                        )}
+                        
+                        {(destination.name.toLowerCase().includes('santorini') || destination.name.toLowerCase().includes('greece')) && (
+                          <motion.div
+                            className="absolute bottom-1/4 right-8 text-5xl"
+                            animate={{ 
+                              scale: [1, 1.1, 1],
+                              rotate: [0, 10, 0]
+                            }}
+                            transition={{ 
+                              duration: 3.5, 
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                              delay: index * 0.6
+                            }}
+                          >
+                            {index === 0 ? '🏛️' : index === 1 ? '🍷' : '⛵'}
+                          </motion.div>
+                        )}
+                        
+                        {(destination.name.toLowerCase().includes('tokyo') || destination.name.toLowerCase().includes('japan')) && (
+                          <motion.div
+                            className="absolute top-1/3 right-6 text-5xl"
+                            animate={{ 
+                              y: [0, -15, 0],
+                              rotate: [0, -5, 5, 0]
+                            }}
+                            transition={{ 
+                              duration: 4.5, 
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                              delay: index * 0.8
+                            }}
+                          >
+                            {index === 0 ? '🌸' : index === 1 ? '🏯' : '🎋'}
+                          </motion.div>
+                        )}
+                        
+                        {(destination.name.toLowerCase().includes('norway') || destination.name.toLowerCase().includes('fjord')) && (
+                          <motion.div
+                            className="absolute top-1/2 right-8 text-5xl"
+                            animate={{ 
+                              y: [0, -20, 0],
+                              x: [0, 5, 0]
+                            }}
+                            transition={{ 
+                              duration: 5, 
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                              delay: index * 0.4
+                            }}
+                          >
+                            {index === 0 ? '🏔️' : index === 1 ? '🐋' : '🌌'}
+                          </motion.div>
+                        )}
+                        
+                        {(destination.name.toLowerCase().includes('croatia') || destination.name.toLowerCase().includes('island')) && (
+                          <motion.div
+                            className="absolute bottom-1/3 right-6 text-5xl"
+                            animate={{ 
+                              scale: [1, 1.2, 1],
+                              y: [0, -10, 0]
+                            }}
+                            transition={{ 
+                              duration: 3, 
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                              delay: index * 0.5
+                            }}
+                          >
+                            {index === 0 ? '🏖️' : index === 1 ? '⛵' : '🏰'}
                           </motion.div>
                         )}
                       </motion.div>
@@ -868,9 +1270,12 @@ export default function EnhancedBooking() {
                               whileHover={{ x: 10, scale: 1.02 }}
                             >
                               <motion.div 
-                                className="w-3 h-3 bg-gradient-to-r from-gold-accent to-lavender-accent rounded-full mr-4 flex-shrink-0"
-                                whileHover={{ scale: 1.3 }}
-                              />
+                                className="text-xl mr-4 flex-shrink-0"
+                                whileHover={{ scale: 1.3, rotate: 10 }}
+                                transition={{ type: "spring", stiffness: 400 }}
+                              >
+                                {getActivityIcon(activity, destination.name)}
+                              </motion.div>
                               <span>{activity}</span>
                             </motion.div>
                           ))}
