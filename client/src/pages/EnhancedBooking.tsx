@@ -97,6 +97,7 @@ export default function EnhancedBooking() {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
   const [activeItineraryDay, setActiveItineraryDay] = useState(1);
+  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
 
   const destinationId = params?.id ? parseInt(params.id) : 0;
 
