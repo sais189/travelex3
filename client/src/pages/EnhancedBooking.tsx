@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useRoute } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
@@ -13,17 +12,8 @@ import {
   Check,
   ArrowLeft,
   ChevronDown,
-  Sparkles,
-  Camera,
-  Mountain,
-  Waves,
-  TreePine,
-  Coffee,
-  Heart,
   Gift,
-  Shield,
-  Zap,
-  Car
+  Shield
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,8 +26,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { format, addDays } from "date-fns";
-
-
 
 interface Destination {
   id: number;
@@ -66,22 +54,6 @@ const upgrades = [
   { id: "airport-transfer", name: "Airport Transfer", price: 120, icon: Plane }
 ];
 
-// Feature icons mapping
-const featureIcons: { [key: string]: any } = {
-  "temple tours": Camera,
-  "tea ceremony": Coffee,
-  "cultural immersion": Heart,
-  "glacier hikes": Mountain,
-  "northern lights": Sparkles,
-  "wildlife safari": TreePine,
-  "beach activities": Waves,
-  "city exploration": MapPin,
-  "local cuisine": Coffee,
-  "photography": Camera,
-  "adventure": Zap,
-  "relaxation": Heart
-};
-
 export default function EnhancedBooking() {
   const [match, params] = useRoute("/booking/:id");
   const [, navigate] = useLocation();
@@ -94,10 +66,6 @@ export default function EnhancedBooking() {
   const [travelClass, setTravelClass] = useState("economy");
   const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([]);
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
-  const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
-  const [activeItineraryDay, setActiveItineraryDay] = useState(1);
-  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
 
   const destinationId = params?.id ? parseInt(params.id) : 0;
 
@@ -216,44 +184,11 @@ export default function EnhancedBooking() {
     );
   }
 
-
-
-  // Get feature icon
-  const getFeatureIcon = (feature: string) => {
-    const lowerFeature = feature.toLowerCase();
-    for (const [key, icon] of Object.entries(featureIcons)) {
-      if (lowerFeature.includes(key)) return icon;
-    }
-    return Sparkles;
-  };
-
-  // Handle booking confirmation
-  const handleBookNowWithAnimation = () => {
-    if (!checkIn || !checkOut || !user) return;
-
-    const bookingData = {
-      destinationId,
-      checkIn,
-      checkOut,
-      guests,
-      travelClass,
-      upgrades: selectedUpgrades,
-      totalAmount: calculateTotal()
-    };
-
-    setBookingConfirmed(true);
-    
-    // Delay the actual booking to show animation
-    setTimeout(() => {
-      createBooking.mutate(bookingData);
-    }, 2000);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black">
-      {/* Stunning Hero Section */}
+      {/* Hero Section */}
       <section className="relative h-screen overflow-hidden">
-        {/* Dynamic Background based on destination */}
+        {/* Background Image */}
         <div className="absolute inset-0">
           <img
             src={destination.imageUrl}
@@ -261,63 +196,12 @@ export default function EnhancedBooking() {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-          
-          {/* Animated particles for destinations like Tokyo */}
-          {destination.name.toLowerCase().includes('cherry') && (
-            <div className="absolute inset-0 overflow-hidden">
-              {[...Array(20)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-2 h-2 bg-pink-300 rounded-full opacity-70"
-                  initial={{ 
-                    x: Math.random() * window.innerWidth,
-                    y: -20,
-                    rotate: 0 
-                  }}
-                  animate={{ 
-                    x: Math.random() * window.innerWidth,
-                    y: window.innerHeight + 20,
-                    rotate: 360 
-                  }}
-                  transition={{ 
-                    duration: Math.random() * 10 + 10,
-                    repeat: Infinity,
-                    ease: "linear",
-                    delay: Math.random() * 5
-                  }}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Aurora effect for Northern Lights destinations */}
-          {destination.name.toLowerCase().includes('northern lights') && (
-            <div className="absolute inset-0">
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-green-400/20 via-blue-500/20 to-purple-600/20"
-                animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                style={{ backgroundSize: "200% 200%" }}
-              />
-            </div>
-          )}
         </div>
 
         {/* Hero Content */}
         <div className="relative z-10 flex items-center justify-center h-full px-6">
           <div className="text-center text-white max-w-4xl">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-              className="mb-6"
-            >
+            <div className="mb-6">
               <Button 
                 variant="ghost" 
                 onClick={() => navigate("/destinations")}
@@ -327,12 +211,7 @@ export default function EnhancedBooking() {
                 Back to Destinations
               </Button>
               
-              <h1 className={`text-6xl md:text-8xl font-bold mb-4 leading-tight ${
-                destination.name.toLowerCase().includes('cherry') ? 'font-serif text-pink-100' :
-                destination.name.toLowerCase().includes('iceland') ? 'font-bold text-blue-100' :
-                destination.name.toLowerCase().includes('santorini') ? 'font-light text-blue-50' :
-                'text-white'
-              }`}>
+              <h1 className="text-6xl md:text-8xl font-bold mb-4 leading-tight text-white">
                 {destination.name}
               </h1>
               
@@ -347,305 +226,39 @@ export default function EnhancedBooking() {
                 </div>
               </div>
 
-              <p className={`text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed ${
-                destination.name.toLowerCase().includes('cherry') ? 'text-pink-100/90 italic' :
-                destination.name.toLowerCase().includes('iceland') ? 'text-blue-100/90 font-medium' :
-                destination.name.toLowerCase().includes('santorini') ? 'text-blue-50/90' :
-                'text-white/90'
-              }`}>
-                {destination.name.toLowerCase().includes('cherry') ? 'Wander through Japan\'s blooming beauty' :
-                 destination.name.toLowerCase().includes('iceland') ? 'Witness nature\'s most spectacular light show' :
-                 destination.name.toLowerCase().includes('santorini') ? 'Experience the magic of the Aegean paradise' :
-                 'Discover your next unforgettable adventure'}
+              <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed text-white/90">
+                {destination.description}
               </p>
               
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-                className="inline-block"
-              >
+              <div className="inline-block">
                 <Button
-                  onClick={() => document.getElementById('trip-highlights')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' })}
                   className="bg-gradient-to-r from-gold-accent to-lavender-accent hover:from-gold-accent/80 hover:to-lavender-accent/80 text-white font-semibold text-lg px-8 py-4 rounded-full"
                 >
-                  Explore This Adventure
+                  Book This Adventure
                   <ChevronDown className="w-5 h-5 ml-2" />
                 </Button>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <ChevronDown className="w-8 h-8 text-white/60" />
-        </motion.div>
       </section>
 
-      {/* Dynamic Itinerary Tab System */}
-      <section className="py-20 px-6 bg-gradient-to-br from-black/10 via-transparent to-black/10">
+      {/* Booking Section */}
+      <section id="booking-form" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
-              Your Journey Unfolds
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Explore each day of your adventure at your own pace
-            </p>
-          </motion.div>
-
-          {destination.itinerary && (
-            <div className="space-y-8">
-              {/* Day Tabs */}
-              <div className="flex justify-center">
-                <div className="flex space-x-1 bg-black/20 rounded-full p-1 backdrop-blur-sm">
-                  {destination.itinerary.map((day: any, index: number) => (
-                    <motion.button
-                      key={day.day}
-                      onClick={() => setActiveItineraryDay(day.day)}
-                      className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                        activeItineraryDay === day.day
-                          ? 'bg-gradient-to-r from-gold-accent to-lavender-accent text-white shadow-lg'
-                          : 'text-muted-foreground hover:text-gold-accent hover:bg-white/10'
-                      }`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      Day {day.day}
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Active Day Content */}
-              <AnimatePresence mode="wait">
-                {destination.itinerary.map((day: any) => 
-                  activeItineraryDay === day.day && (
-                    <motion.div
-                      key={day.day}
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -50 }}
-                      transition={{ duration: 0.5 }}
-                      className="max-w-4xl mx-auto"
-                    >
-                      <Card className="glass-morphism border-gold-accent/20 overflow-hidden">
-                        <div className="grid md:grid-cols-2 gap-0">
-                          <div className="relative h-80 md:h-auto">
-                            <img
-                              src={day.imageUrl}
-                              alt={day.title}
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                            <div className="absolute bottom-6 left-6 text-white">
-                              <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="inline-block bg-gold-accent/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm mb-2"
-                              >
-                                Day {day.day}
-                              </motion.div>
-                            </div>
-                          </div>
-                          <div className="p-8 flex flex-col justify-center">
-                            <motion.h3
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.3 }}
-                              className={`text-3xl font-bold mb-4 ${
-                                destination.name.toLowerCase().includes('cherry') ? 'text-pink-600' :
-                                destination.name.toLowerCase().includes('iceland') ? 'text-blue-600' :
-                                destination.name.toLowerCase().includes('santorini') ? 'text-blue-500' :
-                                'text-gold-accent'
-                              }`}
-                            >
-                              {day.title}
-                            </motion.h3>
-                            <motion.p
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.4 }}
-                              className="text-muted-foreground text-lg leading-relaxed"
-                            >
-                              {day.description}
-                            </motion.p>
-                          </div>
-                        </div>
-                      </Card>
-                    </motion.div>
-                  )
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Interactive Hotspot Image Overlay */}
-      <section id="trip-highlights" className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
-              Discover Your Adventure
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Explore interactive highlights in their natural setting
-            </p>
-          </motion.div>
-
-          {destination.hotspots && (
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-              {/* Panoramic Background Image */}
-              <div className="relative h-[600px] w-full">
-                <img
-                  src={destination.imageUrl}
-                  alt={destination.name}
-                  className="w-full h-full object-cover"
-                />
-                
-                {/* Gradient Overlay for Better Contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
-                
-                {/* Interactive Hotspots */}
-                {destination.hotspots.map((hotspot: any, index: number) => (
-                  <motion.div
-                    key={hotspot.id}
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.2, duration: 0.5 }}
-                    viewport={{ once: true }}
-                    className="absolute cursor-pointer group"
-                    style={{
-                      left: `${hotspot.x}%`,
-                      top: `${hotspot.y}%`,
-                      transform: 'translate(-50%, -50%)'
-                    }}
-                    onMouseEnter={() => setActiveHotspot(hotspot.id)}
-                    onMouseLeave={() => setActiveHotspot(null)}
-                  >
-                    {/* Animated Hotspot Icon */}
-                    <motion.div
-                      className="relative"
-                      animate={{
-                        scale: activeHotspot === hotspot.id ? 1.2 : 1,
-                        y: [0, -10, 0]
-                      }}
-                      transition={{
-                        scale: { duration: 0.3 },
-                        y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                      }}
-                    >
-                      {/* Pulsing Ring */}
-                      <motion.div
-                        className="absolute inset-0 rounded-full bg-gold-accent/30"
-                        animate={{
-                          scale: [1, 1.5, 1],
-                          opacity: [0.5, 0, 0.5]
-                        }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      />
-                      
-                      {/* Icon Container */}
-                      <div className="relative w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border-2 border-gold-accent/50 group-hover:border-gold-accent transition-colors duration-300">
-                        <span className="text-2xl">{hotspot.icon}</span>
-                      </div>
-                    </motion.div>
-
-                    {/* Tooltip/Description */}
-                    <AnimatePresence>
-                      {activeHotspot === hotspot.id && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20, scale: 0.8 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 20, scale: 0.8 }}
-                          transition={{ duration: 0.3 }}
-                          className="absolute top-20 left-1/2 transform -translate-x-1/2 z-10"
-                        >
-                          <div className="bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl border border-gold-accent/20 max-w-xs">
-                            <div className="text-center">
-                              <h3 className="font-bold text-lg text-gray-800 mb-2">
-                                {hotspot.title}
-                              </h3>
-                              <p className="text-sm text-gray-600 leading-relaxed">
-                                {hotspot.description}
-                              </p>
-                            </div>
-                            
-                            {/* Arrow pointing to hotspot */}
-                            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                              <div className="w-4 h-4 bg-white/95 rotate-45 border-l border-t border-gold-accent/20"></div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
-
-                {/* Instruction Text */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 1 }}
-                  viewport={{ once: true }}
-                  className="absolute bottom-6 left-6 text-white/80 text-sm backdrop-blur-sm bg-black/20 rounded-full px-4 py-2"
-                >
-                  Hover over the icons to explore highlights
-                </motion.div>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Enhanced Booking Section */}
-      <section className="py-20 px-6 bg-gradient-to-br from-black/20 via-transparent to-black/20">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
               Complete Your Booking
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Secure your adventure with our seamless booking experience
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Trip Summary */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
+            <div>
               <Card className="glass-morphism border-gold-accent/20 mb-8">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
@@ -694,133 +307,51 @@ export default function EnhancedBooking() {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
 
             {/* Booking Form */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              {/* Booking Confirmation Animation */}
-              <AnimatePresence>
-                {bookingConfirmed && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-                  >
-                    <motion.div
-                      initial={{ y: 50 }}
-                      animate={{ y: 0 }}
-                      className="bg-gradient-to-r from-gold-accent to-lavender-accent p-8 rounded-2xl text-center max-w-md mx-4"
-                    >
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.3, type: "spring" }}
-                        className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4"
-                      >
-                        <Check className="w-8 h-8 text-green-600" />
-                      </motion.div>
-                      <h3 className="text-2xl font-bold text-white mb-2">Booking Confirmed!</h3>
-                      <p className="text-white/90 mb-4">
-                        {destination.name.toLowerCase().includes('cherry') ? `Hi ${user?.firstName || user?.username}, you're off to Tokyo!` :
-                         destination.name.toLowerCase().includes('iceland') ? `Hi ${user?.firstName || user?.username}, your Northern Lights adventure awaits!` :
-                         destination.name.toLowerCase().includes('santorini') ? `Hi ${user?.firstName || user?.username}, your Greek island escape is confirmed!` :
-                         `Hi ${user?.firstName || user?.username}, your ${destination.name} adventure is locked in!`}
-                      </p>
-                      
-                      {/* Destination-specific animations */}
-                      {destination.name.toLowerCase().includes('cherry') && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: [0, 1.2, 1] }}
-                          transition={{ delay: 0.6, duration: 1 }}
-                          className="text-6xl"
-                        >
-                          🌸
-                        </motion.div>
-                      )}
-                      
-                      {destination.name.toLowerCase().includes('iceland') && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: [0, 1, 0.8, 1] }}
-                          transition={{ delay: 0.6, duration: 2, repeat: 2 }}
-                          className="text-6xl"
-                        >
-                          🌌
-                        </motion.div>
-                      )}
-                      
-                      {destination.name.toLowerCase().includes('santorini') && (
-                        <motion.div
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={{ delay: 0.6, duration: 1 }}
-                          className="text-6xl"
-                        >
-                          🌅
-                        </motion.div>
-                      )}
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
+            <div>
               <Card className="glass-morphism border-gold-accent/20">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Calendar className="w-5 h-5 text-gold-accent" />
-                    <span>Book Your Trip</span>
+                    <span>Booking Details</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Dates with smooth animations */}
-                  <motion.div 
-                    className="grid grid-cols-2 gap-4"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div>
-                      <Label htmlFor="checkin">Check-in</Label>
+                  {/* Date Selection */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="check-in">Check-in Date</Label>
                       <Input
-                        id="checkin"
+                        id="check-in"
                         type="date"
                         value={checkIn}
                         onChange={(e) => setCheckIn(e.target.value)}
-                        min={format(new Date(), 'yyyy-MM-dd')}
-                        className="transition-all duration-200 focus:border-gold-accent"
+                        className="glass-input"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="checkout">Check-out</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="check-out">Check-out Date</Label>
                       <Input
-                        id="checkout"
+                        id="check-out"
                         type="date"
                         value={checkOut}
                         onChange={(e) => setCheckOut(e.target.value)}
-                        min={checkIn}
-                        className="transition-all duration-200 focus:border-gold-accent"
+                        className="glass-input"
                       />
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* Guests */}
-                  <div>
-                    <Label htmlFor="guests" className="flex items-center">
-                      <Users className="w-4 h-4 mr-2 text-lavender-accent" />
-                      Number of Guests
-                    </Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="guests">Number of Guests</Label>
                     <Select value={guests.toString()} onValueChange={(value) => setGuests(parseInt(value))}>
-                      <SelectTrigger className="transition-all duration-200 focus:border-gold-accent">
+                      <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {Array.from({ length: destination.maxGuests }, (_, i) => i + 1).map(num => (
+                        {Array.from({ length: destination.maxGuests }, (_, i) => i + 1).map((num) => (
                           <SelectItem key={num} value={num.toString()}>
                             {num} {num === 1 ? 'Guest' : 'Guests'}
                           </SelectItem>
@@ -829,154 +360,99 @@ export default function EnhancedBooking() {
                     </Select>
                   </div>
 
-                  {/* Travel Class with icons */}
-                  <div>
-                    <Label className="flex items-center mb-3">
-                      <Plane className="w-4 h-4 mr-2 text-gold-accent" />
-                      Travel Class
-                    </Label>
-                    <div className="space-y-2">
-                      {travelClasses.map(tc => (
-                        <motion.div
-                          key={tc.value}
-                          className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 ${
-                            travelClass === tc.value
-                              ? 'border-gold-accent bg-gold-accent/10 shadow-lg'
-                              : 'border-muted hover:border-gold-accent/50 hover:bg-gold-accent/5'
-                          }`}
-                          onClick={() => setTravelClass(tc.value)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
+                  {/* Travel Class */}
+                  <div className="space-y-2">
+                    <Label>Travel Class</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {travelClasses.map((cls) => (
+                        <Button
+                          key={cls.value}
+                          variant={travelClass === cls.value ? "default" : "outline"}
+                          onClick={() => setTravelClass(cls.value)}
+                          className="justify-start"
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <Plane className="w-4 h-4 mr-2 text-lavender-accent" />
-                              <span className="font-medium">{tc.label}</span>
+                          <div className="text-left">
+                            <div className="font-medium">{cls.label}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {cls.price > 0 ? `+$${cls.price}` : 'Included'}
                             </div>
-                            <span className="text-sm text-muted-foreground">
-                              {tc.price > 0 ? `+$${tc.price}` : 'Included'}
-                            </span>
                           </div>
-                        </motion.div>
+                        </Button>
                       ))}
                     </div>
                   </div>
 
-                  {/* Upgrades with toggle switches */}
-                  <div>
-                    <Label className="flex items-center mb-3">
-                      <Sparkles className="w-4 h-4 mr-2 text-lavender-accent" />
-                      Optional Upgrades
-                    </Label>
-                    <div className="space-y-3">
-                      {upgrades.map(upgrade => {
-                        const IconComponent = upgrade.icon;
+                  {/* Upgrades */}
+                  <div className="space-y-2">
+                    <Label>Add-ons & Upgrades</Label>
+                    <div className="space-y-2">
+                      {upgrades.map((upgrade) => {
+                        const Icon = upgrade.icon;
                         const isSelected = selectedUpgrades.includes(upgrade.id);
                         return (
-                          <motion.div
+                          <Button
                             key={upgrade.id}
-                            className="p-4 border rounded-lg transition-all duration-200 border-muted hover:border-gold-accent/50"
-                            whileHover={{ scale: 1.01 }}
+                            variant={isSelected ? "default" : "outline"}
+                            onClick={() => handleUpgradeToggle(upgrade.id)}
+                            className="w-full justify-between h-auto p-4"
                           >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center flex-1">
-                                <IconComponent className="w-5 h-5 mr-3 text-gold-accent" />
-                                <div className="flex-1">
-                                  <div className="font-medium">✓ {upgrade.name}</div>
-                                  <div className="text-sm text-muted-foreground">${upgrade.price}</div>
-                                </div>
-                              </div>
-                              
-                              {/* Toggle Switch */}
-                              <motion.button
-                                onClick={() => handleUpgradeToggle(upgrade.id)}
-                                className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
-                                  isSelected 
-                                    ? 'bg-gradient-to-r from-gold-accent to-lavender-accent' 
-                                    : 'bg-muted'
-                                }`}
-                                whileTap={{ scale: 0.95 }}
-                              >
-                                <motion.div
-                                  className="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-lg"
-                                  animate={{
-                                    x: isSelected ? 26 : 2,
-                                  }}
-                                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                />
-                              </motion.button>
+                            <div className="flex items-center">
+                              <Icon className="w-4 h-4 mr-3" />
+                              <span className="font-medium">{upgrade.name}</span>
                             </div>
-                          </motion.div>
+                            <span className="text-sm">${upgrade.price}</span>
+                          </Button>
                         );
                       })}
                     </div>
                   </div>
 
-                  <Separator className="bg-gold-accent/20" />
-
                   {/* Price Breakdown */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Button
                       variant="ghost"
                       onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-                      className="w-full justify-between p-0 h-auto font-normal"
+                      className="w-full justify-between"
                     >
                       <span>Price Breakdown</span>
-                      <motion.div
-                        animate={{ rotate: showPriceBreakdown ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ChevronDown className="w-4 h-4" />
-                      </motion.div>
+                      <ChevronDown className={`w-4 h-4 transition-transform ${showPriceBreakdown ? 'rotate-180' : ''}`} />
                     </Button>
                     
-                    <AnimatePresence>
-                      {showPriceBreakdown && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="space-y-2 text-sm"
-                        >
+                    {showPriceBreakdown && (
+                      <div className="bg-black/20 rounded-lg p-4 space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span>Base price ({guests} guests)</span>
+                          <span>${(parseFloat(destination.price) * guests).toFixed(2)}</span>
+                        </div>
+                        {travelClass !== "economy" && (
                           <div className="flex justify-between">
-                            <span>Base price ({guests} guests)</span>
-                            <span>${(parseFloat(destination.price) * guests).toFixed(2)}</span>
+                            <span>Class upgrade</span>
+                            <span>${(travelClasses.find(tc => tc.value === travelClass)?.price || 0) * guests}</span>
                           </div>
-                          {travelClass !== "economy" && (
-                            <div className="flex justify-between">
-                              <span>Class upgrade</span>
-                              <span>+${(travelClasses.find(tc => tc.value === travelClass)?.price || 0) * guests}</span>
+                        )}
+                        {selectedUpgrades.map((upgradeId) => {
+                          const upgrade = upgrades.find(u => u.id === upgradeId);
+                          return upgrade ? (
+                            <div key={upgradeId} className="flex justify-between">
+                              <span>{upgrade.name}</span>
+                              <span>${upgrade.price}</span>
                             </div>
-                          )}
-                          {selectedUpgrades.length > 0 && (
-                            <div className="flex justify-between">
-                              <span>Upgrades</span>
-                              <span>+${selectedUpgrades.reduce((total, id) => total + (upgrades.find(u => u.id === id)?.price || 0), 0)}</span>
-                            </div>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                    
-                    <div className="flex justify-between text-lg font-bold pt-2 border-t border-gold-accent/20">
-                      <span>Total</span>
-                      <motion.span 
-                        key={calculateTotal()}
-                        initial={{ scale: 1.2, color: "#fbbf24" }}
-                        animate={{ scale: 1, color: "#d4af37" }}
-                        transition={{ duration: 0.3 }}
-                        className="text-gold-accent"
-                      >
-                        ${calculateTotal().toFixed(2)}
-                      </motion.span>
-                    </div>
+                          ) : null;
+                        })}
+                        <Separator />
+                        <div className="flex justify-between font-semibold">
+                          <span>Total</span>
+                          <span>${calculateTotal().toFixed(2)}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  {/* Book Now Button */}
+                  <div>
                     <Button
-                      onClick={handleBookNowWithAnimation}
-                      disabled={createBooking.isPending || !checkIn || !checkOut || bookingConfirmed}
+                      onClick={handleBookNow}
+                      disabled={createBooking.isPending || !checkIn || !checkOut}
                       className="w-full h-12 bg-gradient-to-r from-gold-accent to-lavender-accent hover:from-gold-accent/80 hover:to-lavender-accent/80 text-white font-semibold transition-all duration-300"
                     >
                       {createBooking.isPending ? (
@@ -987,18 +463,17 @@ export default function EnhancedBooking() {
                       ) : (
                         <div className="flex items-center space-x-2">
                           <CreditCard className="w-4 h-4" />
-                          <span>Book Now</span>
+                          <span>Book Now - ${calculateTotal().toFixed(2)}</span>
                         </div>
                       )}
                     </Button>
-                  </motion.div>
+                  </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
     </div>
   );
 }
-
