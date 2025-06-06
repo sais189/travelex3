@@ -87,6 +87,7 @@ export default function EnhancedBooking() {
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [currentScrollStage, setCurrentScrollStage] = useState(0);
 
   const destinationId = params?.id ? parseInt(params.id) : 0;
 
@@ -122,12 +123,31 @@ export default function EnhancedBooking() {
     setCheckOut(format(defaultCheckOut, 'yyyy-MM-dd'));
   }, [destination]);
 
-  // Scroll tracking for parallax effects
+  // Scroll tracking for parallax effects and stage progression
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setScrollY(scrollPosition);
+      
+      // Calculate scroll stages based on viewport height
+      const viewportHeight = window.innerHeight;
+      const stage = Math.floor(scrollPosition / (viewportHeight * 0.8));
+      setCurrentScrollStage(Math.min(stage, 5)); // Max 5 stages
+    };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Journey stages for timeline progression
+  const journeyStages = [
+    { id: 0, title: "Journey Begins", description: "Welcome to your adventure" },
+    { id: 1, title: "Day-by-Day", description: "Explore your itinerary" },
+    { id: 2, title: "Highlights", description: "Key experiences await" },
+    { id: 3, title: "Information", description: "Everything you need" },
+    { id: 4, title: "Booking", description: "Secure your trip" },
+    { id: 5, title: "Complete", description: "Adventure awaits" }
+  ];
 
   // Mock destination data with interactive features
   const mockItinerary = [
@@ -307,7 +327,72 @@ export default function EnhancedBooking() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black">
+    <div className="min-h-screen bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black relative">
+      {/* Timeline Progress Indicator */}
+      <motion.div 
+        className="fixed left-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: scrollY > 100 ? 1 : 0, x: scrollY > 100 ? 0 : -50 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="relative">
+          {/* Vertical Line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-80 bg-gradient-to-b from-gold-accent/30 via-gold-accent/60 to-gold-accent/30"></div>
+          
+          {/* Progress Dots */}
+          <div className="space-y-16">
+            {journeyStages.map((stage, index) => (
+              <motion.div
+                key={stage.id}
+                className="relative flex items-center"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ 
+                  scale: currentScrollStage >= index ? 1 : 0.6,
+                  opacity: currentScrollStage >= index ? 1 : 0.4
+                }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+              >
+                <motion.div
+                  className={`w-4 h-4 rounded-full border-2 ${
+                    currentScrollStage >= index 
+                      ? 'bg-gold-accent border-gold-accent' 
+                      : 'bg-transparent border-gold-accent/40'
+                  } relative z-10`}
+                  animate={currentScrollStage === index ? {
+                    boxShadow: [
+                      "0 0 0 0 rgba(255, 215, 0, 0.7)",
+                      "0 0 0 10px rgba(255, 215, 0, 0)",
+                      "0 0 0 0 rgba(255, 215, 0, 0)"
+                    ]
+                  } : {}}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+                
+                {/* Stage Info Tooltip */}
+                <AnimatePresence>
+                  {currentScrollStage === index && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -20, scale: 0.8 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: -20, scale: 0.8 }}
+                      className="absolute left-8 bg-black/80 backdrop-blur-sm text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap"
+                    >
+                      <div className="font-semibold">{stage.title}</div>
+                      <div className="text-xs text-gold-accent">{stage.description}</div>
+                      
+                      {/* Arrow */}
+                      <div className="absolute left-0 top-1/2 transform -translate-x-full -translate-y-1/2">
+                        <div className="w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-black/80"></div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+
       {/* Cinematic Hero Section with Parallax */}
       <section className="relative h-screen overflow-hidden">
         {/* Parallax Background */}
@@ -468,22 +553,48 @@ export default function EnhancedBooking() {
           </motion.button>
         </motion.div>
       </section>
-      {/* Day-by-Day Itinerary with Sliding Transitions */}
-      <section id="itinerary-section" className="py-20 px-6 bg-gradient-to-br from-black/10 via-transparent to-black/10">
-        <div className="max-w-6xl mx-auto">
+      {/* Day-by-Day Itinerary with Layered Slide-In */}
+      <section id="itinerary-section" className="relative py-20 px-6 overflow-hidden">
+        {/* Fixed Background with Parallax */}
+        <motion.div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `url(${destination.imageUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        />
+        
+        <div className="relative z-10 max-w-6xl mx-auto">
+          {/* Left-to-right slide-in for title */}
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
               Your Journey Unfolds
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            </motion.h2>
+            
+            {/* Right-to-left slide-in for subtitle */}
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-2xl mx-auto"
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+              viewport={{ once: true }}
+            >
               Explore each day of your adventure through an immersive timeline
-            </p>
+            </motion.p>
           </motion.div>
 
           {/* Day Tabs with Timeline */}
@@ -518,106 +629,191 @@ export default function EnhancedBooking() {
               </div>
             </div>
 
-            {/* Active Day Content with Slide Transitions */}
-            <AnimatePresence mode="wait">
-              {mockItinerary.map((day) => 
-                activeItineraryDay === day.day && (
-                  <motion.div
-                    key={day.day}
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="max-w-4xl mx-auto"
-                  >
-                    <Card className="glass-morphism border-gold-accent/20 overflow-hidden">
-                      <div className="grid md:grid-cols-2 gap-0">
+            {/* Layered Journey Cards - Each Day Slides In Differently */}
+            <div className="space-y-24">
+              {mockItinerary.map((day, index) => (
+                <motion.div
+                  key={day.day}
+                  initial={{ opacity: 0, y: 100 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 1, 
+                    delay: index * 0.2,
+                    ease: "easeOut"
+                  }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  className="max-w-6xl mx-auto"
+                >
+                  <Card className="glass-morphism border-gold-accent/20 overflow-hidden">
+                    <div className={`grid md:grid-cols-2 gap-0 ${index % 2 === 1 ? 'md:grid-flow-col-dense' : ''}`}>
+                      {/* Image slides in from alternating directions */}
+                      <motion.div 
+                        className={`relative h-96 md:h-auto ${index % 2 === 1 ? 'md:col-start-2' : ''}`}
+                        initial={{ opacity: 0, x: index % 2 === 0 ? -150 : 150 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 1.2, 
+                          delay: 0.3,
+                          ease: "easeOut"
+                        }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <img
+                          src={day.imageUrl}
+                          alt={day.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                        
+                        {/* Floating day badge */}
                         <motion.div 
-                          className="relative h-80 md:h-auto"
-                          whileHover={{ scale: 1.02 }}
-                          transition={{ duration: 0.3 }}
+                          className="absolute top-6 left-6 text-white"
+                          initial={{ opacity: 0, scale: 0 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 1, type: "spring", bounce: 0.5 }}
+                          viewport={{ once: true }}
                         >
-                          <img
-                            src={day.imageUrl}
-                            alt={day.title}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                          <motion.div 
-                            className="absolute bottom-6 left-6 text-white"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                          >
-                            <div className="inline-block bg-gold-accent/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm mb-2">
-                              Day {day.day}
-                            </div>
-                          </motion.div>
+                          <div className="bg-gold-accent/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-bold">
+                            Day {day.day}
+                          </div>
                         </motion.div>
-                        <div className="p-8 flex flex-col justify-center">
-                          <motion.h3
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                            className="text-3xl font-bold mb-4 text-gold-accent"
-                          >
-                            {day.title}
-                          </motion.h3>
-                          <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="text-muted-foreground text-lg leading-relaxed mb-6"
-                          >
-                            {day.description}
-                          </motion.p>
+
+                        {/* Destination-specific floating elements */}
+                        {destination.name.toLowerCase().includes('iceland') && index === 0 && (
                           <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.6 }}
-                            className="space-y-2"
+                            className="absolute top-1/2 right-8 text-6xl"
+                            animate={{ 
+                              y: [0, -20, 0],
+                              rotate: [0, 5, -5, 0]
+                            }}
+                            transition={{ 
+                              duration: 4, 
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
                           >
-                            <h4 className="font-semibold text-lavender-accent mb-3">Activities:</h4>
-                            {day.activities.map((activity, idx) => (
-                              <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.7 + idx * 0.1 }}
-                                className="flex items-center text-sm"
-                              >
-                                <div className="w-2 h-2 bg-gold-accent rounded-full mr-3" />
-                                {activity}
-                              </motion.div>
-                            ))}
+                            ❄️
                           </motion.div>
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                )
-              )}
-            </AnimatePresence>
+                        )}
+                      </motion.div>
+
+                      {/* Text content slides in from opposite direction */}
+                      <motion.div 
+                        className={`p-8 flex flex-col justify-center ${index % 2 === 1 ? 'md:col-start-1' : ''}`}
+                        initial={{ opacity: 0, x: index % 2 === 0 ? 150 : -150 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 1.2, 
+                          delay: 0.5,
+                          ease: "easeOut"
+                        }}
+                        viewport={{ once: true }}
+                      >
+                        <motion.h3
+                          className="text-3xl md:text-4xl font-bold mb-4 text-gold-accent"
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.8, duration: 0.8 }}
+                          viewport={{ once: true }}
+                        >
+                          {day.title}
+                        </motion.h3>
+                        
+                        <motion.p
+                          className="text-muted-foreground text-lg leading-relaxed mb-8"
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1, duration: 0.8 }}
+                          viewport={{ once: true }}
+                        >
+                          {day.description}
+                        </motion.p>
+                        
+                        {/* Activities fade up sequentially */}
+                        <motion.div
+                          className="space-y-4"
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          transition={{ delay: 1.2 }}
+                          viewport={{ once: true }}
+                        >
+                          <h4 className="font-semibold text-lavender-accent text-lg mb-4">Today's Adventures:</h4>
+                          {day.activities.map((activity, idx) => (
+                            <motion.div
+                              key={idx}
+                              className="flex items-center text-base"
+                              initial={{ opacity: 0, x: -30 }}
+                              whileInView={{ opacity: 1, x: 0 }}
+                              transition={{ 
+                                delay: 1.4 + idx * 0.15,
+                                duration: 0.6,
+                                ease: "easeOut"
+                              }}
+                              viewport={{ once: true }}
+                              whileHover={{ x: 10, scale: 1.02 }}
+                            >
+                              <motion.div 
+                                className="w-3 h-3 bg-gradient-to-r from-gold-accent to-lavender-accent rounded-full mr-4 flex-shrink-0"
+                                whileHover={{ scale: 1.3 }}
+                              />
+                              <span>{activity}</span>
+                            </motion.div>
+                          ))}
+                        </motion.div>
+                      </motion.div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
-      {/* Interactive Hotspot Map */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
-              Explore Interactive Highlights
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Discover key locations and experiences in their natural setting
-            </p>
-          </motion.div>
+      {/* Interactive Hotspot Map with Split Scroll Reveal */}
+      <section className="py-20 px-6 relative overflow-hidden">
+        {/* Fixed background layer */}
+        <motion.div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `url(${destination.imageUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        />
+        
+        <div className="relative z-10 max-w-6xl mx-auto">
+          {/* Split layout - Left: Title slides from left, Right: Description from right */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <motion.h2 
+                className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-6"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                Explore Interactive Highlights
+              </motion.h2>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
+              viewport={{ once: true }}
+            >
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                Discover key locations and experiences in their natural setting. Each hotspot reveals the magic waiting for you at this incredible destination.
+              </p>
+            </motion.div>
+          </div>
 
           <motion.div 
             className="relative rounded-2xl overflow-hidden shadow-2xl"
@@ -726,22 +922,53 @@ export default function EnhancedBooking() {
           </motion.div>
         </div>
       </section>
-      {/* Expandable Information Accordions */}
-      <section className="py-20 px-6 bg-gradient-to-br from-black/10 via-transparent to-black/10">
-        <div className="max-w-4xl mx-auto">
+      {/* Expandable Information with Vertical Slide-Up */}
+      <section className="py-20 px-6 relative overflow-hidden">
+        {/* Subtle moving background */}
+        <motion.div 
+          className="absolute inset-0 opacity-10"
+          animate={{
+            backgroundPosition: ["0% 0%", "100% 100%"],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          style={{
+            backgroundImage: `radial-gradient(circle, rgba(255,215,0,0.1) 2px, transparent 2px)`,
+            backgroundSize: '50px 50px'
+          }}
+        />
+        
+        <div className="relative z-10 max-w-4xl mx-auto">
+          {/* Title slides up from bottom */}
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
               Trip Information
-            </h2>
-            <p className="text-2xl font-bold text-foreground max-w-2xl mx-auto">
+            </motion.h2>
+            
+            <motion.p 
+              className="text-2xl font-bold text-foreground max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
               Everything you need to know for your perfect adventure
-            </p>
+            </motion.p>
           </motion.div>
 
           <div className="space-y-4">
