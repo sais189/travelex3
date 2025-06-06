@@ -497,7 +497,7 @@ export default function EnhancedBooking() {
         </div>
       </section>
 
-      {/* Interactive Trip Highlights Section */}
+      {/* Interactive Hotspot Image Overlay */}
       <section id="trip-highlights" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <motion.div
@@ -508,60 +508,115 @@ export default function EnhancedBooking() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4">
-              Trip Highlights
+              Discover Your Adventure
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Discover the extraordinary experiences that make this journey unforgettable
+              Explore interactive highlights in their natural setting
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {destination.features?.map((feature: string, index: number) => {
-              const IconComponent = getFeatureIcon(feature);
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="group"
-                  onMouseEnter={() => setHoveredFeature(feature)}
-                  onMouseLeave={() => setHoveredFeature(null)}
-                >
-                  <Card className="glass-morphism border-gold-accent/20 h-full cursor-pointer overflow-hidden group-hover:border-gold-accent/40 transition-all duration-300">
-                    <CardContent className="p-6 h-full flex flex-col">
+          {destination.hotspots && (
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              {/* Panoramic Background Image */}
+              <div className="relative h-[600px] w-full">
+                <img
+                  src={destination.imageUrl}
+                  alt={destination.name}
+                  className="w-full h-full object-cover"
+                />
+                
+                {/* Gradient Overlay for Better Contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+                
+                {/* Interactive Hotspots */}
+                {destination.hotspots.map((hotspot: any, index: number) => (
+                  <motion.div
+                    key={hotspot.id}
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.2, duration: 0.5 }}
+                    viewport={{ once: true }}
+                    className="absolute cursor-pointer group"
+                    style={{
+                      left: `${hotspot.x}%`,
+                      top: `${hotspot.y}%`,
+                      transform: 'translate(-50%, -50%)'
+                    }}
+                    onMouseEnter={() => setActiveHotspot(hotspot.id)}
+                    onMouseLeave={() => setActiveHotspot(null)}
+                  >
+                    {/* Animated Hotspot Icon */}
+                    <motion.div
+                      className="relative"
+                      animate={{
+                        scale: activeHotspot === hotspot.id ? 1.2 : 1,
+                        y: [0, -10, 0]
+                      }}
+                      transition={{
+                        scale: { duration: 0.3 },
+                        y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                    >
+                      {/* Pulsing Ring */}
                       <motion.div
-                        className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-gold-accent/20 to-lavender-accent/20 mb-4 mx-auto"
-                        whileHover={{ scale: 1.1, rotate: 360 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <IconComponent className="w-8 h-8 text-gold-accent" />
-                      </motion.div>
+                        className="absolute inset-0 rounded-full bg-gold-accent/30"
+                        animate={{
+                          scale: [1, 1.5, 1],
+                          opacity: [0.5, 0, 0.5]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
                       
-                      <h3 className="text-xl font-semibold text-center mb-3 group-hover:text-gold-accent transition-colors duration-300">
-                        {feature}
-                      </h3>
-                      
-                      <AnimatePresence>
-                        {hoveredFeature === feature && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="text-sm text-muted-foreground text-center leading-relaxed"
-                          >
-                            Experience the wonder of {feature.toLowerCase()} with expert guides and premium amenities.
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </CardContent>
-                  </Card>
+                      {/* Icon Container */}
+                      <div className="relative w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border-2 border-gold-accent/50 group-hover:border-gold-accent transition-colors duration-300">
+                        <span className="text-2xl">{hotspot.icon}</span>
+                      </div>
+                    </motion.div>
+
+                    {/* Tooltip/Description */}
+                    <AnimatePresence>
+                      {activeHotspot === hotspot.id && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 20, scale: 0.8 }}
+                          transition={{ duration: 0.3 }}
+                          className="absolute top-20 left-1/2 transform -translate-x-1/2 z-10"
+                        >
+                          <div className="bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl border border-gold-accent/20 max-w-xs">
+                            <div className="text-center">
+                              <h3 className="font-bold text-lg text-gray-800 mb-2">
+                                {hotspot.title}
+                              </h3>
+                              <p className="text-sm text-gray-600 leading-relaxed">
+                                {hotspot.description}
+                              </p>
+                            </div>
+                            
+                            {/* Arrow pointing to hotspot */}
+                            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                              <div className="w-4 h-4 bg-white/95 rotate-45 border-l border-t border-gold-accent/20"></div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ))}
+
+                {/* Instruction Text */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                  viewport={{ once: true }}
+                  className="absolute bottom-6 left-6 text-white/80 text-sm backdrop-blur-sm bg-black/20 rounded-full px-4 py-2"
+                >
+                  Hover over the icons to explore highlights
                 </motion.div>
-              );
-            })}
-          </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
