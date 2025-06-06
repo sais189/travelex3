@@ -237,8 +237,10 @@ export default function Destinations() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
+              onClick={() => handleBookNow(destination.id)}
+              className="cursor-pointer"
             >
-              <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden h-full flex flex-col">
+              <Card className="glass-morphism card-tilt hover:scale-105 transition-transform duration-300 glow-hover overflow-hidden h-full flex flex-col group">
                 <div className="relative h-64 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
                   <img
                     src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"}
@@ -290,12 +292,12 @@ export default function Destinations() {
                     </div>
                   </div>
                   <div className="mt-auto">
-                    <Button
-                      onClick={() => handleBookNow(destination.id)}
-                      className="w-full h-12 bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground font-semibold text-base"
-                    >
-                      Book Now
-                    </Button>
+                    <div className="w-full h-12 bg-gradient-to-r from-lavender-accent to-gold-accent rounded-lg flex items-center justify-center text-white font-semibold text-base transition-all duration-300 group-hover:shadow-lg">
+                      <span>Click to Book This Adventure</span>
+                      <svg className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
