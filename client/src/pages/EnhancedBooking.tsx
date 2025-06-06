@@ -149,30 +149,135 @@ export default function EnhancedBooking() {
     { id: 5, title: "Complete", description: "Adventure awaits" }
   ];
 
-  // Mock destination data with interactive features
-  const mockItinerary = [
-    {
-      day: 1,
-      title: "Arrival & City Exploration",
-      description: "Welcome to your adventure! Start with a guided city tour and cultural immersion.",
-      imageUrl: destination?.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
-      activities: ["Airport transfer", "Welcome dinner", "City orientation walk"]
-    },
-    {
-      day: 2,
-      title: "Main Attraction Experience",
-      description: "Discover the highlight attractions that make this destination unique.",
-      imageUrl: destination?.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
-      activities: ["Guided tour", "Photography session", "Local cuisine tasting"]
-    },
-    {
-      day: 3,
-      title: "Adventure & Activities",
-      description: "Engage in thrilling activities and create unforgettable memories.",
-      imageUrl: destination?.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
-      activities: ["Adventure sports", "Nature exploration", "Cultural workshops"]
+  // Mock destination data with interactive features and varied images
+  const getItineraryData = () => {
+    const destinationName = destination?.name.toLowerCase() || '';
+    
+    if (destinationName.includes('iceland')) {
+      return [
+        {
+          day: 1,
+          title: "Arrival & Reykjavik Discovery",
+          description: "Welcome to Iceland! Begin with colorful Reykjavik streets and traditional Icelandic culture.",
+          imageUrl: "https://images.unsplash.com/photo-1539704892725-de45bc5b63c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Airport transfer", "Reykjavik walking tour", "Traditional dinner"]
+        },
+        {
+          day: 2,
+          title: "Northern Lights Hunting",
+          description: "Chase the mystical Aurora Borealis across Iceland's pristine wilderness.",
+          imageUrl: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Aurora photography workshop", "Hot springs visit", "Night sky expedition"]
+        },
+        {
+          day: 3,
+          title: "Glacier & Geothermal Wonders",
+          description: "Explore ancient glaciers and powerful geysers in Iceland's dramatic landscape.",
+          imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Glacier hiking", "Geysir eruption viewing", "Blue Lagoon relaxation"]
+        }
+      ];
+    } else if (destinationName.includes('santorini')) {
+      return [
+        {
+          day: 1,
+          title: "Arrival & Oia Village",
+          description: "Discover the iconic blue domes and whitewashed buildings of magical Santorini.",
+          imageUrl: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Village exploration", "Sunset viewing", "Traditional taverna dinner"]
+        },
+        {
+          day: 2,
+          title: "Volcanic Wine Tour",
+          description: "Taste exceptional wines grown in volcanic soil with stunning caldera views.",
+          imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Winery visits", "Volcanic landscape tour", "Local cheese tasting"]
+        },
+        {
+          day: 3,
+          title: "Aegean Sea Adventure",
+          description: "Sail the crystal-clear waters and discover hidden beaches and sea caves.",
+          imageUrl: "https://images.unsplash.com/photo-1544970850-7ad5ac882d5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Catamaran sailing", "Snorkeling excursion", "Beach relaxation"]
+        }
+      ];
+    } else if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
+      return [
+        {
+          day: 1,
+          title: "Cherry Blossom Discovery",
+          description: "Immerse yourself in Japan's most beautiful season with blooming sakura trees.",
+          imageUrl: "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Hanami picnic", "Temple visits", "Traditional tea ceremony"]
+        },
+        {
+          day: 2,
+          title: "Modern Tokyo Experience",
+          description: "Explore the vibrant energy of contemporary Tokyo's districts and technology.",
+          imageUrl: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Shibuya crossing", "Technology museums", "Ramen tasting tour"]
+        },
+        {
+          day: 3,
+          title: "Cultural Heritage Journey",
+          description: "Connect with Japan's rich history through ancient traditions and crafts.",
+          imageUrl: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Pottery workshop", "Kimono experience", "Garden meditation"]
+        }
+      ];
+    } else if (destinationName.includes('norway') || destinationName.includes('fjord')) {
+      return [
+        {
+          day: 1,
+          title: "Fjord Arrival & Bergen",
+          description: "Begin your Norwegian adventure in the colorful wooden houses of historic Bergen.",
+          imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Bergen fish market", "Funicular railway", "Historic district walk"]
+        },
+        {
+          day: 2,
+          title: "Geirangerfjord Cruise",
+          description: "Sail through UNESCO World Heritage fjords with cascading waterfalls.",
+          imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Fjord cruise", "Waterfall viewing", "Mountain hiking"]
+        },
+        {
+          day: 3,
+          title: "Arctic Wildlife & Midnight Sun",
+          description: "Experience the unique Arctic ecosystem and endless daylight phenomenon.",
+          imageUrl: "https://images.unsplash.com/photo-1516822003754-d86e59f32c8e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Wildlife spotting", "Midnight sun photography", "Sami culture experience"]
+        }
+      ];
+    } else {
+      // Default varied images for any other destination
+      return [
+        {
+          day: 1,
+          title: "Arrival & City Exploration",
+          description: "Welcome to your adventure! Start with a guided city tour and cultural immersion.",
+          imageUrl: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Airport transfer", "Welcome dinner", "City orientation walk"]
+        },
+        {
+          day: 2,
+          title: "Main Attraction Experience",
+          description: "Discover the highlight attractions that make this destination unique.",
+          imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Guided tour", "Photography session", "Local cuisine tasting"]
+        },
+        {
+          day: 3,
+          title: "Adventure & Activities",
+          description: "Engage in thrilling activities and create unforgettable memories.",
+          imageUrl: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+          activities: ["Adventure sports", "Nature exploration", "Cultural workshops"]
+        }
+      ];
     }
-  ];
+  };
+
+  const mockItinerary = getItineraryData();
 
   const mockHotspots = [
     {
