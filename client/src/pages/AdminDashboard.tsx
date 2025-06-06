@@ -988,8 +988,8 @@ export default function AdminDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredUsers.map((user: User) => (
-                        <TableRow key={user.id}>
+                      {filteredUsers.map((user: User, index: number) => (
+                        <TableRow key={`${user.id}-${index}`}>
                           <TableCell>
                             <div>
                               <div className="font-medium">{user.firstName} {user.lastName}</div>
