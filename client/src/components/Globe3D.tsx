@@ -42,27 +42,63 @@ export default function Globe3D() {
     // Texture Loader
     const textureLoader = new THREE.TextureLoader();
     
-    // Create realistic Earth texture
-    const earthTexture = textureLoader.load(
-      'https://raw.githubusercontent.com/ruanyf/react-demos/master/3d-earth/images/earthmap1k.jpg',
-      () => {
-        console.log('Earth texture loaded successfully');
-      },
-      undefined,
-      (error) => {
-        console.log('Earth texture failed to load, using wireframe');
-      }
-    );
-
     // Create globe geometry
     const geometry = new THREE.SphereGeometry(1, 64, 64);
     
-    // Create material with Earth texture
-    const material = new THREE.MeshPhongMaterial({
-      map: earthTexture,
-      transparent: true,
-      opacity: 0.9,
-    });
+    // Create a beautiful gradient material as default
+    const createDefaultMaterial = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 256;
+      const context = canvas.getContext('2d');
+      
+      if (context) {
+        // Create a beautiful blue-green gradient
+        const gradient = context.createLinearGradient(0, 0, 0, 256);
+        gradient.addColorStop(0, '#1e40af'); // Deep blue
+        gradient.addColorStop(0.3, '#3b82f6'); // Blue
+        gradient.addColorStop(0.5, '#06b6d4'); // Cyan
+        gradient.addColorStop(0.7, '#10b981'); // Emerald
+        gradient.addColorStop(1, '#059669'); // Green
+        
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, 512, 256);
+        
+        // Add some subtle noise for texture
+        for (let i = 0; i < 2000; i++) {
+          context.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.1})`;
+          context.fillRect(Math.random() * 512, Math.random() * 256, 1, 1);
+        }
+      }
+      
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      
+      return new THREE.MeshPhongMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0.9,
+        shininess: 30,
+      });
+    };
+
+    // Try to load Earth texture, fallback to beautiful gradient
+    let material = createDefaultMaterial();
+    
+    const earthTexture = textureLoader.load(
+      'https://unpkg.com/three-globe@2.24.3/example/img/earth-blue-marble.jpg',
+      (texture) => {
+        console.log('Earth texture loaded successfully');
+        material.map = texture;
+        material.needsUpdate = true;
+      },
+      undefined,
+      (error) => {
+        console.log('Earth texture failed to load, using beautiful gradient');
+        // Material already set to gradient, no action needed
+      }
+    );
 
     const earth = new THREE.Mesh(geometry, material);
     scene.add(earth);

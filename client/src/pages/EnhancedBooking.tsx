@@ -915,7 +915,7 @@ export default function EnhancedBooking() {
               viewport={{ once: true }}
             >
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Discover key locations and experiences in their natural setting. Each hotspot reveals the magic waiting for you at this incredible destination.
+                Explore the unique features and experiences that make this destination extraordinary.
               </p>
             </motion.div>
           </div>
