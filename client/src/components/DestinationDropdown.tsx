@@ -38,6 +38,8 @@ export default function DestinationDropdown() {
       <DropdownMenuContent 
         className="w-80 bg-space-blue/95 backdrop-blur-sm border-gold-accent/20 max-h-96 overflow-y-auto"
         align="center"
+        side="bottom"
+        sideOffset={8}
       >
         {isLoading ? (
           <div className="p-4 text-center text-white/60">

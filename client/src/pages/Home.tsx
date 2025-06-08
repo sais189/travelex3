@@ -87,7 +87,11 @@ export default function Home() {
                           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-full p-0 bg-slate-panel border-border">
+                      <PopoverContent 
+                        className="w-full p-0 bg-slate-panel border-border"
+                        side="bottom"
+                        sideOffset={8}
+                      >
                         <Command>
                           <CommandInput placeholder="Search destinations..." className="h-9" />
                           <CommandList>

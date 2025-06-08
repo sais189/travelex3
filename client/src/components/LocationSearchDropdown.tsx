@@ -84,7 +84,11 @@ export default function LocationSearchDropdown() {
               <SelectValue placeholder="Where to" />
             </div>
           </SelectTrigger>
-          <SelectContent className="bg-space-blue/95 backdrop-blur-sm border-gold-accent/20">
+          <SelectContent 
+            className="bg-space-blue/95 backdrop-blur-sm border-gold-accent/20"
+            side="bottom"
+            sideOffset={8}
+          >
             <SelectItem value="all" className="text-white hover:bg-gold-accent/20">
               All Countries
             </SelectItem>
