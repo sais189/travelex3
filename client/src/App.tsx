@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
 import { Suspense, lazy, useEffect } from "react";
 import { preloadCriticalResources } from "@/utils/performanceCache";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 // Immediate load components
 import Home from "@/pages/Home";
@@ -35,6 +36,8 @@ const LoadingSpinner = () => (
 );
 
 function Router() {
+  useScrollToTop();
+  
   return (
     <>
       <Navbar />
