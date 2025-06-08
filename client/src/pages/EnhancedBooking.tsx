@@ -292,7 +292,7 @@ export default function EnhancedBooking() {
           id: "spot1",
           x: 25,
           y: 40,
-          icon: "🦁",
+          icon: "",
           title: "Lion Pride Territory",
           description: "Witness majestic lions in their natural habitat during game drives."
         },
@@ -300,7 +300,7 @@ export default function EnhancedBooking() {
           id: "spot2",
           x: 60,
           y: 30,
-          icon: "🐘",
+          icon: "",
           title: "Elephant Migration Route",
           description: "Experience the incredible elephant herds on their ancient migration paths."
         },
@@ -308,7 +308,7 @@ export default function EnhancedBooking() {
           id: "spot3",
           x: 80,
           y: 60,
-          icon: "🦒",
+          icon: "",
           title: "Giraffe Sanctuary",
           description: "Get up close with the tallest animals on Earth in protected reserves."
         },
@@ -316,7 +316,7 @@ export default function EnhancedBooking() {
           id: "spot4",
           x: 45,
           y: 70,
-          icon: "🦓",
+          icon: "",
           title: "Zebra Plains",
           description: "Marvel at thousands of zebras grazing across the endless savanna."
         }
