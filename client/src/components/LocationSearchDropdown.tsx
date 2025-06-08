@@ -49,6 +49,29 @@ export default function LocationSearchDropdown() {
     setIsOpen(isFocused && searchTerm.length > 0);
   }, [isFocused, searchTerm]);
 
+  // Force dropdown to appear below by calculating position
+  const [dropdownStyle, setDropdownStyle] = useState({});
+  
+  useEffect(() => {
+    if (isOpen && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - rect.bottom;
+      
+      // Always position below, regardless of available space
+      setDropdownStyle({
+        position: 'fixed' as const,
+        top: rect.bottom + 8,
+        left: rect.left,
+        right: 'auto',
+        width: rect.width,
+        zIndex: 9999,
+        maxHeight: Math.min(400, spaceBelow - 20),
+        transform: 'none'
+      });
+    }
+  }, [isOpen]);
+
   const handleDestinationSelect = (destination: Destination) => {
     setSearchTerm("");
     setIsOpen(false);
