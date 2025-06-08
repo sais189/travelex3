@@ -101,10 +101,15 @@ export default function Globe3D() {
     // Try to load Earth texture, fallback to beautiful gradient
     let material = createDefaultMaterial();
 
+    // Use a smaller, optimized Earth texture for faster loading
     const earthTexture = textureLoader.load(
-      'https://unpkg.com/three-globe@2.24.3/example/img/earth-blue-marble.jpg',
+      'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg',
       (texture) => {
         console.log('Earth texture loaded successfully');
+        // Optimize texture settings for performance
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.generateMipmaps = false;
         material.map = texture;
         material.needsUpdate = true;
       },

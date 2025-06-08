@@ -240,9 +240,7 @@ export default function About() {
                     <p className="text-muted-foreground text-lg leading-relaxed">
                       Our cutting-edge platform features a 3D interactive globe, AI-powered chatbot assistance, and seamless payment integration to make your booking experience as smooth as your travels.
                     </p>
-                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">
-                      We continuously invest in emerging technologies like virtual reality previews, blockchain-secured transactions, and real-time travel optimization to stay at the forefront of the travel industry.
-                    </p>
+                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">We continuously invest in emerging technologies like virtual reality previews, blockchain-secured transactions, and real-time travel optimisation to stay at the forefront of the travel industry.</p>
                   </div>
                   <motion.div
                     className="relative"
