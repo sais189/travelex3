@@ -2,25 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Critical CSS optimizations */
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-display: swap;
-  scroll-behavior: smooth;
-}
-
-/* Preload critical fonts */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: local('Inter');
-}
-
 :root {
   --background: 0 0% 5%; /* #0D0D0D */
   --foreground: 0 0% 93%; /* #EDEDED */

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect } from "react";
 import * as THREE from "three";
 
 export default function Globe3D() {
@@ -6,32 +6,9 @@ export default function Globe3D() {
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const frameRef = useRef<number | null>(null);
-  const [isInView, setIsInView] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Initialize intersection observer
   useEffect(() => {
     if (!mountRef.current) return;
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          setIsInView(entry.isIntersecting);
-        });
-      },
-      { threshold: 0.1, rootMargin: '50px' }
-    );
-
-    observerRef.current.observe(mountRef.current);
-
-    return () => {
-      observerRef.current?.disconnect();
-    };
-  }, []);
-
-  // Initialize 3D scene only when in view
-  useEffect(() => {
-    if (!mountRef.current || !isInView) return;
 
     const width = mountRef.current.clientWidth;
     const height = mountRef.current.clientHeight;
