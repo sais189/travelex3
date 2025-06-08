@@ -983,156 +983,8 @@ export default function EnhancedBooking() {
                   className="max-w-6xl mx-auto"
                 >
                   <Card className="glass-morphism border-gold-accent/20 overflow-hidden">
-                    <div className={`grid md:grid-cols-2 gap-0 ${index % 2 === 1 ? 'md:grid-flow-col-dense' : ''}`}>
-                      {/* Image slides in from alternating directions */}
-                      <motion.div 
-                        className={`relative h-96 md:h-auto ${index % 2 === 1 ? 'md:col-start-2' : ''}`}
-                        initial={{ opacity: 0, x: index % 2 === 0 ? -150 : 150 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ 
-                          duration: 1.2, 
-                          delay: 0.3,
-                          ease: "easeOut"
-                        }}
-                        viewport={{ once: true }}
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        <RobustImage
-                          src={day.imageUrl}
-                          alt={day.title}
-                          className="w-full h-full"
-                          fallbackTitle={day.title}
-                          fallbackSubtitle={`Day ${day.day} Experience`}
-                          retryable={true}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                        
-                        {/* Floating day badge */}
-                        <motion.div 
-                          className="absolute top-6 left-6 text-white"
-                          initial={{ opacity: 0, scale: 0 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 1, type: "spring", bounce: 0.5 }}
-                          viewport={{ once: true }}
-                        >
-                          <div className="bg-gold-accent/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-bold">
-                            Day {day.day}
-                          </div>
-                        </motion.div>
-
-                        {/* Destination-specific floating elements */}
-                        {destination.name.toLowerCase().includes('iceland') && (
-                          <motion.div
-                            className="absolute top-1/2 right-8 text-6xl"
-                            animate={{ 
-                              y: [0, -20, 0],
-                              rotate: [0, 5, -5, 0]
-                            }}
-                            transition={{ 
-                              duration: 4, 
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                              delay: index * 0.5
-                            }}
-                          >
-                            {index === 0 ? '❄️' : index === 1 ? '🌋' : '🧊'}
-                          </motion.div>
-                        )}
-                        
-                        {(destination.name.toLowerCase().includes('kenya') || destination.name.toLowerCase().includes('safari')) && (
-                          <motion.div
-                            className="absolute top-1/4 right-6 text-5xl"
-                            animate={{ 
-                              x: [0, 10, 0],
-                              y: [0, -5, 0]
-                            }}
-                            transition={{ 
-                              duration: 3, 
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                              delay: index * 0.7
-                            }}
-                          >
-                            {index === 0 ? '🦁' : index === 1 ? '🐘' : '🦒'}
-                          </motion.div>
-                        )}
-                        
-                        {(destination.name.toLowerCase().includes('santorini') || destination.name.toLowerCase().includes('greece')) && (
-                          <motion.div
-                            className="absolute bottom-1/4 right-8 text-5xl"
-                            animate={{ 
-                              scale: [1, 1.1, 1],
-                              rotate: [0, 10, 0]
-                            }}
-                            transition={{ 
-                              duration: 3.5, 
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                              delay: index * 0.6
-                            }}
-                          >
-                            {index === 0 ? '🏛️' : index === 1 ? '🍷' : '⛵'}
-                          </motion.div>
-                        )}
-                        
-                        {(destination.name.toLowerCase().includes('tokyo') || destination.name.toLowerCase().includes('japan')) && (
-                          <motion.div
-                            className="absolute top-1/3 right-6 text-5xl"
-                            animate={{ 
-                              y: [0, -15, 0],
-                              rotate: [0, -5, 5, 0]
-                            }}
-                            transition={{ 
-                              duration: 4.5, 
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                              delay: index * 0.8
-                            }}
-                          >
-                            {index === 0 ? '🌸' : index === 1 ? '🏯' : '🎋'}
-                          </motion.div>
-                        )}
-                        
-                        {(destination.name.toLowerCase().includes('norway') || destination.name.toLowerCase().includes('fjord')) && (
-                          <motion.div
-                            className="absolute top-1/2 right-8 text-5xl"
-                            animate={{ 
-                              y: [0, -20, 0],
-                              x: [0, 5, 0]
-                            }}
-                            transition={{ 
-                              duration: 5, 
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                              delay: index * 0.4
-                            }}
-                          >
-                            {index === 0 ? '🏔️' : index === 1 ? '🐋' : '🌌'}
-                          </motion.div>
-                        )}
-                        
-                        {(destination.name.toLowerCase().includes('croatia') || destination.name.toLowerCase().includes('island')) && (
-                          <motion.div
-                            className="absolute bottom-1/3 right-6 text-5xl"
-                            animate={{ 
-                              scale: [1, 1.2, 1],
-                              y: [0, -10, 0]
-                            }}
-                            transition={{ 
-                              duration: 3, 
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                              delay: index * 0.5
-                            }}
-                          >
-                            {index === 0 ? '🏖️' : index === 1 ? '⛵' : '🏰'}
-                          </motion.div>
-                        )}
-                      </motion.div>
-
-                      {/* Text content slides in from opposite direction */}
-                      <motion.div 
-                        className={`p-8 flex flex-col justify-center ${index % 2 === 1 ? 'md:col-start-1' : ''}`}
+                    <motion.div 
+                      className="p-8 flex flex-col justify-center"
                         initial={{ opacity: 0, x: index % 2 === 0 ? 150 : -150 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ 
@@ -1217,34 +1069,34 @@ export default function EnhancedBooking() {
         />
         
         <div className="relative z-10 max-w-6xl mx-auto px-8 py-8">
-          {/* Split layout - Left: Title slides from left, Right: Description from right */}
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              <motion.h2 
-                className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-6"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                viewport={{ once: true }}
-              >
-                Explore Interactive Highlights
-              </motion.h2>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
+          {/* Centralized header */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
+            className="text-center mb-16"
+          >
+            <motion.h2 
+              className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <p className="text-xl text-muted-foreground leading-relaxed">Explore the unique features and experiences</p>
-            </motion.div>
-          </div>
+              Explore the unique features
+            </motion.h2>
+            
+            <motion.p 
+              className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
+              Discover the exceptional experiences that make this destination truly special
+            </motion.p>
+          </motion.div>
 
           <motion.div 
             className="relative rounded-2xl overflow-visible shadow-2xl"
