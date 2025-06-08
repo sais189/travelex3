@@ -1156,7 +1156,7 @@ export default function EnhancedBooking() {
                       whileHover={{ rotate: [0, 5, -5, 0] }}
                       transition={{ duration: 0.5 }}
                     >
-                      <span className="text-2xl">{hotspot.icon}</span>
+                      <MapPin className="w-6 h-6 text-gold-accent" />
                     </motion.div>
                   </motion.div>
 
