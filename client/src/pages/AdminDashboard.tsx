@@ -17,7 +17,12 @@ import {
   Shield,
   Clock,
   CheckCircle,
-  XCircle
+  XCircle,
+  Settings,
+  Bell,
+  LogOut,
+  Download,
+  RefreshCw
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -381,17 +386,73 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen pt-32 pb-16 px-6 bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black">
       <div className="max-w-7xl mx-auto">
+        {/* Enhanced Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Manage users, monitor activity, and oversee system operations
-          </p>
+          <div className="flex items-center justify-between bg-gradient-to-r from-slate-panel/50 to-slate-panel/30 backdrop-blur-lg rounded-xl p-6 border border-gold-accent/20">
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-2">
+                Admin Dashboard
+              </h1>
+              <p className="text-muted-foreground text-lg">
+                Manage users, monitor activity, and oversee system operations
+              </p>
+              <div className="flex items-center mt-3 space-x-6">
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <Activity className="w-4 h-4 mr-2 text-green-500" />
+                  System Status: Online
+                </div>
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <Clock className="w-4 h-4 mr-2 text-blue-500" />
+                  Last Updated: {new Date().toLocaleTimeString()}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.location.reload()}
+                className="glass-morphism border-gold-accent/30 hover:bg-gold-accent/10"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="glass-morphism border-lavender-accent/30 hover:bg-lavender-accent/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="glass-morphism border-gold-accent/30 hover:bg-gold-accent/10"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+              
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="glass-morphism border-lavender-accent/30 hover:bg-lavender-accent/10"
+                >
+                  <Bell className="w-4 h-4" />
+                </Button>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Analytics Cards */}
