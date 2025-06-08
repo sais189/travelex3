@@ -870,6 +870,20 @@ export default function EnhancedBooking() {
     );
   };
 
+  const handleDayTabClick = (dayNumber: number) => {
+    setActiveItineraryDay(dayNumber);
+    
+    // Smooth scroll to the corresponding day card
+    const dayElement = document.getElementById(`day-${dayNumber}`);
+    if (dayElement) {
+      dayElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      });
+    }
+  };
+
   const handleBookNow = () => {
     if (!checkIn || !checkOut || !user) return;
 
@@ -1118,22 +1132,7 @@ export default function EnhancedBooking() {
           <ChevronDown className="w-8 h-8 text-white/60" />
         </motion.div>
 
-        {/* Ambient Audio Control */}
-        <motion.div
-          className="absolute top-32 right-6 z-20"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 2 }}
-        >
-          <motion.button
-            onClick={() => setAudioEnabled(!audioEnabled)}
-            className="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white/80 hover:text-white hover:bg-black/50 transition-all"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            {audioEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
-          </motion.button>
-        </motion.div>
+
       </section>
       {/* Day-by-Day Itinerary with Layered Slide-In */}
       <section id="itinerary-section" className="relative py-20 px-6 overflow-hidden">
@@ -1186,7 +1185,7 @@ export default function EnhancedBooking() {
                 {mockItinerary.map((day, index) => (
                   <motion.button
                     key={day.day}
-                    onClick={() => setActiveItineraryDay(day.day)}
+                    onClick={() => handleDayTabClick(day.day)}
                     className={`relative px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                       activeItineraryDay === day.day
                         ? 'text-white shadow-lg'
@@ -1216,6 +1215,7 @@ export default function EnhancedBooking() {
               {mockItinerary.map((day, index) => (
                 <motion.div
                   key={day.day}
+                  id={`day-${day.day}`}
                   initial={{ opacity: 0, y: 100 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ 
