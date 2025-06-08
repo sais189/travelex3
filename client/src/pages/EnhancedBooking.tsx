@@ -167,129 +167,334 @@ export default function EnhancedBooking() {
 
   // Mock destination data with interactive features and varied images
   const getItineraryData = () => {
-    const destinationName = destination?.name.toLowerCase() || '';
+    const destinationId = destination?.id;
     
-    if (destinationName.includes('iceland')) {
-      return [
-        {
-          day: 1,
-          title: "Arrival & Reykjavik Discovery",
-          description: "Welcome to Iceland! Begin with colorful Reykjavik streets and traditional Icelandic culture.",
-          imageUrl: "https://images.unsplash.com/photo-1539704892725-de45bc5b63c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Airport transfer", "Reykjavik walking tour", "Traditional dinner"]
-        },
-        {
-          day: 2,
-          title: "Northern Lights Hunting",
-          description: "Chase the mystical Aurora Borealis across Iceland's pristine wilderness.",
-          imageUrl: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Aurora photography workshop", "Hot springs visit", "Night sky expedition"]
-        },
-        {
-          day: 3,
-          title: "Glacier & Geothermal Wonders",
-          description: "Explore ancient glaciers and powerful geysers in Iceland's dramatic landscape.",
-          imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Glacier hiking", "Geysir eruption viewing", "Blue Lagoon relaxation"]
-        }
-      ];
-    } else if (destinationName.includes('santorini')) {
-      return [
-        {
-          day: 1,
-          title: "Arrival & Oia Village",
-          description: "Discover the iconic blue domes and whitewashed buildings of magical Santorini.",
-          imageUrl: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Village exploration", "Sunset viewing", "Traditional taverna dinner"]
-        },
-        {
-          day: 2,
-          title: "Volcanic Wine Tour",
-          description: "Taste exceptional wines grown in volcanic soil with stunning caldera views.",
-          imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Winery visits", "Volcanic landscape tour", "Local cheese tasting"]
-        },
-        {
-          day: 3,
-          title: "Aegean Sea Adventure",
-          description: "Sail the crystal-clear waters and discover hidden beaches and sea caves.",
-          imageUrl: "https://images.unsplash.com/photo-1544970850-7ad5ac882d5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Catamaran sailing", "Snorkeling excursion", "Beach relaxation"]
-        }
-      ];
-    } else if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
-      return [
-        {
-          day: 1,
-          title: "Cherry Blossom Discovery",
-          description: "Immerse yourself in Japan's most beautiful season with blooming sakura trees.",
-          imageUrl: "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Hanami picnic", "Temple visits", "Traditional tea ceremony"]
-        },
-        {
-          day: 2,
-          title: "Modern Tokyo Experience",
-          description: "Explore the vibrant energy of contemporary Tokyo's districts and technology.",
-          imageUrl: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Shibuya crossing", "Technology museums", "Ramen tasting tour"]
-        },
-        {
-          day: 3,
-          title: "Cultural Heritage Journey",
-          description: "Connect with Japan's rich history through ancient traditions and crafts.",
-          imageUrl: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Pottery workshop", "Kimono experience", "Garden meditation"]
-        }
-      ];
-    } else if (destinationName.includes('norway') || destinationName.includes('fjord')) {
-      return [
-        {
-          day: 1,
-          title: "Fjord Arrival & Bergen",
-          description: "Begin your Norwegian adventure in the colorful wooden houses of historic Bergen.",
-          imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Bergen fish market", "Funicular railway", "Historic district walk"]
-        },
-        {
-          day: 2,
-          title: "Geirangerfjord Cruise",
-          description: "Sail through UNESCO World Heritage fjords with cascading waterfalls.",
-          imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Fjord cruise", "Waterfall viewing", "Mountain hiking"]
-        },
-        {
-          day: 3,
-          title: "Arctic Wildlife & Midnight Sun",
-          description: "Experience the unique Arctic ecosystem and endless daylight phenomenon.",
-          imageUrl: "https://images.unsplash.com/photo-1516822003754-d86e59f32c8e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Wildlife spotting", "Midnight sun photography", "Sami culture experience"]
-        }
-      ];
-    } else {
-      // Default varied images for any other destination
-      return [
-        {
-          day: 1,
-          title: "Arrival & City Exploration",
-          description: "Welcome to your adventure! Start with a guided city tour and cultural immersion.",
-          imageUrl: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Airport transfer", "Welcome dinner", "City orientation walk"]
-        },
-        {
-          day: 2,
-          title: "Main Attraction Experience",
-          description: "Discover the highlight attractions that make this destination unique.",
-          imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Guided tour", "Photography session", "Local cuisine tasting"]
-        },
-        {
-          day: 3,
-          title: "Adventure & Activities",
-          description: "Engage in thrilling activities and create unforgettable memories.",
-          imageUrl: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-          activities: ["Adventure sports", "Nature exploration", "Cultural workshops"]
-        }
-      ];
+    switch(destinationId) {
+      case 1: // Tokyo Adventure
+        return [
+          {
+            day: 1,
+            title: "Arrival & Modern Tokyo",
+            description: "Experience Tokyo's electric energy in Shibuya, Harajuku, and neon-lit districts.",
+            imageUrl: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Shibuya Crossing experience", "Harajuku street fashion tour", "Robot Restaurant show"]
+          },
+          {
+            day: 2,
+            title: "Traditional Culture & Temples",
+            description: "Explore ancient Tokyo with traditional temples, gardens, and cultural ceremonies.",
+            imageUrl: "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Senso-ji Temple visit", "Traditional tea ceremony", "Imperial Palace gardens"]
+          },
+          {
+            day: 3,
+            title: "Culinary Adventure",
+            description: "Dive into Tokyo's legendary food scene from street vendors to Michelin stars.",
+            imageUrl: "https://images.unsplash.com/photo-1554978991-33ef7f31d658?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Tsukiji Fish Market tour", "Sushi making class", "Izakaya night experience"]
+          }
+        ];
+      
+      case 2: // Santorini Sunset
+        return [
+          {
+            day: 1,
+            title: "Arrival & Oia Exploration",
+            description: "Discover the iconic whitewashed villages and blue-domed churches.",
+            imageUrl: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Oia village walking tour", "Traditional Greek lunch", "Sunset photography"]
+          },
+          {
+            day: 2,
+            title: "Volcanic Wonders & Wine",
+            description: "Explore Santorini's volcanic heritage and world-renowned Assyrtiko wines.",
+            imageUrl: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Volcano boat tour", "Wine tasting at sunset", "Traditional taverna dinner"]
+          },
+          {
+            day: 3,
+            title: "Beaches & Ancient Akrotiri",
+            description: "Relax on unique volcanic beaches and explore ancient Minoan ruins.",
+            imageUrl: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Red Beach visit", "Akrotiri archaeological site", "Cliff-side spa treatment"]
+          }
+        ];
+      
+      case 3: // Patagonia Trek
+        return [
+          {
+            day: 1,
+            title: "Torres del Paine Base",
+            description: "Begin your Patagonian adventure with views of iconic granite towers.",
+            imageUrl: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Base Torres hike", "Wildlife spotting", "Mountain refuge accommodation"]
+          },
+          {
+            day: 2,
+            title: "Glacier & Icefield",
+            description: "Trek to ancient glaciers and witness the power of Patagonian ice fields.",
+            imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Glacier trekking", "Ice climbing workshop", "Condor watching"]
+          },
+          {
+            day: 3,
+            title: "Pristine Wilderness",
+            description: "Explore untouched landscapes where guanacos roam across endless pampas.",
+            imageUrl: "https://images.unsplash.com/photo-1586348943529-beaae6c28db9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Pampas horseback riding", "Gaucho barbecue", "Stargazing session"]
+          }
+        ];
+      
+      case 4: // Bali Serenity
+        return [
+          {
+            day: 1,
+            title: "Sacred Temples & Ubud",
+            description: "Immerse in Bali's spiritual heart with ancient temples and ceremonies.",
+            imageUrl: "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Tanah Lot temple sunset", "Traditional Balinese blessing", "Ubud art market"]
+          },
+          {
+            day: 2,
+            title: "Rice Terraces & Village Life",
+            description: "Experience emerald rice terraces and authentic Balinese village culture.",
+            imageUrl: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Jatiluwih rice terraces", "Traditional farming experience", "Village cooking class"]
+          },
+          {
+            day: 3,
+            title: "Tropical Paradise Beaches",
+            description: "Relax on pristine beaches with crystal-clear waters and tropical luxury.",
+            imageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Nusa Dua beach relaxation", "Traditional Balinese massage", "Beachfront seafood dinner"]
+          }
+        ];
+      
+      case 5: // Iceland Northern Lights
+        return [
+          {
+            day: 1,
+            title: "Arrival & Reykjavik Discovery",
+            description: "Welcome to Iceland! Begin with colorful Reykjavik streets and culture.",
+            imageUrl: "https://images.unsplash.com/photo-1539704892725-de45bc5b63c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Reykjavik walking tour", "Harpa Concert Hall visit", "Traditional Icelandic dinner"]
+          },
+          {
+            day: 2,
+            title: "Northern Lights Hunting",
+            description: "Chase the mystical Aurora Borealis across Iceland's pristine wilderness.",
+            imageUrl: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Aurora photography workshop", "Blue Lagoon hot springs", "Night sky expedition"]
+          },
+          {
+            day: 3,
+            title: "Glacier & Geothermal Wonders",
+            description: "Explore ancient glaciers and powerful geysers in dramatic landscapes.",
+            imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Gullfoss waterfall", "Geysir geothermal area", "Glacier hiking expedition"]
+          }
+        ];
+      
+      case 6: // Safari Kenya
+        return [
+          {
+            day: 1,
+            title: "Maasai Mara Arrival",
+            description: "Enter the legendary Maasai Mara, home to the Great Migration and Big Five.",
+            imageUrl: "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Luxury tented camp check-in", "Evening game drive", "Maasai cultural performance"]
+          },
+          {
+            day: 2,
+            title: "Great Migration Spectacle",
+            description: "Witness millions of wildebeest and zebras in the world's greatest wildlife show.",
+            imageUrl: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Dawn migration viewing", "Hot air balloon safari", "Big Five photography"]
+          },
+          {
+            day: 3,
+            title: "Maasai Culture & Conservation",
+            description: "Experience authentic Maasai traditions and wildlife conservation efforts.",
+            imageUrl: "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Maasai village visit", "Traditional warrior dancing", "Conservation center tour"]
+          }
+        ];
+      
+      case 7: // Swiss Alps Expedition
+        return [
+          {
+            day: 1,
+            title: "Matterhorn & Zermatt",
+            description: "Ascend to Zermatt for iconic Matterhorn views and alpine village charm.",
+            imageUrl: "https://images.unsplash.com/photo-1531754490559-e4a51ba94b88?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Gornergrat railway journey", "Matterhorn viewpoint", "Alpine village exploration"]
+          },
+          {
+            day: 2,
+            title: "Jungfraujoch & Glaciers",
+            description: "Journey to the 'Top of Europe' with spectacular glacier panoramas.",
+            imageUrl: "https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Jungfraujoch railway", "Ice Palace exploration", "Alpine glacier hiking"]
+          },
+          {
+            day: 3,
+            title: "Lake Geneva & Vineyards",
+            description: "Discover Switzerland's wine country with terraced vineyards and pristine lakes.",
+            imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Lavaux vineyard tour", "Lake Geneva cruise", "Swiss wine tasting"]
+          }
+        ];
+      
+      case 8: // Machu Picchu Trail
+        return [
+          {
+            day: 1,
+            title: "Sacred Valley Preparation",
+            description: "Acclimatize in the Sacred Valley while exploring ancient Inca ruins.",
+            imageUrl: "https://images.unsplash.com/photo-1526392060635-9d6019884377?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Ollantaytambo ruins", "Pisac market visit", "Traditional weaving workshop"]
+          },
+          {
+            day: 2,
+            title: "Inca Trail & Cloud Forest",
+            description: "Begin the legendary Inca Trail through mystical cloud forests.",
+            imageUrl: "https://images.unsplash.com/photo-1526392060635-9d6019884377?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Inca Trail trekking", "Cloud forest exploration", "Ancient way stations"]
+          },
+          {
+            day: 3,
+            title: "Machu Picchu Sunrise",
+            description: "Witness sunrise over the Lost City of the Incas from the iconic viewpoint.",
+            imageUrl: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Machu Picchu sunrise viewing", "Guided archaeological tour", "Huayna Picchu climb"]
+          }
+        ];
+      
+      case 9: // Maldives Overwater Escape
+        return [
+          {
+            day: 1,
+            title: "Overwater Bungalow Paradise",
+            description: "Arrive at your private overwater villa with direct lagoon access.",
+            imageUrl: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Overwater villa check-in", "Lagoon swimming", "Sunset cocktails"]
+          },
+          {
+            day: 2,
+            title: "Coral Reef & Marine Life",
+            description: "Explore vibrant coral reefs teeming with tropical fish and marine wonders.",
+            imageUrl: "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Snorkeling expedition", "Dolphin watching cruise", "Underwater restaurant"]
+          },
+          {
+            day: 3,
+            title: "Ultimate Tropical Luxury",
+            description: "Indulge in world-class spa treatments and private beach experiences.",
+            imageUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Overwater spa treatment", "Private beach picnic", "Traditional Maldivian dinner"]
+          }
+        ];
+      
+      case 15: // Tokyo Cherry Blossom Trip
+        return [
+          {
+            day: 1,
+            title: "Sakura Season Arrival",
+            description: "Experience Japan's magical cherry blossom season in traditional gardens.",
+            imageUrl: "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Ueno Park hanami", "Traditional tea ceremony", "Cherry blossom photography"]
+          },
+          {
+            day: 2,
+            title: "Temple Gardens & Traditions",
+            description: "Discover ancient temples framed by delicate pink sakura blossoms.",
+            imageUrl: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Chidorigafuchi rowing", "Imperial Palace gardens", "Traditional hanami picnic"]
+          },
+          {
+            day: 3,
+            title: "Cultural Immersion",
+            description: "Immerse in authentic Japanese culture during the most beautiful season.",
+            imageUrl: "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Kimono rental experience", "Traditional kaiseki dinner", "Night illumination viewing"]
+          }
+        ];
+      
+      case 18: // Norwegian Fjords
+        return [
+          {
+            day: 1,
+            title: "Geiranger Fjord",
+            description: "Sail through Norway's most spectacular fjord with towering waterfalls.",
+            imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Geiranger cruise", "Seven Sisters waterfall", "Eagle's Bend viewpoint"]
+          },
+          {
+            day: 2,
+            title: "Midnight Sun & Villages",
+            description: "Experience the midnight sun phenomenon in charming coastal villages.",
+            imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Flam railway journey", "Stave church visit", "Midnight sun photography"]
+          },
+          {
+            day: 3,
+            title: "Pristine Wilderness",
+            description: "Explore untouched Norwegian wilderness where glaciers carved valleys.",
+            imageUrl: "https://images.unsplash.com/photo-1516822003754-d86e59f32c8e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Glacier hiking", "Wildlife spotting", "Traditional Norwegian dinner"]
+          }
+        ];
+      
+      case 25: // Indian Golden Triangle
+        return [
+          {
+            day: 1,
+            title: "Delhi's Historic Grandeur",
+            description: "Discover India's capital with ancient monuments and bustling markets.",
+            imageUrl: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Red Fort exploration", "Chandni Chowk market", "India Gate visit"]
+          },
+          {
+            day: 2,
+            title: "Taj Mahal at Sunrise",
+            description: "Witness the magnificent Taj Mahal at sunrise, one of the world's greatest monuments.",
+            imageUrl: "https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Taj Mahal sunrise tour", "Agra Fort visit", "Marble inlay workshop"]
+          },
+          {
+            day: 3,
+            title: "Jaipur's Pink City",
+            description: "Explore the Pink City with magnificent palaces and vibrant bazaars.",
+            imageUrl: "https://images.unsplash.com/photo-1477587458883-47145ed94245?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Amber Fort elephant ride", "City Palace tour", "Local handicraft shopping"]
+          }
+        ];
+      
+      default:
+        // Enhanced default with varied destination-appropriate imagery
+        return [
+          {
+            day: 1,
+            title: "Arrival & Cultural Discovery",
+            description: "Begin your journey with cultural immersion and local traditions.",
+            imageUrl: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Cultural orientation", "Local market visit", "Traditional welcome dinner"]
+          },
+          {
+            day: 2,
+            title: "Iconic Landmarks",
+            description: "Explore the destination's most famous attractions and hidden gems.",
+            imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Landmark tours", "Photography workshops", "Local cuisine experience"]
+          },
+          {
+            day: 3,
+            title: "Adventure & Memories",
+            description: "Create lasting memories with adventure activities and cultural exchanges.",
+            imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            activities: ["Adventure activities", "Cultural workshops", "Farewell celebration"]
+          }
+        ];
     }
   };
 
