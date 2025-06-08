@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, MapPin, Plane, Star, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,7 @@ export default function LocationSearchDropdown() {
   const [selectedCountry, setSelectedCountry] = useState("all");
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Fetch destinations
   const { data: destinations = [] } = useQuery<Destination[]>({
@@ -63,7 +64,7 @@ export default function LocationSearchDropdown() {
   };
 
   return (
-    <div className="relative w-full max-w-md">
+    <div ref={containerRef} className="relative w-full max-w-md" style={{ position: 'relative' }}>
       <div className="flex space-x-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -111,9 +112,16 @@ export default function LocationSearchDropdown() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute top-full left-0 right-0 mt-2 z-50"
+            className="absolute left-0 right-0 mt-2 z-50"
+            style={{ 
+              top: '100%',
+              bottom: 'auto',
+              transform: 'translateY(0px)',
+              position: 'absolute',
+              marginTop: '8px'
+            }}
           >
-            <Card className="glass-morphism border-gold-accent/20 shadow-2xl">
+            <Card className="glass-morphism border-gold-accent/20 shadow-2xl" style={{ position: 'relative', zIndex: 9999 }}>
               <CardContent className="p-4">
                 {filteredDestinations.length > 0 ? (
                   <div className="space-y-2">
