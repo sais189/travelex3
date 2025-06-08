@@ -4,7 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
+import { preloadCriticalResources } from "@/utils/performanceCache";
 
 // Immediate load components
 import Home from "@/pages/Home";
@@ -64,6 +65,11 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    // Preload critical resources on app initialization
+    preloadCriticalResources();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>

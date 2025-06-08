@@ -57,8 +57,8 @@ export default function Globe3D() {
     // Texture Loader
     const textureLoader = new THREE.TextureLoader();
 
-    // Create globe geometry
-    const geometry = new THREE.SphereGeometry(1, 64, 64);
+    // Create globe geometry with optimized segments for performance
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
 
     // Create a beautiful gradient material as default
     const createDefaultMaterial = () => {
@@ -124,8 +124,8 @@ export default function Globe3D() {
     earthRef.current = earth;
     scene.add(earth);
 
-    // Add glowing atmosphere
-    const atmosphereGeometry = new THREE.SphereGeometry(1.05, 64, 64);
+    // Add glowing atmosphere with optimized geometry
+    const atmosphereGeometry = new THREE.SphereGeometry(1.05, 24, 24);
     const atmosphereMaterial = new THREE.MeshBasicMaterial({
       color: 0x60a5fa,
       transparent: true,
@@ -136,9 +136,9 @@ export default function Globe3D() {
     atmosphereRef.current = atmosphere;
     scene.add(atmosphere);
 
-    // Add destination points
+    // Add destination points with reduced count for performance
     const pointsGeometry = new THREE.BufferGeometry();
-    const pointsCount = 30;
+    const pointsCount = 15;
     const positions = new Float32Array(pointsCount * 3);
 
     // Real destination coordinates converted to 3D positions
