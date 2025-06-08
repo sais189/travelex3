@@ -481,28 +481,32 @@ export default function EnhancedBooking() {
           x: 25,
           y: 40,
           title: "Pristine Beaches",
-          description: "Relax on crystal-clear beaches with turquoise Adriatic waters."
+          description: "Relax on crystal-clear beaches with turquoise Adriatic waters.",
+          icon: Shell
         },
         {
           id: "spot2",
           x: 60,
           y: 30,
           title: "Island Hopping",
-          description: "Sail between over 1,000 islands each with unique character."
+          description: "Sail between over 1,000 islands each with unique character.",
+          icon: Anchor
         },
         {
           id: "spot3",
           x: 80,
           y: 60,
           title: "Medieval Towns",
-          description: "Explore UNESCO-protected old towns with ancient stone walls."
+          description: "Explore UNESCO-protected old towns with ancient stone walls.",
+          icon: Castle
         },
         {
           id: "spot4",
           x: 45,
           y: 70,
           title: "Underwater Caves",
-          description: "Dive in the clearest waters to discover hidden underwater worlds."
+          description: "Dive in the clearest waters to discover hidden underwater worlds.",
+          icon: Waves
         }
       ];
     } else {
@@ -513,28 +517,32 @@ export default function EnhancedBooking() {
           x: 25,
           y: 40,
           title: "Scenic Viewpoint",
-          description: "Breathtaking panoramic views of the surrounding landscape."
+          description: "Breathtaking panoramic views of the surrounding landscape.",
+          icon: Camera
         },
         {
           id: "spot2",
           x: 60,
           y: 30,
           title: "Natural Wonder",
-          description: "Discover the natural beauty that makes this destination special."
+          description: "Discover the natural beauty that makes this destination special.",
+          icon: Mountain
         },
         {
           id: "spot3",
           x: 80,
           y: 60,
           title: "Cultural Experience",
-          description: "Immerse yourself in local traditions and authentic culture."
+          description: "Immerse yourself in local traditions and authentic culture.",
+          icon: Building
         },
         {
           id: "spot4",
           x: 45,
           y: 70,
           title: "Photo Opportunity",
-          description: "Capture unforgettable moments at this iconic location."
+          description: "Capture unforgettable moments at this iconic location.",
+          icon: Heart
         }
       ];
     }
@@ -1189,7 +1197,10 @@ export default function EnhancedBooking() {
                       whileHover={{ rotate: [0, 5, -5, 0] }}
                       transition={{ duration: 0.5 }}
                     >
-                      <MapPin className="w-6 h-6 text-gold-accent" />
+                      {(() => {
+                        const IconComponent = hotspot.icon || MapPin;
+                        return <IconComponent className="w-6 h-6 text-gold-accent" />;
+                      })()}
                     </motion.div>
                   </motion.div>
 
