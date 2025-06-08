@@ -306,7 +306,7 @@ export default function About() {
             <CardContent className="p-12">
               <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
               <p className="text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto">
-                To democratize luxury travel by making extraordinary experiences accessible to adventurous souls worldwide. 
+                To democratise luxury travel by making extraordinary experiences accessible to adventurous souls worldwide. 
                 We strive to break down barriers between dreamers and destinations, creating a seamless bridge that transforms 
                 wanderlust into unforgettable realities through innovation, excellence, and genuine care for our travellers' journeys.
               </p>

@@ -87,6 +87,9 @@ export default function AdminDashboard() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  const [showUserDetailsDialog, setShowUserDetailsDialog] = useState(false);
+  const [showEditUserDialog, setShowEditUserDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [newUser, setNewUser] = useState({
     username: "",
     email: "",
@@ -94,6 +97,13 @@ export default function AdminDashboard() {
     lastName: "",
     role: "user",
     password: ""
+  });
+  const [editUser, setEditUser] = useState({
+    username: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    role: "user"
   });
   const { toast } = useToast();
 
@@ -137,6 +147,20 @@ export default function AdminDashboard() {
     },
   });
 
+  const updateUser = useMutation({
+    mutationFn: ({ userId, userData }: { userId: string; userData: typeof editUser }) => 
+      apiRequest("PATCH", `/api/admin/users/${userId}`, userData),
+    onSuccess: () => {
+      toast({
+        title: "User updated",
+        description: "User has been updated successfully",
+      });
+      setShowEditUserDialog(false);
+      refetchUsers();
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/activity-logs'] });
+    },
+  });
+
   const addUser = useMutation({
     mutationFn: (userData: typeof newUser) => apiRequest("POST", "/api/admin/users", userData),
     onSuccess: () => {
@@ -164,6 +188,34 @@ export default function AdminDashboard() {
       });
     },
   });
+
+  // Handler functions for user management
+  const handleViewUser = (user: User) => {
+    setSelectedUser(user);
+    setShowUserDetailsDialog(true);
+  };
+
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user);
+    setEditUser({
+      username: user.username,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role
+    });
+    setShowEditUserDialog(true);
+  };
+
+  const handleToggleUserStatus = (userId: string) => {
+    toggleUserStatus.mutate(userId);
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      deleteUser.mutate(userId);
+    }
+  };
 
   // Fetch bookings data for charts
   const { data: bookings = [] } = useQuery<BookingWithDetails[]>({
