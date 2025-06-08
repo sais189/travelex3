@@ -8,8 +8,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Globe3D from "@/components/Globe3D";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 import type { Destination } from "@shared/schema";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export default function Home() {
   const [, navigate] = useLocation();
@@ -19,9 +20,10 @@ export default function Home() {
 
   const { data: destinations = [] } = useQuery<Destination[]>({
     queryKey: ["/api/destinations"],
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 
-  const featuredDestinations = destinations.slice(0, 4);
+  const featuredDestinations = useMemo(() => destinations.slice(0, 4), [destinations]);
 
   const handleSearch = () => {
     if (selectedDestination) {
@@ -198,10 +200,11 @@ export default function Home() {
               >
                 <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden h-full flex flex-col">
                   <div className="relative h-48 flex-shrink-0">
-                    <img
+                    <OptimizedImage
                       src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
                       alt={destination.name}
                       className="w-full h-full object-cover"
+                      priority={index < 2}
                     />
                     <div className="absolute top-4 right-4">
                       <div className="flex items-center space-x-1 bg-black bg-opacity-50 rounded-full px-2 py-1">
