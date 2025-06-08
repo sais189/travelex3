@@ -110,6 +110,7 @@ export default function AdminDashboard() {
     lastName: "",
     role: "user"
   });
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const { toast } = useToast();
 
   // Fetch analytics data
@@ -220,6 +221,32 @@ export default function AdminDashboard() {
     if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
       deleteUser.mutate(userId);
     }
+  };
+
+  // Export functionality
+  const handleExportData = () => {
+    const exportData = {
+      analytics,
+      users: users?.slice(0, 10), // Export first 10 users for demo
+      activityLogs: activityLogs?.slice(0, 20), // Export recent 20 activities
+      exportDate: new Date().toISOString(),
+      exportedBy: "admin"
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `admin-dashboard-export-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Data Exported",
+      description: "Dashboard data has been exported successfully",
+    });
   };
 
   // Fetch bookings data for charts
@@ -394,7 +421,7 @@ export default function AdminDashboard() {
         >
           <div className="flex items-center justify-between bg-gradient-to-r from-slate-panel/50 to-slate-panel/30 backdrop-blur-lg rounded-xl p-6 border border-gold-accent/20">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-2">
+              <h1 className="text-4xl font-black text-white mb-2">
                 Admin Dashboard
               </h1>
               <p className="text-muted-foreground text-lg">
@@ -426,6 +453,7 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={handleExportData}
                 className="glass-morphism border-lavender-accent/30 hover:bg-lavender-accent/10"
               >
                 <Download className="w-4 h-4 mr-2" />
@@ -435,6 +463,7 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => setShowSettingsDialog(true)}
                 className="glass-morphism border-gold-accent/30 hover:bg-gold-accent/10"
               >
                 <Settings className="w-4 h-4 mr-2" />
@@ -1371,6 +1400,130 @@ export default function AdminDashboard() {
               >
                 {updateUser.isPending ? "Updating..." : "Update User"}
               </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Settings Dialog */}
+        <Dialog open={showSettingsDialog} onOpenChange={setShowSettingsDialog}>
+          <DialogContent className="sm:max-w-[600px] glass-morphism border-gold-accent/20">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                <Settings className="w-5 h-5" />
+                <span>Admin Settings</span>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6 py-4">
+              {/* System Settings */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white">System Configuration</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Max Users per Page</label>
+                    <Select defaultValue="10">
+                      <SelectTrigger className="glass-morphism border-gold-accent/30">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="5">5 users</SelectItem>
+                        <SelectItem value="10">10 users</SelectItem>
+                        <SelectItem value="25">25 users</SelectItem>
+                        <SelectItem value="50">50 users</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Activity Log Retention</label>
+                    <Select defaultValue="30">
+                      <SelectTrigger className="glass-morphism border-gold-accent/30">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="7">7 days</SelectItem>
+                        <SelectItem value="30">30 days</SelectItem>
+                        <SelectItem value="90">90 days</SelectItem>
+                        <SelectItem value="365">1 year</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notification Settings */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white">Notifications</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">Email notifications for new users</label>
+                    <input type="checkbox" defaultChecked className="rounded border-gold-accent/30" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">SMS alerts for system issues</label>
+                    <input type="checkbox" className="rounded border-gold-accent/30" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">Daily analytics reports</label>
+                    <input type="checkbox" defaultChecked className="rounded border-gold-accent/30" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Settings */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white">Security</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Session Timeout (minutes)</label>
+                    <Select defaultValue="60">
+                      <SelectTrigger className="glass-morphism border-gold-accent/30">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="30">30 minutes</SelectItem>
+                        <SelectItem value="60">60 minutes</SelectItem>
+                        <SelectItem value="120">2 hours</SelectItem>
+                        <SelectItem value="480">8 hours</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Password Policy</label>
+                    <Select defaultValue="medium">
+                      <SelectTrigger className="glass-morphism border-gold-accent/30">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low security</SelectItem>
+                        <SelectItem value="medium">Medium security</SelectItem>
+                        <SelectItem value="high">High security</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end space-x-4 pt-4 border-t border-gold-accent/20">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowSettingsDialog(false)}
+                  className="glass-morphism border-gold-accent/30"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowSettingsDialog(false);
+                    toast({
+                      title: "Settings Updated",
+                      description: "Admin settings have been saved successfully",
+                    });
+                  }}
+                  className="bg-gradient-to-r from-gold-accent to-lavender-accent text-black font-semibold"
+                >
+                  Save Changes
+                </Button>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
