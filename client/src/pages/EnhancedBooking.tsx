@@ -295,7 +295,7 @@ export default function EnhancedBooking() {
 
   const mockItinerary = getItineraryData();
 
-  // Generate destination-specific interactive hotspots
+  // Generate destination-specific interactive hotspots with varied colors
   const getDestinationHotspots = () => {
     const destinationName = destination?.name.toLowerCase() || '';
     
@@ -307,7 +307,8 @@ export default function EnhancedBooking() {
           y: 40,
           title: "Lion Pride Territory",
           description: "Witness majestic lions in their natural habitat during game drives.",
-          icon: Crown
+          icon: Crown,
+          color: "text-amber-500"
         },
         {
           id: "spot2",
@@ -315,7 +316,8 @@ export default function EnhancedBooking() {
           y: 30,
           title: "Elephant Migration Route",
           description: "Experience the incredible elephant herds on their ancient migration paths.",
-          icon: Mountain
+          icon: Mountain,
+          color: "text-slate-600"
         },
         {
           id: "spot3",
@@ -323,7 +325,8 @@ export default function EnhancedBooking() {
           y: 60,
           title: "Giraffe Sanctuary",
           description: "Get up close with the tallest animals on Earth in protected reserves.",
-          icon: TreePine
+          icon: TreePine,
+          color: "text-green-600"
         },
         {
           id: "spot4",
@@ -331,7 +334,8 @@ export default function EnhancedBooking() {
           y: 70,
           title: "Zebra Plains",
           description: "Marvel at thousands of zebras grazing across the endless savanna.",
-          icon: Compass
+          icon: Compass,
+          color: "text-purple-600"
         }
       ];
     } else if (destinationName.includes('iceland')) {
@@ -342,7 +346,8 @@ export default function EnhancedBooking() {
           y: 40,
           title: "Northern Lights",
           description: "Witness the magical Aurora Borealis dancing across the arctic sky.",
-          icon: Sparkles
+          icon: Sparkles,
+          color: "text-green-400"
         },
         {
           id: "spot2",
@@ -350,7 +355,8 @@ export default function EnhancedBooking() {
           y: 30,
           title: "Active Geysers",
           description: "Watch powerful geothermal eruptions shooting hot water skyward.",
-          icon: Zap
+          icon: Zap,
+          color: "text-yellow-500"
         },
         {
           id: "spot3",
@@ -358,7 +364,8 @@ export default function EnhancedBooking() {
           y: 60,
           title: "Glacier Caves",
           description: "Explore stunning blue ice formations in ancient glacier caves.",
-          icon: Snowflake
+          icon: Snowflake,
+          color: "text-cyan-400"
         },
         {
           id: "spot4",
@@ -366,7 +373,8 @@ export default function EnhancedBooking() {
           y: 70,
           title: "Hot Springs",
           description: "Relax in natural geothermal pools surrounded by dramatic landscapes.",
-          icon: Coffee
+          icon: Coffee,
+          color: "text-orange-500"
         }
       ];
     } else if (destinationName.includes('santorini') || destinationName.includes('greece')) {
@@ -377,7 +385,8 @@ export default function EnhancedBooking() {
           y: 40,
           title: "Ancient Ruins",
           description: "Discover 3,000-year-old archaeological sites with stunning views.",
-          icon: Castle
+          icon: Castle,
+          color: "text-stone-600"
         },
         {
           id: "spot2",
@@ -385,7 +394,8 @@ export default function EnhancedBooking() {
           y: 30,
           title: "Oia Sunset",
           description: "Experience the world's most famous sunset from clifftop villages.",
-          icon: Sun
+          icon: Sun,
+          color: "text-orange-400"
         },
         {
           id: "spot3",
@@ -393,7 +403,8 @@ export default function EnhancedBooking() {
           y: 60,
           title: "Volcanic Wineries",
           description: "Taste unique wines grown in volcanic soil with caldera views.",
-          icon: Grape
+          icon: Grape,
+          color: "text-purple-500"
         },
         {
           id: "spot4",
@@ -401,7 +412,8 @@ export default function EnhancedBooking() {
           y: 70,
           title: "Aegean Sailing",
           description: "Sail crystal-clear waters to hidden beaches and sea caves.",
-          icon: Anchor
+          icon: Anchor,
+          color: "text-blue-500"
         }
       ];
     } else if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
@@ -412,7 +424,8 @@ export default function EnhancedBooking() {
           y: 40,
           title: "Cherry Blossoms",
           description: "Experience the magical sakura season in traditional gardens.",
-          icon: Flower2
+          icon: Flower2,
+          color: "text-pink-400"
         },
         {
           id: "spot2",
@@ -420,7 +433,8 @@ export default function EnhancedBooking() {
           y: 30,
           title: "Historic Temples",
           description: "Visit ancient temples and shrines in the heart of modern Tokyo.",
-          icon: Building
+          icon: Building,
+          color: "text-red-600"
         },
         {
           id: "spot3",
@@ -428,7 +442,8 @@ export default function EnhancedBooking() {
           y: 60,
           title: "Tsukiji Market",
           description: "Discover the world's largest fish market and authentic sushi culture.",
-          icon: Fish
+          icon: Fish,
+          color: "text-blue-600"
         },
         {
           id: "spot4",
@@ -436,7 +451,8 @@ export default function EnhancedBooking() {
           y: 70,
           title: "Bamboo Forests",
           description: "Walk through mystical bamboo groves in serene temple grounds.",
-          icon: TreePine
+          icon: TreePine,
+          color: "text-green-500"
         }
       ];
     } else if (destinationName.includes('norway') || destinationName.includes('fjord')) {
@@ -447,7 +463,8 @@ export default function EnhancedBooking() {
           y: 40,
           title: "Dramatic Fjords",
           description: "Cruise through UNESCO World Heritage fjords with towering cliffs.",
-          icon: Mountain
+          icon: Mountain,
+          color: "text-gray-600"
         },
         {
           id: "spot2",
@@ -455,7 +472,8 @@ export default function EnhancedBooking() {
           y: 30,
           title: "Whale Watching",
           description: "Spot orcas, humpback whales, and arctic wildlife in their habitat.",
-          icon: Waves
+          icon: Waves,
+          color: "text-blue-600"
         },
         {
           id: "spot3",
@@ -463,7 +481,8 @@ export default function EnhancedBooking() {
           y: 60,
           title: "Midnight Sun",
           description: "Experience the phenomenon of 24-hour daylight in summer.",
-          icon: Sun
+          icon: Sun,
+          color: "text-yellow-400"
         },
         {
           id: "spot4",
@@ -471,7 +490,8 @@ export default function EnhancedBooking() {
           y: 70,
           title: "Alpine Adventures",
           description: "Enjoy world-class skiing and mountain hiking opportunities.",
-          icon: Snowflake
+          icon: Snowflake,
+          color: "text-cyan-300"
         }
       ];
     } else if (destinationName.includes('croatia') || destinationName.includes('island')) {
@@ -482,7 +502,8 @@ export default function EnhancedBooking() {
           y: 40,
           title: "Pristine Beaches",
           description: "Relax on crystal-clear beaches with turquoise Adriatic waters.",
-          icon: Shell
+          icon: Shell,
+          color: "text-teal-400"
         },
         {
           id: "spot2",
@@ -490,7 +511,8 @@ export default function EnhancedBooking() {
           y: 30,
           title: "Island Hopping",
           description: "Sail between over 1,000 islands each with unique character.",
-          icon: Anchor
+          icon: Anchor,
+          color: "text-blue-500"
         },
         {
           id: "spot3",
@@ -498,7 +520,8 @@ export default function EnhancedBooking() {
           y: 60,
           title: "Medieval Towns",
           description: "Explore UNESCO-protected old towns with ancient stone walls.",
-          icon: Castle
+          icon: Castle,
+          color: "text-amber-600"
         },
         {
           id: "spot4",
@@ -506,7 +529,8 @@ export default function EnhancedBooking() {
           y: 70,
           title: "Underwater Caves",
           description: "Dive in the clearest waters to discover hidden underwater worlds.",
-          icon: Waves
+          icon: Waves,
+          color: "text-indigo-500"
         }
       ];
     } else {
@@ -518,7 +542,8 @@ export default function EnhancedBooking() {
           y: 40,
           title: "Scenic Viewpoint",
           description: "Breathtaking panoramic views of the surrounding landscape.",
-          icon: Camera
+          icon: Camera,
+          color: "text-violet-500"
         },
         {
           id: "spot2",
@@ -526,7 +551,8 @@ export default function EnhancedBooking() {
           y: 30,
           title: "Natural Wonder",
           description: "Discover the natural beauty that makes this destination special.",
-          icon: Mountain
+          icon: Mountain,
+          color: "text-emerald-600"
         },
         {
           id: "spot3",
@@ -534,7 +560,8 @@ export default function EnhancedBooking() {
           y: 60,
           title: "Cultural Experience",
           description: "Immerse yourself in local traditions and authentic culture.",
-          icon: Building
+          icon: Building,
+          color: "text-rose-500"
         },
         {
           id: "spot4",
@@ -542,7 +569,8 @@ export default function EnhancedBooking() {
           y: 70,
           title: "Photo Opportunity",
           description: "Capture unforgettable moments at this iconic location.",
-          icon: Heart
+          icon: Heart,
+          color: "text-red-500"
         }
       ];
     }
@@ -1104,7 +1132,7 @@ export default function EnhancedBooking() {
         </div>
       </section>
       {/* Interactive Hotspot Map with Split Scroll Reveal */}
-      <section className="py-20 px-6 relative overflow-visible">
+      <section className="py-20 relative overflow-visible">
         {/* Fixed background layer */}
         <motion.div 
           className="absolute inset-0 opacity-30"
@@ -1116,26 +1144,26 @@ export default function EnhancedBooking() {
           }}
         />
         
-        <div className="relative z-10 max-w-6xl mx-auto px-8 py-8">
-          {/* Split layout - Left: Title slides from left, Right: Description from right */}
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              <motion.h2 
-                className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-6 text-center"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                viewport={{ once: true }}
-              >
-                Explore the unique features
-              </motion.h2>
-            </motion.div>
-          </div>
+        {/* Full-width header */}
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+          className="relative z-10 w-full text-center mb-16 px-6"
+        >
+          <motion.h2 
+            className="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            Explore the unique features
+          </motion.h2>
+        </motion.div>
+        
+        <div className="relative z-10 max-w-6xl mx-auto px-6 py-8">
 
           <motion.div 
             className="relative rounded-2xl overflow-visible shadow-2xl"
@@ -1199,7 +1227,8 @@ export default function EnhancedBooking() {
                     >
                       {(() => {
                         const IconComponent = hotspot.icon || MapPin;
-                        return <IconComponent className="w-6 h-6 text-gold-accent" />;
+                        const iconColor = hotspot.color || "text-gold-accent";
+                        return <IconComponent className={`w-6 h-6 ${iconColor}`} />;
                       })()}
                     </motion.div>
                   </motion.div>
@@ -1212,28 +1241,28 @@ export default function EnhancedBooking() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.8 }}
                         transition={{ duration: 0.3 }}
-                        className={`absolute z-50 ${
-                          // Dynamic positioning based on hotspot location
-                          hotspot.y < 30 
+                        className={`absolute z-[60] ${
+                          // Improved dynamic positioning based on hotspot location
+                          hotspot.y < 25 
                             ? 'top-20' // Show below if hotspot is near top
-                            : hotspot.y > 70 
+                            : hotspot.y > 75 
                             ? 'bottom-20' // Show above if hotspot is near bottom
                             : 'top-20' // Default to below
                         } ${
-                          hotspot.x < 30 
+                          hotspot.x < 25 
                             ? 'left-0' // Align left if hotspot is near left edge
-                            : hotspot.x > 70 
+                            : hotspot.x > 75 
                             ? 'right-0' // Align right if hotspot is near right edge
                             : 'left-1/2 transform -translate-x-1/2' // Center if in middle
                         }`}
                         style={{
-                          // Ensure tooltip stays within viewport bounds
-                          maxWidth: '280px',
-                          minWidth: '220px',
-                          // Prevent tooltip from going off-screen
-                          left: hotspot.x > 80 ? 'auto' : undefined,
-                          right: hotspot.x > 80 ? '0' : undefined,
-                          transform: hotspot.x > 30 && hotspot.x < 70 ? 'translateX(-50%)' : undefined
+                          // Ensure tooltip stays within viewport bounds with better sizing
+                          maxWidth: '320px',
+                          minWidth: '280px',
+                          // Prevent tooltip from going off-screen with margin buffer
+                          left: hotspot.x > 75 ? 'auto' : undefined,
+                          right: hotspot.x > 75 ? '20px' : undefined,
+                          transform: hotspot.x > 25 && hotspot.x < 75 ? 'translateX(-50%)' : undefined
                         }}
                       >
                         <div className="bg-white backdrop-blur-md rounded-xl p-5 shadow-2xl border border-gold-accent/30 relative">
