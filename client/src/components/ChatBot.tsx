@@ -154,7 +154,7 @@ Need specific help with any of these topics?`;
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
+    <div className="fixed bottom-6 right-6 z-[70]">
       {/* Chat Button */}
       <motion.div
         whileHover={{ scale: 1.1 }}

@@ -1265,12 +1265,12 @@ export default function EnhancedBooking() {
                           transform: hotspot.x > 25 && hotspot.x < 75 ? 'translateX(-50%)' : undefined
                         }}
                       >
-                        <div className="bg-white backdrop-blur-md rounded-xl p-5 shadow-2xl border border-gold-accent/30 relative">
+                        <div className="bg-white/95 backdrop-blur-md rounded-xl p-6 shadow-2xl border border-gold-accent/30 relative">
                           <div className="text-center">
-                            <h3 className="font-bold text-lg text-gray-900 mb-3 leading-tight">
+                            <h3 className="font-bold text-xl text-gray-900 mb-4 leading-tight break-words">
                               {hotspot.title}
                             </h3>
-                            <p className="text-sm text-gray-800 leading-relaxed line-clamp-3">
+                            <p className="text-base text-gray-800 leading-relaxed break-words overflow-hidden">
                               {hotspot.description}
                             </p>
                           </div>
