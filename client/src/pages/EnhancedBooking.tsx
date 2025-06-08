@@ -728,7 +728,6 @@ export default function EnhancedBooking() {
           </div>
         </div>
       </motion.div>
-
       {/* Cinematic Hero Section with Parallax */}
       <section className="relative h-screen overflow-hidden">
         {/* Parallax Background */}
@@ -1243,9 +1242,7 @@ export default function EnhancedBooking() {
               transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Explore the unique features and experiences that make this destination extraordinary.
-              </p>
+              <p className="text-xl text-muted-foreground leading-relaxed">Explore the unique features and experiences</p>
             </motion.div>
           </div>
 
@@ -1927,7 +1924,6 @@ export default function EnhancedBooking() {
           </div>
         </motion.div>
       </section>
-      
     </div>
   );
 }
