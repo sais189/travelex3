@@ -738,12 +738,10 @@ export default function EnhancedBooking() {
           }}
         >
           <RobustImage
-            src={destination.imageUrl}
-            alt={destination.name}
+            src={destination?.imageUrl || ""}
+            alt={destination?.name || "Destination"}
             className="w-full h-[120%]"
-            fallbackTitle={destination.name}
-            fallbackSubtitle={`Experience awaits in ${destination.country}`}
-            retryable={true}
+            fallbackSrc="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           
@@ -1001,9 +999,7 @@ export default function EnhancedBooking() {
                           src={day.imageUrl}
                           alt={day.title}
                           className="w-full h-full"
-                          fallbackTitle={day.title}
-                          fallbackSubtitle={`Day ${day.day} Experience`}
-                          retryable={true}
+                          fallbackSrc="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                         
@@ -1226,23 +1222,14 @@ export default function EnhancedBooking() {
               viewport={{ once: true, amount: 0.3 }}
             >
               <motion.h2 
-                className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-6"
+                className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-6 text-center"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                Explore Interactive Highlights
+                Explore the unique features
               </motion.h2>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
-              viewport={{ once: true }}
-            >
-              <p className="text-xl text-muted-foreground leading-relaxed">Explore the unique features and experiences</p>
             </motion.div>
           </div>
 
@@ -1254,19 +1241,11 @@ export default function EnhancedBooking() {
             viewport={{ once: true }}
           >
             <div className="relative h-[600px] w-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl overflow-hidden">
-              <img
-                src={destination.imageUrl}
-                alt={destination.name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  target.parentElement?.classList.add('flex', 'items-center', 'justify-center');
-                  const fallback = document.createElement('div');
-                  fallback.className = 'text-center text-slate-600 dark:text-slate-400';
-                  fallback.innerHTML = `<h3 class="text-2xl font-bold mb-2">${destination.name}</h3><p class="text-lg">Beautiful destination in ${destination.country}</p>`;
-                  target.parentElement?.appendChild(fallback);
-                }}
+              <RobustImage
+                src={destination?.imageUrl || ""}
+                alt={destination?.name || "Destination"}
+                className="w-full h-full"
+                fallbackSrc="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
               />
               
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
