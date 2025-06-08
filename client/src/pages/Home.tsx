@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { OptimizedImage } from "@/components/ui/optimized-image";
+import EarthGlobe from "@/components/EarthGlobe";
 import type { Destination } from "@shared/schema";
 import { useState, useMemo } from "react";
 
@@ -43,12 +44,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
+      {/* Hero Section with 3D Globe */}
       <section className="pt-32 pb-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-center">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
-              className="text-center max-w-4xl"
+              className="text-center lg:text-left"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -57,14 +58,14 @@ export default function Home() {
                 Explore the{" "}
                 <span className="text-gold-accent">Future</span> of Travel
               </h1>
-              <p className="text-xl text-muted-foreground mb-8 max-w-lg mx-auto">
+              <p className="text-xl text-muted-foreground mb-8 max-w-lg">
                 Discover extraordinary destinations with our immersive travel
                 experiences powered by cutting-edge technology.
               </p>
 
               {/* Search Bar */}
               <motion.div
-                className="glass-morphism rounded-2xl p-6 mb-8 max-w-2xl mx-auto"
+                className="glass-morphism rounded-2xl p-6 mb-8 max-w-2xl"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -134,7 +135,7 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="flex flex-col sm:flex-row gap-4 justify-center"
+                className="flex flex-col sm:flex-row gap-4"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
@@ -156,6 +157,16 @@ export default function Home() {
                   Learn More
                 </Button>
               </motion.div>
+            </motion.div>
+
+            {/* 3D Globe */}
+            <motion.div
+              className="flex justify-center lg:justify-end"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.6 }}
+            >
+              <EarthGlobe />
             </motion.div>
           </div>
         </div>
