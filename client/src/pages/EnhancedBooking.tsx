@@ -327,7 +327,7 @@ export default function EnhancedBooking() {
           id: "spot1",
           x: 25,
           y: 40,
-          icon: "❄️",
+          icon: "",
           title: "Northern Lights",
           description: "Witness the magical Aurora Borealis dancing across the arctic sky."
         },
@@ -335,7 +335,7 @@ export default function EnhancedBooking() {
           id: "spot2",
           x: 60,
           y: 30,
-          icon: "🌋",
+          icon: "",
           title: "Active Geysers",
           description: "Watch powerful geothermal eruptions shooting hot water skyward."
         },
@@ -343,7 +343,7 @@ export default function EnhancedBooking() {
           id: "spot3",
           x: 80,
           y: 60,
-          icon: "🧊",
+          icon: "",
           title: "Glacier Caves",
           description: "Explore stunning blue ice formations in ancient glacier caves."
         },
@@ -351,7 +351,7 @@ export default function EnhancedBooking() {
           id: "spot4",
           x: 45,
           y: 70,
-          icon: "♨️",
+          icon: "",
           title: "Hot Springs",
           description: "Relax in natural geothermal pools surrounded by dramatic landscapes."
         }
@@ -362,7 +362,7 @@ export default function EnhancedBooking() {
           id: "spot1",
           x: 25,
           y: 40,
-          icon: "🏛️",
+          icon: "",
           title: "Ancient Ruins",
           description: "Discover 3,000-year-old archaeological sites with stunning views."
         },
@@ -370,7 +370,7 @@ export default function EnhancedBooking() {
           id: "spot2",
           x: 60,
           y: 30,
-          icon: "🌅",
+          icon: "",
           title: "Oia Sunset",
           description: "Experience the world's most famous sunset from clifftop villages."
         },
@@ -378,7 +378,7 @@ export default function EnhancedBooking() {
           id: "spot3",
           x: 80,
           y: 60,
-          icon: "🍷",
+          icon: "",
           title: "Volcanic Wineries",
           description: "Taste unique wines grown in volcanic soil with caldera views."
         },
@@ -386,7 +386,7 @@ export default function EnhancedBooking() {
           id: "spot4",
           x: 45,
           y: 70,
-          icon: "⛵",
+          icon: "",
           title: "Aegean Sailing",
           description: "Sail crystal-clear waters to hidden beaches and sea caves."
         }
@@ -397,7 +397,7 @@ export default function EnhancedBooking() {
           id: "spot1",
           x: 25,
           y: 40,
-          icon: "🌸",
+          icon: "",
           title: "Cherry Blossoms",
           description: "Experience the magical sakura season in traditional gardens."
         },
@@ -405,7 +405,7 @@ export default function EnhancedBooking() {
           id: "spot2",
           x: 60,
           y: 30,
-          icon: "🏯",
+          icon: "",
           title: "Historic Temples",
           description: "Visit ancient temples and shrines in the heart of modern Tokyo."
         },
@@ -413,7 +413,7 @@ export default function EnhancedBooking() {
           id: "spot3",
           x: 80,
           y: 60,
-          icon: "🍣",
+          icon: "",
           title: "Tsukiji Market",
           description: "Discover the world's largest fish market and authentic sushi culture."
         },
@@ -421,7 +421,7 @@ export default function EnhancedBooking() {
           id: "spot4",
           x: 45,
           y: 70,
-          icon: "🎋",
+          icon: "",
           title: "Bamboo Forests",
           description: "Walk through mystical bamboo groves in serene temple grounds."
         }
@@ -432,7 +432,7 @@ export default function EnhancedBooking() {
           id: "spot1",
           x: 25,
           y: 40,
-          icon: "🏔️",
+          icon: "",
           title: "Dramatic Fjords",
           description: "Cruise through UNESCO World Heritage fjords with towering cliffs."
         },
@@ -440,7 +440,7 @@ export default function EnhancedBooking() {
           id: "spot2",
           x: 60,
           y: 30,
-          icon: "🐋",
+          icon: "",
           title: "Whale Watching",
           description: "Spot orcas, humpback whales, and arctic wildlife in their habitat."
         },
@@ -448,7 +448,7 @@ export default function EnhancedBooking() {
           id: "spot3",
           x: 80,
           y: 60,
-          icon: "🌌",
+          icon: "",
           title: "Midnight Sun",
           description: "Experience the phenomenon of 24-hour daylight in summer."
         },
@@ -456,7 +456,7 @@ export default function EnhancedBooking() {
           id: "spot4",
           x: 45,
           y: 70,
-          icon: "🎿",
+          icon: "",
           title: "Alpine Adventures",
           description: "Enjoy world-class skiing and mountain hiking opportunities."
         }
@@ -467,7 +467,7 @@ export default function EnhancedBooking() {
           id: "spot1",
           x: 25,
           y: 40,
-          icon: "🏖️",
+          icon: "",
           title: "Pristine Beaches",
           description: "Relax on crystal-clear beaches with turquoise Adriatic waters."
         },
@@ -475,7 +475,7 @@ export default function EnhancedBooking() {
           id: "spot2",
           x: 60,
           y: 30,
-          icon: "⛵",
+          icon: "",
           title: "Island Hopping",
           description: "Sail between over 1,000 islands each with unique character."
         },
@@ -483,7 +483,7 @@ export default function EnhancedBooking() {
           id: "spot3",
           x: 80,
           y: 60,
-          icon: "🏰",
+          icon: "",
           title: "Medieval Towns",
           description: "Explore UNESCO-protected old towns with ancient stone walls."
         },
@@ -491,7 +491,7 @@ export default function EnhancedBooking() {
           id: "spot4",
           x: 45,
           y: 70,
-          icon: "🐠",
+          icon: "",
           title: "Underwater Caves",
           description: "Dive in the clearest waters to discover hidden underwater worlds."
         }
@@ -503,7 +503,7 @@ export default function EnhancedBooking() {
           id: "spot1",
           x: 25,
           y: 40,
-          icon: "🏔️",
+          icon: "",
           title: "Scenic Viewpoint",
           description: "Breathtaking panoramic views of the surrounding landscape."
         },
@@ -511,7 +511,7 @@ export default function EnhancedBooking() {
           id: "spot2",
           x: 60,
           y: 30,
-          icon: "🌊",
+          icon: "",
           title: "Natural Wonder",
           description: "Discover the natural beauty that makes this destination special."
         },
@@ -519,7 +519,7 @@ export default function EnhancedBooking() {
           id: "spot3",
           x: 80,
           y: 60,
-          icon: "🎯",
+          icon: "",
           title: "Cultural Experience",
           description: "Immerse yourself in local traditions and authentic culture."
         },
@@ -527,7 +527,7 @@ export default function EnhancedBooking() {
           id: "spot4",
           x: 45,
           y: 70,
-          icon: "📸",
+          icon: "",
           title: "Photo Opportunity",
           description: "Capture unforgettable moments at this iconic location."
         }
