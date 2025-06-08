@@ -284,6 +284,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch('/api/admin/users/:id', async (req, res) => {
+    try {
+      const sessionUser = (req as any).session?.user;
+      if (!sessionUser || sessionUser.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const { id } = req.params;
+      const { username, email, firstName, lastName, role } = req.body;
+
+      if (!username || !email) {
+        return res.status(400).json({ message: "Username and email are required" });
+      }
+
+      // Check if username is already taken by another user
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser && existingUser.id !== id) {
+        return res.status(409).json({ message: "Username already exists" });
+      }
+
+      // Get current user data
+      const currentUser = await storage.getUser(id);
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Update user
+      const updatedUser = await storage.updateUser(id, {
+        username,
+        email,
+        firstName,
+        lastName,
+        role: role || currentUser.role
+      });
+
+      // Log the activity
+      await storage.createActivityLog({
+        userId: sessionUser.id,
+        action: 'User Updated',
+        description: `Updated user ${username} (${firstName} ${lastName})`
+      });
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Update user error:", error);
+      res.status(500).json({ message: "Failed to update user" });
+    }
+  });
+
   app.delete('/api/admin/users/:id', async (req, res) => {
     try {
       const sessionUser = (req as any).session?.user;

@@ -1095,22 +1095,32 @@ export default function AdminDashboard() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleViewUser(user)}>
                                   <Eye className="w-4 h-4 mr-2" />
                                   View Details
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleEditUser(user)}>
                                   <Edit className="w-4 h-4 mr-2" />
                                   Edit User
                                 </DropdownMenuItem>
                                 <DropdownMenuItem 
-                                  onClick={() => toggleUserStatus.mutate(user.id)}
+                                  onClick={() => handleToggleUserStatus(user.id)}
                                 >
-                                  {user.isActive ? 'Deactivate' : 'Activate'}
+                                  {user.isActive ? (
+                                    <>
+                                      <XCircle className="w-4 h-4 mr-2" />
+                                      Deactivate
+                                    </>
+                                  ) : (
+                                    <>
+                                      <CheckCircle className="w-4 h-4 mr-2" />
+                                      Activate
+                                    </>
+                                  )}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem 
                                   className="text-red-600"
-                                  onClick={() => deleteUser.mutate(user.id)}
+                                  onClick={() => handleDeleteUser(user.id)}
                                 >
                                   <Trash2 className="w-4 h-4 mr-2" />
                                   Delete User
@@ -1163,6 +1173,146 @@ export default function AdminDashboard() {
 
 
         </Tabs>
+
+        {/* User Details Dialog */}
+        <Dialog open={showUserDetailsDialog} onOpenChange={setShowUserDetailsDialog}>
+          <DialogContent className="sm:max-w-[500px] glass-morphism border-gold-accent/20">
+            <DialogHeader>
+              <DialogTitle>User Details</DialogTitle>
+            </DialogHeader>
+            {selectedUser && (
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">First Name</label>
+                    <p className="text-sm">{selectedUser.firstName}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Last Name</label>
+                    <p className="text-sm">{selectedUser.lastName}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Username</label>
+                  <p className="text-sm">@{selectedUser.username}</p>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Email</label>
+                  <p className="text-sm">{selectedUser.email}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Role</label>
+                    <Badge variant={selectedUser.role === 'admin' ? 'default' : 'secondary'}>
+                      {selectedUser.role === 'admin' && <Shield className="w-3 h-3 mr-1" />}
+                      {selectedUser.role.replace('_', ' ')}
+                    </Badge>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Status</label>
+                    <Badge variant={selectedUser.isActive ? 'default' : 'destructive'}>
+                      {selectedUser.isActive ? (
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                      ) : (
+                        <XCircle className="w-3 h-3 mr-1" />
+                      )}
+                      {selectedUser.isActive ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Last Login</label>
+                  <p className="text-sm">
+                    {selectedUser.lastLoginAt 
+                      ? format(new Date(selectedUser.lastLoginAt), 'MMM dd, yyyy HH:mm')
+                      : 'Never'
+                    }
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Created</label>
+                  <p className="text-sm">{format(new Date(selectedUser.createdAt), 'MMM dd, yyyy HH:mm')}</p>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit User Dialog */}
+        <Dialog open={showEditUserDialog} onOpenChange={setShowEditUserDialog}>
+          <DialogContent className="sm:max-w-[425px] glass-morphism border-gold-accent/20">
+            <DialogHeader>
+              <DialogTitle>Edit User</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">First Name</label>
+                  <Input
+                    value={editUser.firstName}
+                    onChange={(e) => setEditUser({ ...editUser, firstName: e.target.value })}
+                    placeholder="First name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Last Name</label>
+                  <Input
+                    value={editUser.lastName}
+                    onChange={(e) => setEditUser({ ...editUser, lastName: e.target.value })}
+                    placeholder="Last name"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Username</label>
+                <Input
+                  value={editUser.username}
+                  onChange={(e) => setEditUser({ ...editUser, username: e.target.value })}
+                  placeholder="Username"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Email</label>
+                <Input
+                  type="email"
+                  value={editUser.email}
+                  onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
+                  placeholder="Email address"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Role</label>
+                <Select value={editUser.role} onValueChange={(value) => setEditUser({ ...editUser, role: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="travel_agent">Travel Agent</SelectItem>
+                    <SelectItem value="support">Support</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowEditUserDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => selectedUser && updateUser.mutate({ userId: selectedUser.id, userData: editUser })}
+                disabled={updateUser.isPending || !editUser.username || !editUser.email}
+                className="bg-gradient-to-r from-gold-accent to-lavender-accent"
+              >
+                {updateUser.isPending ? "Updating..." : "Update User"}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
