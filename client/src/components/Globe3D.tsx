@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import * as THREE from "three";
 
 export default function Globe3D() {
@@ -6,6 +6,17 @@ export default function Globe3D() {
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const frameRef = useRef<number | null>(null);
+  const earthRef = useRef<THREE.Mesh | null>(null);
+  const atmosphereRef = useRef<THREE.Mesh | null>(null);
+  const pointsRef = useRef<THREE.Points | null>(null);
+  
+  // Interactive controls state
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [targetRotation, setTargetRotation] = useState({ x: 0, y: 0 });
+  const [autoRotate, setAutoRotate] = useState(true);
+  const [rotationSpeed, setRotationSpeed] = useState(0.0015);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -101,6 +112,7 @@ export default function Globe3D() {
     );
 
     const earth = new THREE.Mesh(geometry, material);
+    earthRef.current = earth;
     scene.add(earth);
 
     // Add glowing atmosphere
@@ -112,6 +124,7 @@ export default function Globe3D() {
       side: THREE.BackSide,
     });
     const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+    atmosphereRef.current = atmosphere;
     scene.add(atmosphere);
 
     // Add destination points
@@ -165,20 +178,136 @@ export default function Globe3D() {
     });
 
     const points = new THREE.Points(pointsGeometry, pointsMaterial);
+    pointsRef.current = points;
     scene.add(points);
 
-    // Animation
+    // Mouse interaction handlers
+    const handleMouseDown = (event: MouseEvent) => {
+      setIsMouseDown(true);
+      setAutoRotate(false);
+      setMousePosition({ x: event.clientX, y: event.clientY });
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!isMouseDown) return;
+      
+      const deltaX = event.clientX - mousePosition.x;
+      const deltaY = event.clientY - mousePosition.y;
+      
+      setTargetRotation(prev => ({
+        x: prev.x - deltaY * 0.005,
+        y: prev.y + deltaX * 0.005
+      }));
+      
+      setMousePosition({ x: event.clientX, y: event.clientY });
+    };
+
+    const handleMouseUp = () => {
+      setIsMouseDown(false);
+      // Resume auto-rotation after 3 seconds of no interaction
+      setTimeout(() => setAutoRotate(true), 3000);
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      const zoom = event.deltaY > 0 ? 1.1 : 0.9;
+      camera.position.multiplyScalar(zoom);
+      camera.position.clampLength(2, 8);
+    };
+
+    const handleDoubleClick = () => {
+      // Speed up rotation temporarily
+      setRotationSpeed(0.008);
+      setTimeout(() => setRotationSpeed(0.0015), 2000);
+    };
+
+    // Touch interaction handlers for mobile
+    const handleTouchStart = (event: TouchEvent) => {
+      event.preventDefault();
+      const touch = event.touches[0];
+      setIsMouseDown(true);
+      setAutoRotate(false);
+      setMousePosition({ x: touch.clientX, y: touch.clientY });
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!isMouseDown) return;
+      event.preventDefault();
+      
+      const touch = event.touches[0];
+      const deltaX = touch.clientX - mousePosition.x;
+      const deltaY = touch.clientY - mousePosition.y;
+      
+      setTargetRotation(prev => ({
+        x: prev.x - deltaY * 0.005,
+        y: prev.y + deltaX * 0.005
+      }));
+      
+      setMousePosition({ x: touch.clientX, y: touch.clientY });
+    };
+
+    const handleTouchEnd = () => {
+      setIsMouseDown(false);
+      setTimeout(() => setAutoRotate(true), 3000);
+    };
+
+    // Add event listeners for both mouse and touch
+    const canvas = renderer.domElement;
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('wheel', handleWheel, { passive: false });
+    canvas.addEventListener('dblclick', handleDoubleClick);
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvas.addEventListener('touchend', handleTouchEnd);
+    canvas.style.cursor = 'grab';
+    canvas.style.touchAction = 'none';
+
+    // Animation with interactive controls
     const animate = () => {
       frameRef.current = requestAnimationFrame(animate);
       
-      // Smooth rotation
-      earth.rotation.y += 0.0015;
-      atmosphere.rotation.y += 0.0015;
-      points.rotation.y += 0.0015;
+      // Smooth interpolation to target rotation
+      const earth = earthRef.current;
+      const atmosphere = atmosphereRef.current;
+      const points = pointsRef.current;
       
-      // Pulsing points
-      const time = Date.now() * 0.005;
-      pointsMaterial.opacity = 0.5 + 0.5 * Math.sin(time);
+      if (earth && atmosphere && points) {
+        if (autoRotate) {
+          // Auto rotation
+          earth.rotation.y += rotationSpeed;
+          atmosphere.rotation.y += rotationSpeed;
+          points.rotation.y += rotationSpeed;
+        } else {
+          // User-controlled rotation with smooth interpolation
+          const lerpFactor = 0.1;
+          setRotation(prev => ({
+            x: prev.x + (targetRotation.x - prev.x) * lerpFactor,
+            y: prev.y + (targetRotation.y - prev.y) * lerpFactor
+          }));
+          
+          earth.rotation.x = rotation.x;
+          earth.rotation.y = rotation.y;
+          atmosphere.rotation.x = rotation.x;
+          atmosphere.rotation.y = rotation.y;
+          points.rotation.x = rotation.x;
+          points.rotation.y = rotation.y;
+        }
+        
+        // Update cursor based on interaction state
+        canvas.style.cursor = isMouseDown ? 'grabbing' : 'grab';
+        
+        // Pulsing points with interaction feedback
+        const time = Date.now() * 0.005;
+        const pulseIntensity = autoRotate ? 0.5 : 0.8; // More intense when interacting
+        pointsMaterial.opacity = pulseIntensity + (1 - pulseIntensity) * Math.sin(time);
+        
+        // Scale effect on interaction
+        const scale = isMouseDown ? 1.02 : 1.0;
+        earth.scale.setScalar(scale);
+        atmosphere.scale.setScalar(scale * 1.05);
+      }
       
       renderer.render(scene, camera);
     };
@@ -200,6 +329,18 @@ export default function Globe3D() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      
+      // Remove event listeners
+      const canvas = renderer.domElement;
+      canvas.removeEventListener('mousedown', handleMouseDown);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseup', handleMouseUp);
+      canvas.removeEventListener('wheel', handleWheel);
+      canvas.removeEventListener('dblclick', handleDoubleClick);
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleTouchEnd);
+      
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
       }
@@ -217,10 +358,42 @@ export default function Globe3D() {
   }, []);
 
   return (
-    <div 
-      ref={mountRef} 
-      className="w-full h-full"
-      style={{ minHeight: '400px' }}
-    />
+    <div className="relative w-full h-full" style={{ minHeight: '400px' }}>
+      <div 
+        ref={mountRef} 
+        className="w-full h-full"
+      />
+      
+      {/* Interaction hints */}
+      <div className="absolute bottom-4 left-4 text-white/60 text-xs space-y-1 pointer-events-none">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-gold-accent rounded-full animate-pulse" />
+          <span>Drag to rotate</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-lavender-accent rounded-full animate-pulse" />
+          <span>Scroll to zoom</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+          <span>Double-click for speed boost</span>
+        </div>
+      </div>
+      
+      {/* Status indicator */}
+      <div className="absolute top-4 right-4 text-white/60 text-xs pointer-events-none">
+        {autoRotate ? (
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-spin" />
+            <span>Auto-rotating</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-orange-400 rounded-full" />
+            <span>Manual control</span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
