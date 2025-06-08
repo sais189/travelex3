@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { ArrowRight, Globe, Award, Users, TrendingUp, Rocket, Calendar, Star, Heart, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import LazyImage from "@/components/LazyImage";
 
 export default function About() {
   const [, navigate] = useLocation();
@@ -177,8 +178,8 @@ export default function About() {
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <img
-                      src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400"
+                    <LazyImage
+                      src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=75"
                       alt="Futuristic travel technology"
                       className="rounded-xl shadow-lg w-full h-auto"
                     />
@@ -203,8 +204,8 @@ export default function About() {
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <img
-                      src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400"
+                    <LazyImage
+                      src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=75"
                       alt="Luxury hotel interior"
                       className="rounded-xl shadow-lg w-full h-auto"
                     />
@@ -244,8 +245,8 @@ export default function About() {
                     transition={{ duration: 0.3 }}
                   >
                     <img
-                      src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
-                      alt="Travel innovation and technology"
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
+                      alt="Interactive globe and modern travel technology"
                       className="rounded-xl shadow-lg w-full h-auto"
                     />
                     <div className="absolute inset-0 bg-gradient-to-tr from-mint-accent/20 to-transparent rounded-xl" />
