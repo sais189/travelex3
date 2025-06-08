@@ -6,6 +6,20 @@ export default function Globe3D() {
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const frameRef = useRef<number | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const earthRef = useRef<THREE.Mesh | null>(null);
+  const atmosphereRef = useRef<THREE.Mesh | null>(null);
+  const pointsRef = useRef<THREE.Points | null>(null);
+  
+  // Mouse interaction state
+  const mouseRef = useRef({
+    isDown: false,
+    position: { x: 0, y: 0 },
+    previousPosition: { x: 0, y: 0 },
+    rotation: { x: 0, y: 0 },
+    targetRotation: { x: 0, y: 0 },
+    autoRotationSpeed: 0.004 // Increased from 0.0015
+  });
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -20,6 +34,7 @@ export default function Globe3D() {
     // Camera
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(0, 0, 3);
+    cameraRef.current = camera;
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({ 
@@ -101,6 +116,7 @@ export default function Globe3D() {
     );
 
     const earth = new THREE.Mesh(geometry, material);
+    earthRef.current = earth;
     scene.add(earth);
 
     // Add glowing atmosphere
@@ -112,6 +128,7 @@ export default function Globe3D() {
       side: THREE.BackSide,
     });
     const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+    atmosphereRef.current = atmosphere;
     scene.add(atmosphere);
 
     // Add destination points
@@ -165,16 +182,77 @@ export default function Globe3D() {
     });
 
     const points = new THREE.Points(pointsGeometry, pointsMaterial);
+    pointsRef.current = points;
     scene.add(points);
+
+    // Mouse event handlers
+    const handleMouseDown = (event: MouseEvent) => {
+      mouseRef.current.isDown = true;
+      mouseRef.current.previousPosition.x = event.clientX;
+      mouseRef.current.previousPosition.y = event.clientY;
+      renderer.domElement.style.cursor = 'grabbing';
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!mouseRef.current.isDown) return;
+
+      const deltaX = event.clientX - mouseRef.current.previousPosition.x;
+      const deltaY = event.clientY - mouseRef.current.previousPosition.y;
+
+      mouseRef.current.targetRotation.y += deltaX * 0.01;
+      mouseRef.current.targetRotation.x += deltaY * 0.01;
+
+      // Clamp vertical rotation
+      mouseRef.current.targetRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, mouseRef.current.targetRotation.x));
+
+      mouseRef.current.previousPosition.x = event.clientX;
+      mouseRef.current.previousPosition.y = event.clientY;
+    };
+
+    const handleMouseUp = () => {
+      mouseRef.current.isDown = false;
+      renderer.domElement.style.cursor = 'grab';
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      const zoomSpeed = 0.1;
+      const minDistance = 1.5;
+      const maxDistance = 10;
+      
+      camera.position.z += event.deltaY * 0.001 * zoomSpeed;
+      camera.position.z = Math.max(minDistance, Math.min(maxDistance, camera.position.z));
+    };
+
+    // Add event listeners
+    renderer.domElement.addEventListener('mousedown', handleMouseDown);
+    renderer.domElement.addEventListener('mousemove', handleMouseMove);
+    renderer.domElement.addEventListener('mouseup', handleMouseUp);
+    renderer.domElement.addEventListener('mouseleave', handleMouseUp);
+    renderer.domElement.addEventListener('wheel', handleWheel);
+    renderer.domElement.style.cursor = 'grab';
 
     // Animation
     const animate = () => {
       frameRef.current = requestAnimationFrame(animate);
 
-      // Smooth rotation
-      earth.rotation.y += 0.0015;
-      atmosphere.rotation.y += 0.0015;
-      points.rotation.y += 0.0015;
+      // Smooth interpolation for user interactions
+      const lerpFactor = 0.05;
+      mouseRef.current.rotation.x += (mouseRef.current.targetRotation.x - mouseRef.current.rotation.x) * lerpFactor;
+      mouseRef.current.rotation.y += (mouseRef.current.targetRotation.y - mouseRef.current.rotation.y) * lerpFactor;
+
+      // Auto rotation when not interacting
+      if (!mouseRef.current.isDown) {
+        mouseRef.current.targetRotation.y += mouseRef.current.autoRotationSpeed;
+      }
+
+      // Apply rotations to globe objects
+      earth.rotation.x = mouseRef.current.rotation.x;
+      earth.rotation.y = mouseRef.current.rotation.y;
+      atmosphere.rotation.x = mouseRef.current.rotation.x;
+      atmosphere.rotation.y = mouseRef.current.rotation.y;
+      points.rotation.x = mouseRef.current.rotation.x;
+      points.rotation.y = mouseRef.current.rotation.y;
 
       // Pulsing points
       const time = Date.now() * 0.005;
@@ -200,6 +278,14 @@ export default function Globe3D() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      
+      // Remove mouse event listeners
+      renderer.domElement.removeEventListener('mousedown', handleMouseDown);
+      renderer.domElement.removeEventListener('mousemove', handleMouseMove);
+      renderer.domElement.removeEventListener('mouseup', handleMouseUp);
+      renderer.domElement.removeEventListener('mouseleave', handleMouseUp);
+      renderer.domElement.removeEventListener('wheel', handleWheel);
+      
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
       }
