@@ -48,7 +48,7 @@ export default function About() {
       year: "2025",
       title: "Future Vision",
       description: "Expanding to 100+ destinations with sustainable travel initiatives",
-      icon: Heart,
+      icon: MapPin,
       color: "from-indigo-500 to-purple-500"
     }
   ];
@@ -245,8 +245,8 @@ export default function About() {
                     transition={{ duration: 0.3 }}
                   >
                     <LazyImage
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=75"
-                      alt="Interactive globe and modern travel technology"
+                      src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=75"
+                      alt="Scenic mountain landscape with pristine lake"
                       className="rounded-xl shadow-lg w-full h-auto"
                     />
                     <div className="absolute inset-0 bg-gradient-to-tr from-mint-accent/20 to-transparent rounded-xl" />
