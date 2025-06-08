@@ -170,9 +170,7 @@ export default function About() {
                     <p className="text-muted-foreground text-lg leading-relaxed">
                       We believe travel should transcend the ordinary. By combining futuristic technology with luxurious accommodations, we create immersive experiences that connect travelers with destinations in unprecedented ways.
                     </p>
-                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">
-                      Our platform leverages advanced algorithms, AI-powered recommendations, and real-time data to craft personalized journeys that exceed expectations and create lasting memories.
-                    </p>
+                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">Our platform leverages advanced algorithms, AI-powered recommendations, and real-time data to craft personalised journeys that exceed expectations and create lasting memories.</p>
                   </div>
                   <motion.div
                     className="relative"
