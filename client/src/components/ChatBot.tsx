@@ -154,7 +154,7 @@ Need specific help with any of these topics?`;
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[70]">
+    <div className="fixed bottom-4 right-4 z-[70] sm:bottom-6 sm:right-6">
       {/* Chat Button */}
       <motion.div
         whileHover={{ scale: 1.1 }}
@@ -173,7 +173,11 @@ Need specific help with any of these topics?`;
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute bottom-20 right-0 w-80 h-96 glass-morphism rounded-2xl shadow-2xl overflow-hidden"
+            className="absolute bottom-20 right-0 w-80 max-h-[calc(100vh-140px)] glass-morphism rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            style={{ 
+              maxHeight: 'min(400px, calc(100vh - 140px))',
+              height: 'min(400px, calc(100vh - 140px))'
+            }}
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -203,7 +207,7 @@ Need specific help with any of these topics?`;
             </div>
 
             {/* Chat Messages */}
-            <div className="p-4 h-64 overflow-y-auto">
+            <div className="p-4 flex-1 overflow-y-auto" style={{ height: 'calc(100% - 140px)' }}>
               <div className="space-y-4">
                 {messages.map((message) => (
                   <motion.div
@@ -233,7 +237,7 @@ Need specific help with any of these topics?`;
             </div>
 
             {/* Chat Input */}
-            <div className="p-4 border-t border-border">
+            <div className="p-4 border-t border-border flex-shrink-0">
               <div className="flex items-center space-x-2">
                 <Input
                   value={inputValue}
