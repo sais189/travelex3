@@ -214,9 +214,7 @@ export default function About() {
                   </motion.div>
                   <div className="lg:order-2">
                     <h2 className="text-3xl font-bold mb-4">Premium Experiences</h2>
-                    <p className="text-muted-foreground text-lg leading-relaxed">
-                      Every destination in our portfolio is carefully curated to offer unmatched luxury, exclusive access, and personalized service that exceeds expectations.
-                    </p>
+                    <p className="text-muted-foreground text-lg leading-relaxed">Every destination in our portfolio is carefully curated to offer unmatched luxury, exclusive access, and personalised service that exceeds expectations.</p>
                     <p className="text-muted-foreground text-lg leading-relaxed mt-4">
                       From private overwater villas in the Maldives to exclusive mountain chalets in the Swiss Alps, we partner with the world's finest accommodations to ensure your journey is nothing short of extraordinary.
                     </p>
