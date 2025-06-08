@@ -28,7 +28,20 @@ import {
   Volume2,
   VolumeX,
   Play,
-  Pause
+  Pause,
+  Crown,
+  Compass,
+  Anchor,
+  Fish,
+  Snowflake,
+  Wind,
+  Castle,
+  Sun,
+  Grape,
+  TreePalm,
+  Building,
+  Flower2,
+  Shell
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -293,28 +306,32 @@ export default function EnhancedBooking() {
           x: 25,
           y: 40,
           title: "Lion Pride Territory",
-          description: "Witness majestic lions in their natural habitat during game drives."
+          description: "Witness majestic lions in their natural habitat during game drives.",
+          icon: Crown
         },
         {
           id: "spot2",
           x: 60,
           y: 30,
           title: "Elephant Migration Route",
-          description: "Experience the incredible elephant herds on their ancient migration paths."
+          description: "Experience the incredible elephant herds on their ancient migration paths.",
+          icon: Mountain
         },
         {
           id: "spot3",
           x: 80,
           y: 60,
           title: "Giraffe Sanctuary",
-          description: "Get up close with the tallest animals on Earth in protected reserves."
+          description: "Get up close with the tallest animals on Earth in protected reserves.",
+          icon: TreePine
         },
         {
           id: "spot4",
           x: 45,
           y: 70,
           title: "Zebra Plains",
-          description: "Marvel at thousands of zebras grazing across the endless savanna."
+          description: "Marvel at thousands of zebras grazing across the endless savanna.",
+          icon: Compass
         }
       ];
     } else if (destinationName.includes('iceland')) {
@@ -324,28 +341,32 @@ export default function EnhancedBooking() {
           x: 25,
           y: 40,
           title: "Northern Lights",
-          description: "Witness the magical Aurora Borealis dancing across the arctic sky."
+          description: "Witness the magical Aurora Borealis dancing across the arctic sky.",
+          icon: Sparkles
         },
         {
           id: "spot2",
           x: 60,
           y: 30,
           title: "Active Geysers",
-          description: "Watch powerful geothermal eruptions shooting hot water skyward."
+          description: "Watch powerful geothermal eruptions shooting hot water skyward.",
+          icon: Zap
         },
         {
           id: "spot3",
           x: 80,
           y: 60,
           title: "Glacier Caves",
-          description: "Explore stunning blue ice formations in ancient glacier caves."
+          description: "Explore stunning blue ice formations in ancient glacier caves.",
+          icon: Snowflake
         },
         {
           id: "spot4",
           x: 45,
           y: 70,
           title: "Hot Springs",
-          description: "Relax in natural geothermal pools surrounded by dramatic landscapes."
+          description: "Relax in natural geothermal pools surrounded by dramatic landscapes.",
+          icon: Coffee
         }
       ];
     } else if (destinationName.includes('santorini') || destinationName.includes('greece')) {
@@ -355,28 +376,32 @@ export default function EnhancedBooking() {
           x: 25,
           y: 40,
           title: "Ancient Ruins",
-          description: "Discover 3,000-year-old archaeological sites with stunning views."
+          description: "Discover 3,000-year-old archaeological sites with stunning views.",
+          icon: Castle
         },
         {
           id: "spot2",
           x: 60,
           y: 30,
           title: "Oia Sunset",
-          description: "Experience the world's most famous sunset from clifftop villages."
+          description: "Experience the world's most famous sunset from clifftop villages.",
+          icon: Sun
         },
         {
           id: "spot3",
           x: 80,
           y: 60,
           title: "Volcanic Wineries",
-          description: "Taste unique wines grown in volcanic soil with caldera views."
+          description: "Taste unique wines grown in volcanic soil with caldera views.",
+          icon: Grape
         },
         {
           id: "spot4",
           x: 45,
           y: 70,
           title: "Aegean Sailing",
-          description: "Sail crystal-clear waters to hidden beaches and sea caves."
+          description: "Sail crystal-clear waters to hidden beaches and sea caves.",
+          icon: Anchor
         }
       ];
     } else if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
@@ -386,28 +411,32 @@ export default function EnhancedBooking() {
           x: 25,
           y: 40,
           title: "Cherry Blossoms",
-          description: "Experience the magical sakura season in traditional gardens."
+          description: "Experience the magical sakura season in traditional gardens.",
+          icon: Flower2
         },
         {
           id: "spot2",
           x: 60,
           y: 30,
           title: "Historic Temples",
-          description: "Visit ancient temples and shrines in the heart of modern Tokyo."
+          description: "Visit ancient temples and shrines in the heart of modern Tokyo.",
+          icon: Building
         },
         {
           id: "spot3",
           x: 80,
           y: 60,
           title: "Tsukiji Market",
-          description: "Discover the world's largest fish market and authentic sushi culture."
+          description: "Discover the world's largest fish market and authentic sushi culture.",
+          icon: Fish
         },
         {
           id: "spot4",
           x: 45,
           y: 70,
           title: "Bamboo Forests",
-          description: "Walk through mystical bamboo groves in serene temple grounds."
+          description: "Walk through mystical bamboo groves in serene temple grounds.",
+          icon: TreePine
         }
       ];
     } else if (destinationName.includes('norway') || destinationName.includes('fjord')) {
@@ -417,28 +446,32 @@ export default function EnhancedBooking() {
           x: 25,
           y: 40,
           title: "Dramatic Fjords",
-          description: "Cruise through UNESCO World Heritage fjords with towering cliffs."
+          description: "Cruise through UNESCO World Heritage fjords with towering cliffs.",
+          icon: Mountain
         },
         {
           id: "spot2",
           x: 60,
           y: 30,
           title: "Whale Watching",
-          description: "Spot orcas, humpback whales, and arctic wildlife in their habitat."
+          description: "Spot orcas, humpback whales, and arctic wildlife in their habitat.",
+          icon: Waves
         },
         {
           id: "spot3",
           x: 80,
           y: 60,
           title: "Midnight Sun",
-          description: "Experience the phenomenon of 24-hour daylight in summer."
+          description: "Experience the phenomenon of 24-hour daylight in summer.",
+          icon: Sun
         },
         {
           id: "spot4",
           x: 45,
           y: 70,
           title: "Alpine Adventures",
-          description: "Enjoy world-class skiing and mountain hiking opportunities."
+          description: "Enjoy world-class skiing and mountain hiking opportunities.",
+          icon: Snowflake
         }
       ];
     } else if (destinationName.includes('croatia') || destinationName.includes('island')) {
