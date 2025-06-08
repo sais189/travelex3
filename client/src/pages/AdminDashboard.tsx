@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import { 
   Users, 
   MapPin, 
@@ -111,6 +113,8 @@ export default function AdminDashboard() {
     role: "user"
   });
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [showNotificationsDialog, setShowNotificationsDialog] = useState(false);
+  const dashboardRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   // Fetch analytics data
@@ -223,30 +227,86 @@ export default function AdminDashboard() {
     }
   };
 
-  // Export functionality
-  const handleExportData = () => {
-    const exportData = {
-      analytics,
-      users: users?.slice(0, 10), // Export first 10 users for demo
-      activityLogs: activityLogs?.slice(0, 20), // Export recent 20 activities
-      exportDate: new Date().toISOString(),
-      exportedBy: "admin"
-    };
+  // Export dashboard as PDF
+  const handleExportData = async () => {
+    if (!dashboardRef.current) return;
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `admin-dashboard-export-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      toast({
+        title: "Generating PDF",
+        description: "Please wait while we create your dashboard PDF...",
+      });
 
-    toast({
-      title: "Data Exported",
-      description: "Dashboard data has been exported successfully",
-    });
+      // Hide header buttons temporarily for cleaner PDF
+      const headerButtons = dashboardRef.current.querySelectorAll('.header-buttons');
+      headerButtons.forEach(btn => (btn as HTMLElement).style.display = 'none');
+
+      const canvas = await html2canvas(dashboardRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#0f172a'
+      });
+
+      // Show header buttons again
+      headerButtons.forEach(btn => (btn as HTMLElement).style.display = 'flex');
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('l', 'mm', 'a4'); // landscape orientation
+      
+      const imgWidth = 297; // A4 landscape width in mm
+      const pageHeight = 210; // A4 landscape height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add title page
+      pdf.setFontSize(24);
+      pdf.setTextColor(255, 215, 0); // Gold color
+      pdf.text('Admin Dashboard Report', 20, 30);
+      
+      pdf.setFontSize(12);
+      pdf.setTextColor(100, 100, 100);
+      pdf.text(`Generated on: ${new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })}`, 20, 40);
+
+      pdf.text(`Total Users: ${analytics?.users?.total || 0}`, 20, 50);
+      pdf.text(`Active Users: ${analytics?.users?.active || 0}`, 20, 60);
+      pdf.text(`Total Bookings: ${analytics?.bookings?.total || 0}`, 20, 70);
+      pdf.text(`Revenue: ${analytics?.revenue?.total || '$0'}`, 20, 80);
+
+      pdf.addPage();
+
+      // Add dashboard screenshot
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(`admin-dashboard-${new Date().toISOString().split('T')[0]}.pdf`);
+
+      toast({
+        title: "PDF Exported",
+        description: "Dashboard has been exported as PDF successfully",
+      });
+    } catch (error) {
+      console.error('PDF export error:', error);
+      toast({
+        title: "Export Failed",
+        description: "Failed to generate PDF. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Fetch bookings data for charts
@@ -412,7 +472,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen pt-32 pb-16 px-6 bg-gradient-to-br from-space-blue via-deep-purple to-cosmic-black">
-      <div className="max-w-7xl mx-auto">
+      <div ref={dashboardRef} className="max-w-7xl mx-auto">
         {/* Enhanced Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -439,7 +499,7 @@ export default function AdminDashboard() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 header-buttons">
               <Button
                 variant="outline"
                 size="sm"
@@ -474,6 +534,7 @@ export default function AdminDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={() => setShowNotificationsDialog(true)}
                   className="glass-morphism border-lavender-accent/30 hover:bg-lavender-accent/10"
                 >
                   <Bell className="w-4 h-4" />
@@ -1522,6 +1583,127 @@ export default function AdminDashboard() {
                   className="bg-gradient-to-r from-gold-accent to-lavender-accent text-black font-semibold"
                 >
                   Save Changes
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Notifications Dialog */}
+        <Dialog open={showNotificationsDialog} onOpenChange={setShowNotificationsDialog}>
+          <DialogContent className="sm:max-w-[500px] glass-morphism border-gold-accent/20">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                <Bell className="w-5 h-5" />
+                <span>Notifications</span>
+                <Badge variant="destructive" className="ml-2">3</Badge>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4 max-h-96 overflow-y-auto">
+              {/* Recent notifications */}
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3 p-3 rounded-lg border border-red-500/20 bg-red-500/5">
+                  <div className="w-2 h-2 bg-red-500 rounded-full mt-2 animate-pulse"></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-red-400">System Alert</h4>
+                      <span className="text-xs text-muted-foreground">2 min ago</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      High server load detected. Consider scaling resources.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3 p-3 rounded-lg border border-blue-500/20 bg-blue-500/5">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-blue-400">New User Registration</h4>
+                      <span className="text-xs text-muted-foreground">15 min ago</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      5 new users registered in the last hour.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3 p-3 rounded-lg border border-green-500/20 bg-green-500/5">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-green-400">Booking Milestone</h4>
+                      <span className="text-xs text-muted-foreground">1 hour ago</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Reached 1000 bookings this month! Revenue up 15%.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3 p-3 rounded-lg border border-gold-accent/20 bg-gold-accent/5">
+                  <div className="w-2 h-2 bg-gold-accent rounded-full mt-2"></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-gold-accent">Payment Processed</h4>
+                      <span className="text-xs text-muted-foreground">2 hours ago</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Large booking payment of $12,500 processed successfully.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3 p-3 rounded-lg border border-purple-500/20 bg-purple-500/5">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-purple-400">User Feedback</h4>
+                      <span className="text-xs text-muted-foreground">3 hours ago</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      New 5-star review received for Tokyo Adventure package.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3 p-3 rounded-lg border border-orange-500/20 bg-orange-500/5">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-orange-400">Maintenance Reminder</h4>
+                      <span className="text-xs text-muted-foreground">6 hours ago</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Scheduled system maintenance tomorrow at 2:00 AM UTC.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-between items-center pt-4 border-t border-gold-accent/20">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="glass-morphism border-gold-accent/30"
+                  onClick={() => {
+                    toast({
+                      title: "Notifications Cleared",
+                      description: "All notifications have been marked as read",
+                    });
+                  }}
+                >
+                  Mark All Read
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="glass-morphism border-lavender-accent/30"
+                  onClick={() => setShowNotificationsDialog(false)}
+                >
+                  Close
                 </Button>
               </div>
             </div>
