@@ -169,9 +169,9 @@ export default function About() {
                   <div>
                     <h2 className="text-3xl font-bold mb-4">Our Vision</h2>
                     <p className="text-muted-foreground text-lg leading-relaxed">
-                      We believe travel should transcend the ordinary. By combining futuristic technology with luxurious accommodations, we create immersive experiences that connect travelers with destinations in unprecedented ways.
+                      We combine cutting-edge technology with luxury to create extraordinary travel experiences that connect you with destinations worldwide.
                     </p>
-                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">Our platform leverages advanced algorithms, AI-powered recommendations, and real-time data to craft personalised journeys that exceed expectations and create lasting memories.</p>
+                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">Our platform uses AI and real-time data to craft personalized journeys that exceed expectations.</p>
                   </div>
                   <motion.div
                     className="relative"
@@ -213,9 +213,9 @@ export default function About() {
                   </motion.div>
                   <div className="lg:order-2">
                     <h2 className="text-3xl font-bold mb-4">Premium Experiences</h2>
-                    <p className="text-muted-foreground text-lg leading-relaxed">Every destination in our portfolio is carefully curated to offer unmatched luxury, exclusive access, and personalised service that exceeds expectations.</p>
+                    <p className="text-muted-foreground text-lg leading-relaxed">Every destination offers luxury accommodations, exclusive access, and personalized service.</p>
                     <p className="text-muted-foreground text-lg leading-relaxed mt-4">
-                      From private overwater villas in the Maldives to exclusive mountain chalets in the Swiss Alps, we partner with the world's finest accommodations to ensure your journey is nothing short of extraordinary.
+                      From Maldives villas to Swiss Alps chalets, we partner with world-class accommodations for extraordinary journeys.
                     </p>
                   </div>
                 </div>
@@ -235,9 +235,9 @@ export default function About() {
                   <div>
                     <h2 className="text-3xl font-bold mb-4">Innovation at Heart</h2>
                     <p className="text-muted-foreground text-lg leading-relaxed">
-                      Our cutting-edge platform features a 3D interactive globe, AI-powered chatbot assistance, and seamless payment integration to make your booking experience as smooth as your travels.
+                      Our platform features a 3D interactive globe, AI chatbot assistance, and seamless payment integration for smooth booking experiences.
                     </p>
-                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">We continuously invest in emerging technologies like virtual reality previews, blockchain-secured transactions, and real-time travel optimisation to stay at the forefront of the travel industry.</p>
+                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">We invest in VR previews, blockchain security, and real-time optimization to lead the travel industry.</p>
                   </div>
                   <motion.div
                     className="relative"
@@ -306,9 +306,7 @@ export default function About() {
             <CardContent className="p-12">
               <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
               <p className="text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto">
-                To democratise luxury travel by making extraordinary experiences accessible to adventurous souls worldwide. 
-                We strive to break down barriers between dreamers and destinations, creating a seamless bridge that transforms 
-                wanderlust into unforgettable realities through innovation, excellence, and genuine care for our travellers' journeys.
+                Making luxury travel accessible worldwide. We connect dreamers with destinations through innovation and excellence, transforming wanderlust into unforgettable realities.
               </p>
             </CardContent>
           </Card>
@@ -324,8 +322,7 @@ export default function About() {
         >
           <h2 className="text-3xl font-bold mb-6">Ready to Explore?</h2>
           <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied travelers who have discovered the world through Globetrotter. 
-            Your next adventure is just a click away.
+            Join thousands of travelers discovering the world with Globetrotter. Your next adventure awaits.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
