@@ -12,42 +12,42 @@ export default function About() {
     {
       year: "2020",
       title: "The Vision",
-      description: "Founded by travel enthusiasts who dreamed of revolutionising how people explore the world",
+      description: "Founded by travel enthusiasts with a vision to revolutionize global exploration",
       icon: Rocket,
       color: "from-blue-500 to-cyan-500"
     },
     {
       year: "2021",
       title: "First Launch",
-      description: "Launched with 10 destinations and our signature 3D globe interface",
+      description: "Launched with 10 destinations and 3D globe interface",
       icon: Globe,
       color: "from-green-500 to-emerald-500"
     },
     {
       year: "2022",
       title: "Global Expansion",
-      description: "Reached 25 countries and 1,000+ happy travelers",
+      description: "Expanded to 25 countries and 1,000+ travelers",
       icon: Users,
       color: "from-purple-500 to-violet-500"
     },
     {
       year: "2023",
       title: "Innovation Breakthrough",
-      description: "Introduced AI-powered recommendations and immersive VR previews",
+      description: "Added AI recommendations and VR previews",
       icon: Star,
       color: "from-amber-500 to-orange-500"
     },
     {
       year: "2024",
       title: "Community Growth",
-      description: "Surpassed 10,000 travelers and won 'Best Travel Platform' award",
+      description: "Reached 10,000+ travelers and won 'Best Travel Platform'",
       icon: Award,
       color: "from-rose-500 to-pink-500"
     },
     {
       year: "2025",
       title: "Future Vision",
-      description: "Expanding to 100+ destinations with sustainable travel initiatives",
+      description: "Expanding to 100+ destinations with sustainable travel",
       icon: MapPin,
       color: "from-indigo-500 to-purple-500"
     }
@@ -72,7 +72,7 @@ export default function About() {
         >
           <h1 className="text-5xl font-bold mb-6">About Globetrotter</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Pioneering the future of travel with cutting-edge technology and unparalleled luxury experiences across the globe.
+            Transforming travel with innovative technology and luxury experiences worldwide.
           </p>
         </motion.div>
 
@@ -85,9 +85,9 @@ export default function About() {
           viewport={{ once: true }}
         >
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Our Journey Through Time</h2>
+            <h2 className="text-4xl font-bold mb-4">Our Journey</h2>
             <p className="text-xl text-muted-foreground">
-              From startup vision to global travel platform
+              From startup to global platform
             </p>
           </div>
 
