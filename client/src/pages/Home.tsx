@@ -91,6 +91,8 @@ export default function Home() {
                         className="w-full p-0 bg-slate-panel border-border"
                         side="bottom"
                         sideOffset={8}
+                        align="start"
+                        avoidCollisions={false}
                       >
                         <Command>
                           <CommandInput placeholder="Search destinations..." className="h-9" />
