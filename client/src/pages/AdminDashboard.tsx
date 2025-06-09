@@ -504,7 +504,7 @@ export default function AdminDashboard() {
                 variant="outline"
                 size="sm"
                 onClick={() => window.location.reload()}
-                className="glass-morphism border-gold-accent/30 hover:bg-gold-accent/10"
+                className="glass-morphism border-gold-accent/30 hover:bg-yellow-500/20 hover:border-yellow-500/40"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh
@@ -514,7 +514,7 @@ export default function AdminDashboard() {
                 variant="outline"
                 size="sm"
                 onClick={handleExportData}
-                className="glass-morphism border-lavender-accent/30 hover:bg-lavender-accent/10"
+                className="glass-morphism border-lavender-accent/30 hover:bg-yellow-500/20 hover:border-yellow-500/40"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Export
@@ -524,7 +524,7 @@ export default function AdminDashboard() {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowSettingsDialog(true)}
-                className="glass-morphism border-gold-accent/30 hover:bg-gold-accent/10"
+                className="glass-morphism border-gold-accent/30 hover:bg-yellow-500/20 hover:border-yellow-500/40"
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
@@ -535,7 +535,7 @@ export default function AdminDashboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowNotificationsDialog(true)}
-                  className="glass-morphism border-lavender-accent/30 hover:bg-lavender-accent/10"
+                  className="glass-morphism border-lavender-accent/30 hover:bg-yellow-500/20 hover:border-yellow-500/40"
                 >
                   <Bell className="w-4 h-4" />
                 </Button>
