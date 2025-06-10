@@ -65,7 +65,7 @@ export default function Navbar() {
             whileTap={{ scale: 0.95 }}
           >
             <Globe className="text-gold-accent text-2xl" />
-            <span className="text-xl font-bold text-gold-accent">Globetrotter</span>
+            <span className="text-xl font-bold text-gold-accent">Travelex</span>
           </motion.div>
         </Link>
 
