@@ -141,6 +141,11 @@ export default function Booking() {
     );
   }
 
+  // Debug logging
+  console.log('Destination data:', destination);
+  console.log('maxGuests:', destination.maxGuests);
+  console.log('Current guests state:', guests);
+
   // Calculate upgrade costs
   const upgradeOptions = [
     { id: "private-chef", name: "Private Chef", price: 500 },
@@ -366,7 +371,15 @@ export default function Booking() {
                 {/* Guest Selection */}
                 <div className="mb-6">
                   <Label className="text-sm font-semibold mb-2 block">Guests</Label>
-                  <Select value={guests} onValueChange={setGuests}>
+                  <Select value={guests} onValueChange={(value) => {
+                    console.log('Guest selection changed to:', value);
+                    try {
+                      setGuests(value);
+                    } catch (error) {
+                      console.error('Error setting guests:', error);
+                      setGuests("2");
+                    }
+                  }}>
                     <SelectTrigger className="bg-slate-panel border-border focus:border-gold-accent">
                       <SelectValue />
                     </SelectTrigger>
