@@ -148,7 +148,8 @@ export default function Booking() {
     { id: "spa-package", name: "Couples Spa Package", price: 400 },
   ];
 
-  const basePrice = parseFloat(destination.price) * parseInt(guests);
+  const guestCount = Math.max(1, parseInt(guests) || 2);
+  const basePrice = parseFloat(destination.price || "0") * guestCount;
   const classMultiplier = travelClass === "business" ? 1.2 : 1;
   const upgradeTotal = upgrades.reduce((total, upgradeId) => {
     const upgrade = upgradeOptions.find(u => u.id === upgradeId);
@@ -178,7 +179,7 @@ export default function Booking() {
       destinationId: destination.id,
       checkIn,
       checkOut,
-      guests: parseInt(guests),
+      guests: guestCount,
       travelClass,
       upgrades,
       totalAmount,
