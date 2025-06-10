@@ -51,7 +51,7 @@ export default function Auth() {
                     <Globe className="w-8 h-8 text-gold-accent" />
                   </div>
                 </motion.div>
-                <h1 className="text-3xl font-bold mb-2">Welcome to Globetrotter</h1>
+                <h1 className="text-3xl font-bold mb-2">Welcome to Travelex</h1>
                 <p className="text-muted-foreground">
                   Sign in to access your travel dashboard and book amazing destinations
                 </p>

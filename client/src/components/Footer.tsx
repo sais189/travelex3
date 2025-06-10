@@ -52,7 +52,7 @@ export default function Footer() {
               transition={{ duration: 0.3 }}
             >
               <Globe className="text-gold-accent text-3xl" />
-              <span className="text-2xl font-bold text-gold-accent">Globetrotter</span>
+              <span className="text-2xl font-bold text-gold-accent">Travelex</span>
             </motion.div>
             <p className="text-muted-foreground mb-6 leading-relaxed">
               Pioneering the future of travel through immersive experiences and cutting-edge technology. 
@@ -61,7 +61,7 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-muted-foreground">
                 <Mail className="w-4 h-4 text-gold-accent" />
-                <span>hello@globetrotter.com</span>
+                <span>hello@travelex.com</span>
               </div>
               <div className="flex items-center space-x-3 text-muted-foreground">
                 <Phone className="w-4 h-4 text-gold-accent" />

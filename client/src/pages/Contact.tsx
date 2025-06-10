@@ -96,7 +96,7 @@ export default function Contact() {
     {
       icon: Mail,
       title: "Email",
-      content: "contact@globetrotter.com",
+      content: "contact@travelex.com",
       color: "text-mint-accent",
       bgColor: "bg-mint-accent",
     },

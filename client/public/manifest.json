@@ -1,6 +1,6 @@
 {
-  "name": "Globetrotter",
-  "short_name": "Globetrotter",
+  "name": "Travelex",
+  "short_name": "Travelex",
   "description": "Premium travel booking platform with 3D globe interface",
   "start_url": "/",
   "display": "standalone",
