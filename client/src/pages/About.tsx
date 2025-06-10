@@ -12,7 +12,7 @@ export default function About() {
     {
       year: "2020",
       title: "The Vision",
-      description: "Founded by travel enthusiasts with a vision to revolutionize global exploration",
+      description: "Founded by travel enthusiasts with a vision to revolutionise global exploration",
       icon: Rocket,
       color: "from-blue-500 to-cyan-500"
     },
@@ -171,7 +171,7 @@ export default function About() {
                     <p className="text-muted-foreground text-lg leading-relaxed">
                       We combine cutting-edge technology with luxury to create extraordinary travel experiences that connect you with destinations worldwide.
                     </p>
-                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">Our platform uses AI and real-time data to craft personalized journeys that exceed expectations.</p>
+                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">Our platform uses AI and real-time data to craft personalised journeys that exceed expectations.</p>
                   </div>
                   <motion.div
                     className="relative"
@@ -213,7 +213,7 @@ export default function About() {
                   </motion.div>
                   <div className="lg:order-2">
                     <h2 className="text-3xl font-bold mb-4">Premium Experiences</h2>
-                    <p className="text-muted-foreground text-lg leading-relaxed">Every destination offers luxury accommodations, exclusive access, and personalized service.</p>
+                    <p className="text-muted-foreground text-lg leading-relaxed">Every destination offers luxury accommodations, exclusive access, and personalised service.</p>
                     <p className="text-muted-foreground text-lg leading-relaxed mt-4">
                       From Maldives villas to Swiss Alps chalets, we partner with world-class accommodations for extraordinary journeys.
                     </p>
@@ -237,7 +237,7 @@ export default function About() {
                     <p className="text-muted-foreground text-lg leading-relaxed">
                       Our platform features a 3D interactive globe, AI chatbot assistance, and seamless payment integration for smooth booking experiences.
                     </p>
-                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">We invest in VR previews, blockchain security, and real-time optimization to lead the travel industry.</p>
+                    <p className="text-muted-foreground text-lg leading-relaxed mt-4">We invest in VR previews, blockchain security, and real-time optimisation to lead the travel industry.</p>
                   </div>
                   <motion.div
                     className="relative"
