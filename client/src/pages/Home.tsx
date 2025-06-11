@@ -229,7 +229,7 @@ export default function Home() {
                         {destination.name}
                       </h3>
                       <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-4 min-h-[5rem]">
-                        {destination.shortDescription || (destination.description.length > 200 ? destination.description.slice(0, 200) + "..." : destination.description)}
+                        {destination.shortDescription || (destination.description.length > 330 ? destination.description.slice(0, 330) + "..." : destination.description)}
                       </p>
                     </div>
                     <div className="flex justify-between items-center mt-auto pt-4">
