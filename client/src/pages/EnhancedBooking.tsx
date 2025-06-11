@@ -165,12 +165,7 @@ export default function EnhancedBooking() {
     { id: 5, title: "Complete", description: "Adventure awaits" }
   ];
 
-  // Mock destination data with interactive features and varied images
-  const getItineraryData = () => {
-    const destinationId = destination?.id;
-    
-    switch(destinationId) {
-      case 1: // Tokyo Adventure
+  // Use the real destination itinerary data from the database
         return [
           {
             day: 1,
@@ -498,7 +493,8 @@ export default function EnhancedBooking() {
     }
   };
 
-  const mockItinerary = getItineraryData();
+  // Use the real destination itinerary data from the database
+  const mockItinerary = destination?.itinerary || [];
 
   // Generate destination-specific interactive hotspots with varied colors
   const getDestinationHotspots = () => {
