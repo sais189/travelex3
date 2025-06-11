@@ -34,7 +34,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = await storage.getUser(userId);
       
       // Check if user should have admin role based on email
-      if (user && user.email === 'admins@globetrotter.com') {
+      if (user && user.email === 'admins@travelex.com') {
         const updatedUser = await storage.upsertUser({
           ...user,
           role: 'admin'
