@@ -37,6 +37,7 @@ export interface IStorage {
   updateDestination(id: number, destination: Partial<InsertDestination>): Promise<Destination>;
   deleteDestination(id: number): Promise<void>;
   getDestinationsWithStats(): Promise<DestinationWithStats[]>;
+  checkImageUrlExists(imageUrl: string, excludeId?: number): Promise<Destination | null>;
 
   // Booking operations
   createBooking(booking: InsertBooking): Promise<Booking>;
@@ -268,6 +269,19 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createDestination(destination: InsertDestination): Promise<Destination> {
+    // Check for duplicate image URL
+    if (destination.imageUrl) {
+      const existingDestination = await db
+        .select()
+        .from(destinations)
+        .where(eq(destinations.imageUrl, destination.imageUrl))
+        .limit(1);
+      
+      if (existingDestination.length > 0) {
+        throw new Error(`Image URL already in use by destination: ${existingDestination[0].name}`);
+      }
+    }
+
     const [newDestination] = await db
       .insert(destinations)
       .values(destination)
@@ -276,6 +290,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateDestination(id: number, destination: Partial<InsertDestination>): Promise<Destination> {
+    // Check for duplicate image URL if being updated
+    if (destination.imageUrl) {
+      const existingDestination = await db
+        .select()
+        .from(destinations)
+        .where(and(
+          eq(destinations.imageUrl, destination.imageUrl),
+          not(eq(destinations.id, id)) // Exclude current destination
+        ))
+        .limit(1);
+      
+      if (existingDestination.length > 0) {
+        throw new Error(`Image URL already in use by destination: ${existingDestination[0].name}`);
+      }
+    }
+
     const [updated] = await db
       .update(destinations)
       .set({ ...destination, updatedAt: new Date() })
