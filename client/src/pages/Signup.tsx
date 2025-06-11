@@ -58,28 +58,20 @@ export default function Signup() {
 
   const signupMutation = useMutation({
     mutationFn: async (data: Omit<SignupForm, "confirmPassword">) => {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || "Signup failed");
-      }
-      
+      const response = await apiRequest("POST", "/api/auth/signup", data);
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       toast({
         title: "Account created successfully!",
-        description: "You can now sign in with your credentials.",
+        description: "Welcome to Travelex! You are now logged in.",
       });
+      // Invalidate auth queries to refresh user state
       queryClient.invalidateQueries({ queryKey: ["/api/auth/session"] });
-      navigate("/auth");
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      
+      // Navigate to home page since user is automatically logged in after signup
+      navigate("/");
     },
     onError: (error: Error) => {
       toast({

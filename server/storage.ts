@@ -70,29 +70,49 @@ export class DatabaseStorage implements IStorage {
   }
 
   async authenticateUser(username: string, password: string): Promise<User | undefined> {
+    console.log('Authenticating user:', username);
     const user = await this.getUserByUsername(username);
-    if (!user || !user.password) {
+    if (!user) {
+      console.log('User not found:', username);
       return undefined;
     }
     
+    if (!user.password) {
+      console.log('User has no password stored:', username);
+      return undefined;
+    }
+    
+    console.log('Password exists, comparing...');
     const isValidPassword = await bcrypt.compare(password, user.password);
+    console.log('Password comparison result:', isValidPassword);
+    
     if (!isValidPassword) {
+      console.log('Invalid password for user:', username);
       return undefined;
     }
 
     // Update last login time
     await this.updateUserLastLogin(user.id);
+    console.log('Authentication successful for user:', username);
     
     return user;
   }
 
   async createUser(userData: UpsertUser): Promise<User> {
+    console.log('Creating user:', userData.username);
     // Hash password if provided
     if (userData.password) {
+      console.log('Hashing password for user:', userData.username);
+      const originalPassword = userData.password;
       userData.password = await bcrypt.hash(userData.password, 10);
+      console.log('Password hashed successfully for user:', userData.username);
+      console.log('Original password length:', originalPassword.length, 'Hashed length:', userData.password.length);
+    } else {
+      console.log('No password provided for user:', userData.username);
     }
 
     const [user] = await db.insert(users).values(userData).returning();
+    console.log('User created successfully:', user.username);
     return user;
   }
 
