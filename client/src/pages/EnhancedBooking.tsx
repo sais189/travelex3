@@ -107,6 +107,86 @@ export default function EnhancedBooking() {
 
   const destinationId = params?.id ? parseInt(params.id) : 0;
 
+  // Generate varied images for each day based on destination and day content
+  const getVariedImageForDay = (destination: any, day: any, index: number) => {
+    const destinationName = destination?.name.toLowerCase() || '';
+    const dayTitle = day?.title?.toLowerCase() || '';
+    const country = destination?.country?.toLowerCase() || '';
+
+    // Base image collections for different destination types
+    const imageCollections = {
+      tokyo: [
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Tokyo skyline
+        "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Traditional temple
+        "https://images.unsplash.com/photo-1554978991-33ef7f31d658?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sushi/food
+        "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cherry blossoms
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Markets
+      ],
+      maldives: [
+        "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Overwater villas
+        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Coral reefs
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Spa treatment
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Beach
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Sunset cruise
+      ],
+      safari: [
+        "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Lions
+        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Migration
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Maasai culture
+        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Elephants
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Landscape
+      ],
+      iceland: [
+        "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Northern lights
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Glaciers
+        "https://images.unsplash.com/photo-1539704892725-de45bc5b63c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Reykjavik
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Waterfalls
+        "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Hot springs
+      ],
+      switzerland: [
+        "https://images.unsplash.com/photo-1531754490559-e4a51ba94b88?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Matterhorn
+        "https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Jungfraujoch
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Lakes
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Villages
+        "https://images.unsplash.com/photo-1551524164-687a55dd1126?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Train
+      ],
+      peru: [
+        "https://images.unsplash.com/photo-1587595431973-160d0d94add1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Machu Picchu
+        "https://images.unsplash.com/photo-1526392060635-9d6019884377?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sacred Valley
+        "https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cusco
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mountains
+        "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Markets
+      ],
+      default: [
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+      ]
+    };
+
+    // Determine which image collection to use
+    let selectedCollection = imageCollections.default;
+    
+    if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
+      selectedCollection = imageCollections.tokyo;
+    } else if (destinationName.includes('maldives')) {
+      selectedCollection = imageCollections.maldives;
+    } else if (destinationName.includes('safari') || destinationName.includes('kenya') || country.includes('kenya')) {
+      selectedCollection = imageCollections.safari;
+    } else if (destinationName.includes('iceland') || country.includes('iceland')) {
+      selectedCollection = imageCollections.iceland;
+    } else if (destinationName.includes('swiss') || country.includes('switzerland')) {
+      selectedCollection = imageCollections.switzerland;
+    } else if (destinationName.includes('machu') || country.includes('peru')) {
+      selectedCollection = imageCollections.peru;
+    }
+
+    // Return image based on day index, cycling through collection
+    return selectedCollection[index % selectedCollection.length];
+  };
+
   // Fetch destination details
   const { data: destination, isLoading } = useQuery({
     queryKey: ['/api/destinations', destinationId],
@@ -167,6 +247,135 @@ export default function EnhancedBooking() {
 
   // Use the real destination itinerary data from the database
   const mockItinerary = destination?.itinerary || [];
+
+  // Generate varied images for each day based on destination and day content
+  const getVariedImageForDay = (destination: any, day: any, index: number) => {
+    const destinationName = destination?.name.toLowerCase() || '';
+    const country = destination?.country?.toLowerCase() || '';
+
+    // Base image collections for different destination types
+    const imageCollections = {
+      tokyo: [
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Tokyo skyline
+        "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Traditional temple
+        "https://images.unsplash.com/photo-1554978991-33ef7f31d658?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sushi/food
+        "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cherry blossoms
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Markets
+      ],
+      maldives: [
+        "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Overwater villas
+        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Coral reefs
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Spa treatment
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Beach
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Sunset cruise
+      ],
+      safari: [
+        "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Lions
+        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Migration
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Maasai culture
+        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Elephants
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Landscape
+      ],
+      default: [
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+      ]
+    };
+
+    // Determine which image collection to use
+    let selectedCollection = imageCollections.default;
+    
+    if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
+      selectedCollection = imageCollections.tokyo;
+    } else if (destinationName.includes('maldives')) {
+      selectedCollection = imageCollections.maldives;
+    } else if (destinationName.includes('safari') || destinationName.includes('kenya') || country.includes('kenya')) {
+      selectedCollection = imageCollections.safari;
+    }
+
+    // Return image based on day index, cycling through collection
+    return selectedCollection[index % selectedCollection.length];
+  };
+
+  // Generate key highlights for each day in dot point format
+  const getHighlightsForDay = (day: any, index: number) => {
+    const dayActivities = day?.activities || [];
+    const dayTitle = day?.title?.toLowerCase() || '';
+    
+    // Extract meaningful highlights from activities or generate based on destination
+    if (dayActivities.length > 0) {
+      return dayActivities.slice(0, 4).map((activity: any) => 
+        typeof activity === 'string' ? activity : activity.name || activity.description || 'Experience included'
+      );
+    }
+
+    // Generate destination-specific highlights
+    const destinationName = destination?.name.toLowerCase() || '';
+    
+    if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
+      return [
+        "Traditional temple visits with guided cultural insights",
+        "Authentic local cuisine experiences",
+        "Cherry blossom viewing in prime locations",
+        "Modern Tokyo exploration and shopping districts"
+      ][index % 4] ? [[
+        "Traditional temple visits with guided cultural insights",
+        "Authentic local cuisine experiences", 
+        "Cherry blossom viewing in prime locations",
+        "Modern Tokyo exploration and shopping districts"
+      ][index % 4]] : [
+        "Cultural immersion experiences",
+        "Local transportation included",
+        "Professional guide services",
+        "Premium location access"
+      ];
+    } else if (destinationName.includes('maldives')) {
+      return [
+        "Overwater villa accommodation with ocean views",
+        "Snorkeling and diving in coral reefs",
+        "Spa treatments and wellness experiences", 
+        "Sunset cruise and dolphin watching"
+      ][index % 4] ? [[
+        "Overwater villa accommodation with ocean views",
+        "Snorkeling and diving in coral reefs",
+        "Spa treatments and wellness experiences",
+        "Sunset cruise and dolphin watching"
+      ][index % 4]] : [
+        "Luxury beachfront access",
+        "Water sports equipment included",
+        "Gourmet dining experiences",
+        "Private beach activities"
+      ];
+    } else if (destinationName.includes('safari') || destinationName.includes('kenya')) {
+      return [
+        "Big Five wildlife viewing opportunities", 
+        "Professional safari guide and transportation",
+        "Cultural interactions with Maasai communities",
+        "Conservation education and park support"
+      ][index % 4] ? [[
+        "Big Five wildlife viewing opportunities",
+        "Professional safari guide and transportation", 
+        "Cultural interactions with Maasai communities",
+        "Conservation education and park support"
+      ][index % 4]] : [
+        "Premium game drive vehicles",
+        "Wildlife photography opportunities",
+        "Traditional cultural experiences",
+        "Conservation contribution included"
+      ];
+    }
+
+    // Default highlights for other destinations
+    return [
+      "Professional local guide services",
+      "Premium location access and activities", 
+      "Cultural immersion experiences",
+      "Transportation and logistics included"
+    ];
+  };
 
   // Generate destination-specific interactive hotspots with varied colors
   const getDestinationHotspots = () => {
@@ -750,7 +959,7 @@ export default function EnhancedBooking() {
                         whileHover={{ scale: 1.05 }}
                       >
                         <RobustImage
-                          src={destination.imageUrl}
+                          src={getVariedImageForDay(destination, day, index)}
                           alt={day.title}
                           className="w-full h-full object-cover"
                         />
@@ -758,7 +967,7 @@ export default function EnhancedBooking() {
                         
                         {/* Day number overlay */}
                         <motion.div 
-                          className="absolute top-6 left-6 w-16 h-16 bg-gradient-to-br from-gold-accent to-lavender-accent rounded-full flex items-center justify-center"
+                          className="absolute top-6 left-6 w-16 h-16 bg-gradient-to-br from-gold-accent to-lavender-accent rounded-full flex items-center justify-center shadow-lg"
                           initial={{ scale: 0 }}
                           whileInView={{ scale: 1 }}
                           transition={{ delay: 0.8, type: "spring" }}
@@ -803,6 +1012,32 @@ export default function EnhancedBooking() {
                         >
                           {day.description}
                         </motion.p>
+
+                        {/* Key highlights in dot points */}
+                        <motion.div
+                          className="space-y-3"
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1.1, duration: 0.6 }}
+                          viewport={{ once: true }}
+                        >
+                          <h4 className="text-lg font-semibold text-gold-accent mb-3">Key Highlights:</h4>
+                          <div className="grid grid-cols-1 gap-2">
+                            {getHighlightsForDay(day, index).map((highlight, idx) => (
+                              <motion.div
+                                key={idx}
+                                className="flex items-start space-x-3"
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 1.2 + idx * 0.1, duration: 0.4 }}
+                                viewport={{ once: true }}
+                              >
+                                <div className="w-2 h-2 rounded-full bg-gold-accent mt-2 flex-shrink-0" />
+                                <span className="text-muted-foreground">{highlight}</span>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </motion.div>
                       </motion.div>
                     </div>
                   </Card>
