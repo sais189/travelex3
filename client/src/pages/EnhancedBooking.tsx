@@ -557,12 +557,13 @@ export default function EnhancedBooking() {
       const response = await apiRequest("POST", "/api/bookings", bookingData);
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (booking) => {
       toast({
-        title: "Booking Confirmed!",
-        description: "Your adventure has been booked successfully.",
+        title: "Booking Created!",
+        description: "Redirecting to payment...",
       });
-      navigate("/");
+      // Navigate to payment page with the booking ID
+      navigate(`/payment/${booking.id}`);
     },
     onError: (error: Error) => {
       toast({
