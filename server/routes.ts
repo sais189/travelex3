@@ -66,6 +66,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Set session
       (req as any).session.user = user;
+      console.log("Session after login:", (req as any).session);
       
       res.json({ user, message: "Login successful" });
     } catch (error) {
