@@ -325,22 +325,32 @@ export default function EnhancedBooking() {
     let selectedCollection = imageCollections.default;
     
     // Match destination types to appropriate image collections
-    if (destinationName.includes('tokyo') || destinationName.includes('japan') || country.includes('japan')) {
+    if (destinationName.includes('tokyo') || destinationName.includes('japan') || country.includes('japan') || destinationName.includes('seoul') || country.includes('korea')) {
       selectedCollection = imageCollections.tokyo;
-    } else if (destinationName.includes('maldives') || destinationName.includes('luxury resort')) {
+    } else if (destinationName.includes('maldives') || destinationName.includes('luxury resort') || destinationName.includes('santorini') || country.includes('greece')) {
       selectedCollection = imageCollections.maldives;
-    } else if (destinationName.includes('safari') || destinationName.includes('kenya') || country.includes('kenya') || destinationName.includes('wildlife')) {
+    } else if (destinationName.includes('safari') || destinationName.includes('kenya') || country.includes('kenya') || destinationName.includes('wildlife') || destinationName.includes('serengeti') || country.includes('tanzania') || country.includes('madagascar')) {
       selectedCollection = imageCollections.safari;
-    } else if (destinationName.includes('himalaya') || destinationName.includes('everest') || destinationName.includes('base camp') || country.includes('nepal')) {
+    } else if (destinationName.includes('himalaya') || destinationName.includes('everest') || destinationName.includes('base camp') || country.includes('nepal') || destinationName.includes('rockies') || country.includes('canada')) {
       selectedCollection = imageCollections.himalayas;
-    } else if (destinationName.includes('amazon') || destinationName.includes('rainforest') || country.includes('ecuador')) {
+    } else if (destinationName.includes('amazon') || destinationName.includes('rainforest') || country.includes('ecuador') || country.includes('brazil') || country.includes('costa rica')) {
       selectedCollection = imageCollections.amazon;
     } else if (destinationName.includes('galápagos') || destinationName.includes('galapagos')) {
       selectedCollection = imageCollections.galapagos;
-    } else if (destinationName.includes('northern lights') || destinationName.includes('finland') || destinationName.includes('lapland') || country.includes('finland')) {
+    } else if (destinationName.includes('northern lights') || destinationName.includes('finland') || destinationName.includes('lapland') || country.includes('finland') || country.includes('iceland') || destinationName.includes('aurora')) {
       selectedCollection = imageCollections.arctic;
-    } else if (destinationName.includes('castle') || destinationName.includes('medieval') || country.includes('ireland') || country.includes('poland')) {
+    } else if (destinationName.includes('castle') || destinationName.includes('medieval') || country.includes('ireland') || country.includes('poland') || country.includes('scotland') || destinationName.includes('tuscany') || country.includes('italy')) {
       selectedCollection = imageCollections.europe;
+    } else if (destinationName.includes('outback') || country.includes('australia') || destinationName.includes('patagonia') || country.includes('argentina')) {
+      selectedCollection = imageCollections.safari; // Use safari for wildlife/adventure destinations
+    } else if (destinationName.includes('angkor') || country.includes('cambodia') || destinationName.includes('temple') || destinationName.includes('bagan') || country.includes('myanmar')) {
+      selectedCollection = imageCollections.tokyo; // Use Asian cultural collection
+    } else if (destinationName.includes('machu picchu') || country.includes('peru') || country.includes('bolivia') || destinationName.includes('inca')) {
+      selectedCollection = imageCollections.himalayas; // Use mountain collection for high altitude destinations
+    } else if (destinationName.includes('pyramid') || country.includes('egypt') || destinationName.includes('cappadocia') || country.includes('turkey')) {
+      selectedCollection = imageCollections.europe; // Use cultural collection
+    } else if (destinationName.includes('bali') || country.includes('indonesia') || destinationName.includes('vietnam') || country.includes('vietnam') || destinationName.includes('coffee') || country.includes('colombia')) {
+      selectedCollection = imageCollections.tokyo; // Use Asian collection for cultural experiences
     }
 
     // Advanced activity-based image selection for maximum relevance
