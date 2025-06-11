@@ -272,6 +272,19 @@ export default function Destinations() {
                       <span className="text-sm">{destination.rating}</span>
                     </div>
                   </div>
+                  
+                  {/* Countries covered section */}
+                  <div className="mb-3">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold-accent/10 border border-gold-accent/20">
+                      <svg className="w-3 h-3 mr-1.5 text-gold-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-xs font-medium text-gold-accent">
+                        {destination.country}
+                      </span>
+                    </div>
+                  </div>
+
                   <p className="text-muted-foreground mb-4 flex-1 text-sm leading-relaxed line-clamp-3">
                     {destination.description.slice(0, 120)}...
                   </p>
