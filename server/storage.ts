@@ -271,14 +271,9 @@ export class DatabaseStorage implements IStorage {
   async createDestination(destination: InsertDestination): Promise<Destination> {
     // Check for duplicate image URL
     if (destination.imageUrl) {
-      const existingDestination = await db
-        .select()
-        .from(destinations)
-        .where(eq(destinations.imageUrl, destination.imageUrl))
-        .limit(1);
-      
-      if (existingDestination.length > 0) {
-        throw new Error(`Image URL already in use by destination: ${existingDestination[0].name}`);
+      const existingDestination = await this.checkImageUrlExists(destination.imageUrl);
+      if (existingDestination) {
+        throw new Error(`Image URL already in use by destination: ${existingDestination.name}`);
       }
     }
 
@@ -292,17 +287,9 @@ export class DatabaseStorage implements IStorage {
   async updateDestination(id: number, destination: Partial<InsertDestination>): Promise<Destination> {
     // Check for duplicate image URL if being updated
     if (destination.imageUrl) {
-      const existingDestination = await db
-        .select()
-        .from(destinations)
-        .where(and(
-          eq(destinations.imageUrl, destination.imageUrl),
-          not(eq(destinations.id, id)) // Exclude current destination
-        ))
-        .limit(1);
-      
-      if (existingDestination.length > 0) {
-        throw new Error(`Image URL already in use by destination: ${existingDestination[0].name}`);
+      const existingDestination = await this.checkImageUrlExists(destination.imageUrl, id);
+      if (existingDestination) {
+        throw new Error(`Image URL already in use by destination: ${existingDestination.name}`);
       }
     }
 
@@ -316,6 +303,29 @@ export class DatabaseStorage implements IStorage {
 
   async deleteDestination(id: number): Promise<void> {
     await db.delete(destinations).where(eq(destinations.id, id));
+  }
+
+  async checkImageUrlExists(imageUrl: string, excludeId?: number): Promise<Destination | null> {
+    const query = db
+      .select()
+      .from(destinations)
+      .where(eq(destinations.imageUrl, imageUrl))
+      .limit(1);
+
+    if (excludeId) {
+      const result = await db
+        .select()
+        .from(destinations)
+        .where(and(
+          eq(destinations.imageUrl, imageUrl),
+          not(eq(destinations.id, excludeId))
+        ))
+        .limit(1);
+      return result.length > 0 ? result[0] : null;
+    }
+
+    const result = await query;
+    return result.length > 0 ? result[0] : null;
   }
 
   async getDestinationsWithStats(): Promise<DestinationWithStats[]> {

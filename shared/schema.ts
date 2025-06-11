@@ -49,7 +49,7 @@ export const destinations = pgTable("destinations", {
   country: varchar("country", { length: 255 }).notNull(),
   description: text("description").notNull(),
   shortDescription: varchar("short_description", { length: 500 }),
-  imageUrl: varchar("image_url", { length: 500 }),
+  imageUrl: varchar("image_url", { length: 500 }).unique(),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   duration: integer("duration").notNull(), // in days
   distanceKm: decimal("distance_km", { precision: 8, scale: 2 }), // distance in kilometers
