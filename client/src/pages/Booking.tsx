@@ -141,10 +141,7 @@ export default function Booking() {
     );
   }
 
-  // Debug logging
-  console.log('Destination data:', destination);
-  console.log('maxGuests:', destination.maxGuests);
-  console.log('Current guests state:', guests);
+
 
   // Calculate upgrade costs
   const upgradeOptions = [
