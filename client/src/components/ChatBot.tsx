@@ -109,7 +109,7 @@ export default function ChatBot() {
 • Are there group discounts? - Yes, 10% discount for groups of 6+ people
 
 📞 **Contact & Support**
-• How can I contact support? - Phone: 0491906089 or email: contact@travelex.com
+• How can I contact support? - Phone: 0491906089 or email: contact@globetrotter.com
 • What are your business hours? - Mon-Fri 9AM-6PM, Sat 10AM-4PM, Emergency support 24/7
 
 Need specific help with any of these topics?`;
@@ -132,7 +132,7 @@ Need specific help with any of these topics?`;
     }
 
     if (lowerInput.includes("contact") || lowerInput.includes("phone") || lowerInput.includes("address")) {
-      return "You can reach us at:\n📞 Phone: 0491906089\n📧 Email: contact@travelex.com\n📍 Address: 419A Windsor Rd, Baulkham Hills NSW 2153, Australia\n\nBusiness Hours: Mon-Fri 9AM-6PM, Sat 10AM-4PM, Emergency support available 24/7";
+      return "You can reach us at:\n📞 Phone: 0491906089\n📧 Email: contact@globetrotter.com\n📍 Address: 419A Windsor Rd, Baulkham Hills NSW 2153, Australia\n\nBusiness Hours: Mon-Fri 9AM-6PM, Sat 10AM-4PM, Emergency support available 24/7";
     }
 
     if (lowerInput.includes("help") || lowerInput.includes("support")) {

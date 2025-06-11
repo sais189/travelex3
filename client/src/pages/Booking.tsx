@@ -141,8 +141,6 @@ export default function Booking() {
     );
   }
 
-
-
   // Calculate upgrade costs
   const upgradeOptions = [
     { id: "private-chef", name: "Private Chef", price: 500 },
@@ -150,8 +148,7 @@ export default function Booking() {
     { id: "spa-package", name: "Couples Spa Package", price: 400 },
   ];
 
-  const guestCount = Math.max(1, parseInt(guests) || 2);
-  const basePrice = parseFloat(destination.price || "0") * guestCount;
+  const basePrice = parseFloat(destination.price) * parseInt(guests);
   const classMultiplier = travelClass === "business" ? 1.2 : 1;
   const upgradeTotal = upgrades.reduce((total, upgradeId) => {
     const upgrade = upgradeOptions.find(u => u.id === upgradeId);
@@ -181,7 +178,7 @@ export default function Booking() {
       destinationId: destination.id,
       checkIn,
       checkOut,
-      guests: guestCount,
+      guests: parseInt(guests),
       travelClass,
       upgrades,
       totalAmount,
