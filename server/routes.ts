@@ -177,6 +177,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Check for duplicate image URLs
+  app.get('/api/admin/check-image-url', async (req, res) => {
+    try {
+      const sessionUser = (req as any).session?.user;
+      if (!sessionUser || sessionUser.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const { imageUrl, excludeId } = req.query;
+      
+      if (!imageUrl) {
+        return res.status(400).json({ message: "Image URL is required" });
+      }
+
+      const existingDestination = await storage.checkImageUrlExists(
+        imageUrl as string, 
+        excludeId ? parseInt(excludeId as string) : undefined
+      );
+
+      res.json({
+        isDuplicate: !!existingDestination,
+        existingDestination: existingDestination || null
+      });
+    } catch (error) {
+      console.error("Image URL check error:", error);
+      res.status(500).json({ message: "Failed to check image URL" });
+    }
+  });
+
   app.get('/api/admin/users', async (req, res) => {
     try {
       const sessionUser = (req as any).session?.user;

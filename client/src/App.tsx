@@ -18,6 +18,7 @@ const EnhancedBooking = lazy(() => import("@/pages/EnhancedBooking"));
 const Payment = lazy(() => import("@/pages/Payment"));
 const MyTrips = lazy(() => import("@/pages/MyTrips"));
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
+const ImageValidationTest = lazy(() => import("@/pages/ImageValidationTest"));
 const Login = lazy(() => import("@/pages/Login"));
 const Signup = lazy(() => import("@/pages/Signup"));
 const About = lazy(() => import("@/pages/About"));

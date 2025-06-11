@@ -38,15 +38,17 @@ export default function ImageUrlValidator({
     setValidationStatus('checking');
 
     try {
-      // Check if URL is already in use
-      const response = await fetch('/api/destinations');
-      const destinations = await response.json();
-      const isDuplicate = destinations.some((dest: any) => dest.imageUrl === url);
-
-      if (isDuplicate) {
-        setValidationStatus('duplicate');
-        onValidationChange?.(false, true);
-        return;
+      // Check if URL is already in use via API
+      const response = await fetch(`/api/admin/check-image-url?imageUrl=${encodeURIComponent(url)}`);
+      
+      if (response.ok) {
+        const result = await response.json();
+        
+        if (result.isDuplicate) {
+          setValidationStatus('duplicate');
+          onValidationChange?.(false, true);
+          return;
+        }
       }
 
       // Validate URL accessibility
