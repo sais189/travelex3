@@ -177,7 +177,7 @@ export default function EnhancedBooking() {
 
     // Comprehensive image collections with verified high-quality URLs
     const imageCollections = {
-      // Japan & Tokyo collections
+      // Japan & Tokyo collections - 15 images
       tokyo: [
         "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=80", // Tokyo skyline arrival
         "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1200&q=80", // Traditional temple visit
@@ -188,10 +188,15 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=1200&q=80", // Mount Fuji day trip
         "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=1200&q=80", // Traditional village visit
         "https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=1200&q=80", // Kyoto bamboo forest
-        "https://images.unsplash.com/photo-1589952283406-b53dd93b766b?w=1200&q=80"  // Tea ceremony experience
+        "https://images.unsplash.com/photo-1589952283406-b53dd93b766b?w=1200&q=80", // Tea ceremony experience
+        "https://images.unsplash.com/photo-1528181304800-259b08848526?w=1200&q=80", // Golden pavilion
+        "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200&q=80", // Traditional architecture
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=1200&q=80", // Japanese cuisine
+        "https://images.unsplash.com/photo-1580654712603-eb43273aff33?w=1200&q=80", // Cultural ceremony
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80"  // Night illuminations
       ],
       
-      // Maldives tropical paradise
+      // Maldives tropical paradise - 15 images
       maldives: [
         "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Tropical island arrival
         "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&q=80", // Overwater villa luxury
@@ -202,10 +207,15 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?w=1200&q=80", // Beachfront dining
         "https://images.unsplash.com/photo-1540206395-68808572332f?w=1200&q=80", // Spa wellness treatment
         "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?w=1200&q=80", // Water sports adventure
-        "https://images.unsplash.com/photo-1562504208-03d85cc8c23e?w=1200&q=80"  // Sunset cruise experience
+        "https://images.unsplash.com/photo-1562504208-03d85cc8c23e?w=1200&q=80", // Sunset cruise experience
+        "https://images.unsplash.com/photo-1537956965359-7573183d1180?w=1200&q=80", // Private villa deck
+        "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80", // Infinity pool
+        "https://images.unsplash.com/photo-1566398490448-f90eebcf6cc0?w=1200&q=80", // Underwater dining
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80", // Dolphin encounter
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&q=80"  // Seaplane transfer
       ],
       
-      // Safari & Wildlife
+      // Safari & Wildlife - 15 images
       safari: [
         "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Lion pride
         "https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Elephant herd
@@ -216,7 +226,12 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1549366021-9f761d040a94?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sunset savanna
         "https://images.unsplash.com/photo-1552201979-8d5a8c4c6b50?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Maasai culture
         "https://images.unsplash.com/photo-1563592441-6ebc9f07c5e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Wildebeest
-        "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Big five
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Leopard spotting
+        "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Rhino encounter
+        "https://images.unsplash.com/photo-1581852017103-68ac65514cf4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // African buffalo
+        "https://images.unsplash.com/photo-1555993539-1732b0258327?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Hot air balloon safari
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Traditional village
+        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Safari camp luxury
       ],
 
       // Himalayas & Mountain adventures
