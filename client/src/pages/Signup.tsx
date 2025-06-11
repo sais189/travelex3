@@ -67,19 +67,21 @@ export default function Signup() {
       });
       
       if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || "Signup failed");
+        const errorData = await response.json().catch(() => ({ message: "Signup failed" }));
+        throw new Error(errorData.message || "Signup failed");
       }
       
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({
         title: "Account created successfully!",
-        description: "You can now sign in with your credentials.",
+        description: "You have been automatically signed in.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/auth/session"] });
-      navigate("/auth");
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      // Since the backend sets up the session on signup, redirect to home
+      navigate("/");
     },
     onError: (error: Error) => {
       toast({

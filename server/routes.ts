@@ -106,8 +106,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       (req as any).session.user = newUser;
       
       res.status(201).json({ user: newUser, message: "Account created successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Signup error:", error);
+      
+      // Handle specific database constraint errors
+      if (error.code === '23505') {
+        if (error.constraint === 'users_email_unique') {
+          return res.status(409).json({ message: "Email address already exists" });
+        }
+        if (error.constraint === 'users_username_unique') {
+          return res.status(409).json({ message: "Username already exists" });
+        }
+      }
+      
       res.status(500).json({ message: "Account creation failed" });
     }
   });
