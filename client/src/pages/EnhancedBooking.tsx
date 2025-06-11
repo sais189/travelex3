@@ -175,34 +175,34 @@ export default function EnhancedBooking() {
     const destinationName = destination?.name.toLowerCase() || '';
     const country = destination?.country?.toLowerCase() || '';
 
-    // Comprehensive image collections for different destination types and activities
+    // Comprehensive image collections with verified high-quality URLs
     const imageCollections = {
       // Japan & Tokyo collections
       tokyo: [
-        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Tokyo skyline
-        "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Temple
-        "https://images.unsplash.com/photo-1554978991-33ef7f31d658?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cherry blossoms
-        "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Street food
-        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Traditional garden
-        "https://images.unsplash.com/photo-1492571350019-22de08371fd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Shibuya crossing
-        "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sushi
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mount Fuji
-        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Ryokan
-        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Tea ceremony
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=80", // Tokyo skyline arrival
+        "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1200&q=80", // Traditional temple visit
+        "https://images.unsplash.com/photo-1522637739821-45282d6e14ba?w=1200&q=80", // Cherry blossoms experience
+        "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=1200&q=80", // Sushi cooking class
+        "https://images.unsplash.com/photo-1566639046106-4e5dd0604a93?w=1200&q=80", // Traditional garden exploration
+        "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=1200&q=80", // Shibuya crossing culture
+        "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=1200&q=80", // Mount Fuji day trip
+        "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=1200&q=80", // Traditional village visit
+        "https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=1200&q=80", // Kyoto bamboo forest
+        "https://images.unsplash.com/photo-1589952283406-b53dd93b766b?w=1200&q=80"  // Tea ceremony experience
       ],
       
       // Maldives tropical paradise
       maldives: [
-        "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Overwater villa
-        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Crystal water
-        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Beach sunset
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Coral reef
-        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Tropical fish
-        "https://images.unsplash.com/photo-1520637836862-4d197d17c18a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Hammock beach
-        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Beach dining
-        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Spa treatment
-        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Snorkeling
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Dolphin watching
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Tropical island arrival
+        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&q=80", // Overwater villa luxury
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=80", // Crystal clear waters
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80", // Coral reef snorkeling
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80", // Marine life exploration
+        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?w=1200&q=80", // Beach relaxation
+        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?w=1200&q=80", // Beachfront dining
+        "https://images.unsplash.com/photo-1540206395-68808572332f?w=1200&q=80", // Spa wellness treatment
+        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?w=1200&q=80", // Water sports adventure
+        "https://images.unsplash.com/photo-1562504208-03d85cc8c23e?w=1200&q=80"  // Sunset cruise experience
       ],
       
       // Safari & Wildlife
