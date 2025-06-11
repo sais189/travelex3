@@ -368,15 +368,7 @@ export default function Booking() {
                 {/* Guest Selection */}
                 <div className="mb-6">
                   <Label className="text-sm font-semibold mb-2 block">Guests</Label>
-                  <Select value={guests} onValueChange={(value) => {
-                    console.log('Guest selection changed to:', value);
-                    try {
-                      setGuests(value);
-                    } catch (error) {
-                      console.error('Error setting guests:', error);
-                      setGuests("2");
-                    }
-                  }}>
+                  <Select value={guests} onValueChange={setGuests}>
                     <SelectTrigger className="bg-slate-panel border-border focus:border-gold-accent">
                       <SelectValue />
                     </SelectTrigger>
