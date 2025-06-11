@@ -941,8 +941,8 @@ export default function EnhancedBooking() {
 
       {/* Interactive Features & Booking Section */}
       <section className="py-20 px-6 bg-gradient-to-b from-background to-muted/20">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-12">
             {/* Interactive Image with Hotspots */}
             <motion.div 
               className="lg:col-span-2"
@@ -956,50 +956,55 @@ export default function EnhancedBooking() {
                   <CardTitle className="text-2xl text-gold-accent">Explore Key Highlights</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="relative h-96 overflow-hidden">
+                  <div className="relative h-96 overflow-visible">
                     <RobustImage
                       src={destination.imageUrl}
                       alt={destination.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-b-lg"
                     />
-                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="absolute inset-0 bg-black/20 rounded-b-lg" />
                     
                     {/* Interactive Hotspots */}
-                    {destinationHotspots.map((hotspot, index) => (
-                      <motion.div
-                        key={hotspot.id}
-                        className="absolute"
-                        style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
-                        initial={{ scale: 0, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: index * 0.2, type: "spring" }}
-                        viewport={{ once: true }}
-                      >
-                        <motion.button
-                          className={`w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center ${hotspot.color} hover:bg-white/30 transition-all duration-300`}
-                          onClick={() => setActiveHotspot(activeHotspot === hotspot.id ? null : hotspot.id)}
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
+                    {destinationHotspots.map((hotspot, index) => {
+                      // Adjust positioning to prevent cutoff on the right side
+                      const adjustedX = Math.min(hotspot.x, 85); // Cap at 85% to prevent right-side cutoff
+                      return (
+                        <motion.div
+                          key={hotspot.id}
+                          className="absolute z-20"
+                          style={{ left: `${adjustedX}%`, top: `${hotspot.y}%` }}
+                          initial={{ scale: 0, opacity: 0 }}
+                          whileInView={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: index * 0.2, type: "spring" }}
+                          viewport={{ once: true }}
                         >
-                          <hotspot.icon className="w-4 h-4" />
-                        </motion.button>
-                        
-                        <AnimatePresence>
-                          {activeHotspot === hotspot.id && (
-                            <motion.div
-                              className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white p-3 rounded-lg min-w-48 z-10"
-                              initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                              animate={{ opacity: 1, y: 0, scale: 1 }}
-                              exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                              transition={{ type: "spring", stiffness: 200 }}
-                            >
-                              <h4 className="font-semibold mb-1">{hotspot.title}</h4>
-                              <p className="text-sm text-gray-300">{hotspot.description}</p>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-                    ))}
+                          <motion.button
+                            className={`w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center ${hotspot.color} hover:bg-white/30 transition-all duration-300 shadow-lg`}
+                            onClick={() => setActiveHotspot(activeHotspot === hotspot.id ? null : hotspot.id)}
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <hotspot.icon className="w-5 h-5" />
+                          </motion.button>
+                          
+                          <AnimatePresence>
+                            {activeHotspot === hotspot.id && (
+                              <motion.div
+                                className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-black/90 backdrop-blur-sm text-white p-4 rounded-lg min-w-52 z-30 shadow-xl"
+                                initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                                transition={{ type: "spring", stiffness: 200 }}
+                              >
+                                <h4 className="font-semibold mb-2 text-gold-accent">{hotspot.title}</h4>
+                                <p className="text-sm text-gray-200">{hotspot.description}</p>
+                                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black/90"></div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>
