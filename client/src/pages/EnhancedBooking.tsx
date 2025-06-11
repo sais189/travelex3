@@ -943,10 +943,10 @@ export default function EnhancedBooking() {
       {/* Interactive Features & Booking Section */}
       <section className="py-20 px-6 bg-gradient-to-b from-background to-muted/20">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-12">
+          <div className="grid lg:grid-cols-5 gap-16">
             {/* Interactive Image with Hotspots */}
             <motion.div 
-              className="lg:col-span-2"
+              className="lg:col-span-3"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
@@ -957,7 +957,7 @@ export default function EnhancedBooking() {
                   <CardTitle className="text-2xl text-gold-accent">Explore Key Highlights</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="relative h-96 overflow-visible">
+                  <div className="relative h-96 overflow-visible pr-8">
                     <RobustImage
                       src={destination.imageUrl}
                       alt={destination.name}
@@ -968,7 +968,7 @@ export default function EnhancedBooking() {
                     {/* Interactive Hotspots */}
                     {destinationHotspots.map((hotspot, index) => {
                       // Adjust positioning to prevent cutoff on the right side
-                      const adjustedX = Math.min(hotspot.x, 85); // Cap at 85% to prevent right-side cutoff
+                      const adjustedX = Math.min(hotspot.x, 75); // Cap at 75% to prevent right-side cutoff
                       return (
                         <motion.div
                           key={hotspot.id}
@@ -1013,6 +1013,7 @@ export default function EnhancedBooking() {
 
             {/* Booking Form */}
             <motion.div
+              className="lg:col-span-2"
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
