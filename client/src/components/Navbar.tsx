@@ -65,7 +65,7 @@ export default function Navbar() {
             whileTap={{ scale: 0.95 }}
           >
             <Globe className="text-gold-accent text-2xl" />
-            <span className="text-xl font-bold text-gold-accent">Globetrotter</span>
+            <span className="text-xl font-bold text-gold-accent">Travelex</span>
           </motion.div>
         </Link>
 
@@ -120,8 +120,14 @@ export default function Navbar() {
                     variant="outline" 
                     className="border-gold-accent text-gold-accent hover:bg-gold-accent hover:text-primary-foreground"
                     onClick={async () => {
-                      await apiRequest("POST", "/api/auth/logout");
-                      window.location.href = "/";
+                      try {
+                        await apiRequest("POST", "/api/auth/logout");
+                        window.location.href = "/";
+                      } catch (error) {
+                        console.error("Logout error:", error);
+                        // Fallback: redirect anyway
+                        window.location.href = "/";
+                      }
                     }}
                   >
                     <LogOut className="w-4 h-4 mr-2" />
@@ -204,15 +210,22 @@ export default function Navbar() {
                             </motion.div>
                           </Link>
                         )}
-                        <a href="/api/logout">
-                          <motion.div
-                            className="flex items-center space-x-3 px-4 py-3 rounded-lg text-alert-red hover:bg-red-500 hover:bg-opacity-10 transition-colors duration-300 cursor-pointer"
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <LogOut className="w-5 h-5" />
-                            <span>Logout</span>
-                          </motion.div>
-                        </a>
+                        <motion.div
+                          className="flex items-center space-x-3 px-4 py-3 rounded-lg text-alert-red hover:bg-red-500 hover:bg-opacity-10 transition-colors duration-300 cursor-pointer"
+                          whileTap={{ scale: 0.95 }}
+                          onClick={async () => {
+                            try {
+                              await apiRequest("POST", "/api/auth/logout");
+                              window.location.href = "/";
+                            } catch (error) {
+                              console.error("Logout error:", error);
+                              window.location.href = "/";
+                            }
+                          }}
+                        >
+                          <LogOut className="w-5 h-5" />
+                          <span>Logout</span>
+                        </motion.div>
                       </>
                     )}
                   </>

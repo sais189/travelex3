@@ -177,7 +177,7 @@ export default function Footer() {
 
           <div className="text-center md:text-right">
             <p className="text-muted-foreground text-sm mb-2">
-              © {currentYear} Globetrotter. All rights reserved.
+              © {currentYear} Travelex. All rights reserved.
             </p>
             <p className="text-muted-foreground text-xs flex items-center justify-center md:justify-end">
               Made with <Heart className="w-3 h-3 mx-1 text-red-500" /> for adventurous souls

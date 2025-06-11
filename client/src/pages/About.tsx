@@ -322,7 +322,7 @@ export default function About() {
         >
           <h2 className="text-3xl font-bold mb-6">Ready to Explore?</h2>
           <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of travelers discovering the world with Globetrotter. Your next adventure awaits.
+            Join thousands of travelers discovering the world with Travelex. Your next adventure awaits.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

@@ -135,7 +135,7 @@ export default function Signup() {
               whileHover={{ scale: 1.05 }}
             >
               <Globe className="text-gold-accent text-3xl" />
-              <span className="text-2xl font-bold text-gold-accent">Globetrotter</span>
+              <span className="text-2xl font-bold text-gold-accent">Travelex</span>
             </motion.div>
             <CardTitle className="text-2xl font-bold text-white">Create Account</CardTitle>
             <CardDescription className="text-white/70">
