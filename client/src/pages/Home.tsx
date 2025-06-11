@@ -228,8 +228,8 @@ export default function Home() {
                       <h3 className="text-xl font-semibold mb-2 line-clamp-2 min-h-[3.5rem] group-hover:text-gold-accent transition-colors duration-200">
                         {destination.name}
                       </h3>
-                      <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-4 min-h-[5rem]">
-                        {destination.shortDescription || destination.description.slice(0, 180) + "..."}
+                      <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-6 min-h-[7rem]">
+                        {destination.shortDescription || (destination.description.length > 320 ? destination.description.slice(0, 320) + "..." : destination.description)}
                       </p>
                     </div>
                     <div className="flex justify-between items-center mt-auto pt-4">
