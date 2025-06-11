@@ -667,36 +667,41 @@ export default function EnhancedBooking() {
         </motion.div>
 
         <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            <Badge className="mb-4 text-sm px-4 py-2 bg-gold-accent/20 text-gold-accent border-gold-accent/30">
-              {destination.duration} Days Adventure
-            </Badge>
-          </motion.div>
+          {/* Semi-transparent backdrop for text */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm rounded-2xl"></div>
           
-          <motion.h1 
-            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.7 }}
-          >
-            {destination.name}
-          </motion.h1>
-          
-          <motion.p 
-            className="text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed text-white/90"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
-          >
-            {destination.description}
-          </motion.p>
+          <div className="relative z-10 py-12 px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+            >
+              <Badge className="mb-4 text-sm px-4 py-2 bg-gold-accent/20 text-gold-accent border-gold-accent/30">
+                {destination.duration} Days Adventure
+              </Badge>
+            </motion.div>
+            
+            <motion.h1 
+              className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.7 }}
+            >
+              {destination.name}
+            </motion.h1>
+            
+            <motion.p 
+              className="text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed text-white/95"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.8 }}
+            >
+              {destination.description}
+            </motion.p>
+          </div>
           
           <motion.div 
-            className="inline-block"
+            className="inline-block mt-8"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.3, duration: 0.8, type: "spring" }}
