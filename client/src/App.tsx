@@ -51,6 +51,7 @@ function Router() {
           <Route path="/my-trips" component={MyTrips} />
           <Route path="/admin" component={AdminDashboard} />
           <Route path="/admin/:tab" component={AdminDashboard} />
+          <Route path="/admin/image-validation-test" component={ImageValidationTest} />
           <Route path="/auth" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/about" component={About} />
