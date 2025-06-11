@@ -96,7 +96,9 @@ export default function AdminDashboard() {
   const [showAddUserDialog, setShowAddUserDialog] = useState(false);
   const [showUserDetailsDialog, setShowUserDetailsDialog] = useState(false);
   const [showEditUserDialog, setShowEditUserDialog] = useState(false);
+  const [showActivityDetailsDialog, setShowActivityDetailsDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<ActivityLog | null>(null);
   const [newUser, setNewUser] = useState({
     username: "",
     email: "",
@@ -224,6 +226,61 @@ export default function AdminDashboard() {
   const handleDeleteUser = (userId: string) => {
     if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
       deleteUser.mutate(userId);
+    }
+  };
+
+  const handleViewActivity = (activity: ActivityLog) => {
+    setSelectedActivity(activity);
+    setShowActivityDetailsDialog(true);
+  };
+
+  const getActivityIcon = (action: string) => {
+    switch (action.toLowerCase()) {
+      case 'login':
+      case 'login_failed':
+        return <LogOut className="w-4 h-4" />;
+      case 'booking_created':
+      case 'booking_modified':
+      case 'booking_cancelled':
+        return <Calendar className="w-4 h-4" />;
+      case 'payment_processed':
+      case 'financial_report':
+      case 'expense_approval':
+        return <DollarSign className="w-4 h-4" />;
+      case 'support_ticket':
+      case 'support_response':
+      case 'user_assistance':
+        return <Bell className="w-4 h-4" />;
+      case 'user_management':
+      case 'profile_updated':
+        return <Users className="w-4 h-4" />;
+      case 'destination_viewed':
+      case 'destination_created':
+      case 'destination_search':
+        return <MapPin className="w-4 h-4" />;
+      case 'system_backup':
+      case 'system_maintenance':
+      case 'security_update':
+        return <Shield className="w-4 h-4" />;
+      default:
+        return <Activity className="w-4 h-4" />;
+    }
+  };
+
+  const getActivityPriority = (action: string) => {
+    const criticalActions = ['login_failed', 'account_suspended', 'system_backup', 'security_update'];
+    const warningActions = ['booking_cancelled', 'support_escalation', 'payment_retry'];
+    
+    if (criticalActions.some(a => action.toLowerCase().includes(a))) return 'critical';
+    if (warningActions.some(a => action.toLowerCase().includes(a))) return 'warning';
+    return 'normal';
+  };
+
+  const getActivityBadgeColor = (priority: string) => {
+    switch (priority) {
+      case 'critical': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'warning': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      default: return 'bg-green-500/20 text-green-400 border-green-500/30';
     }
   };
 
@@ -1298,25 +1355,58 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {activityLogs.map((log: ActivityLog) => (
-                    <div key={log.id} className="flex items-start space-x-4 p-4 border border-gold-accent/20 rounded-lg">
-                      <div className="w-2 h-2 bg-gold-accent rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-medium">{log.action}</h4>
-                          <span className="text-sm text-muted-foreground">
-                            {format(new Date(log.createdAt), 'MMM dd, yyyy HH:mm')}
-                          </span>
+                  {activityLogs.map((log: ActivityLog) => {
+                    const priority = getActivityPriority(log.action);
+                    return (
+                      <motion.div 
+                        key={log.id} 
+                        className="flex items-start space-x-4 p-4 border border-gold-accent/20 rounded-lg hover:bg-gold-accent/5 cursor-pointer transition-all duration-200 group"
+                        onClick={() => handleViewActivity(log)}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                      >
+                        <div className="flex-shrink-0 mt-1">
+                          <div className={`p-2 rounded-full ${getActivityBadgeColor(priority)}`}>
+                            {getActivityIcon(log.action)}
+                          </div>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">{log.description}</p>
-                        {log.user && (
-                          <p className="text-xs text-muted-foreground mt-2">
-                            by {log.user.firstName} {log.user.lastName} (@{log.user.username})
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <h4 className="font-medium text-foreground group-hover:text-gold-accent transition-colors">
+                                {log.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                              </h4>
+                              <Badge 
+                                variant="outline" 
+                                className={`text-xs ${getActivityBadgeColor(priority)}`}
+                              >
+                                {priority}
+                              </Badge>
+                            </div>
+                            <span className="text-sm text-muted-foreground flex-shrink-0">
+                              {format(new Date(log.createdAt), 'MMM dd, HH:mm')}
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-1 truncate">
+                            {log.description}
                           </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                          {log.user && (
+                            <div className="flex items-center space-x-2 mt-2">
+                              <div className="w-6 h-6 bg-gradient-to-br from-gold-accent to-lavender-accent rounded-full flex items-center justify-center text-xs font-bold text-background">
+                                {log.user.firstName?.[0]}{log.user.lastName?.[0]}
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                {log.user.firstName} {log.user.lastName} (@{log.user.username})
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Eye className="w-4 h-4 text-gold-accent" />
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
