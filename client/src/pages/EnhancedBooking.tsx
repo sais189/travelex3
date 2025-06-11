@@ -221,30 +221,30 @@ export default function EnhancedBooking() {
 
       // Himalayas & Mountain adventures
       himalayas: [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mountain peaks
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Trekking path
-        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Prayer flags
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mountain village
-        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Yak caravan
-        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Monastery
-        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Base camp
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sunrise peaks
-        "https://images.unsplash.com/photo-1464822759844-d150296c5bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sherpa culture
-        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // High altitude
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Kathmandu arrival mountain peaks
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Trekking path adventure
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Colorful prayer flags
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Traditional mountain village
+        "https://images.unsplash.com/photo-1571708513618-b2fc5d8e0064?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Suspension bridge crossing
+        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Ancient monastery visit
+        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Everest base camp
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sunrise over peaks
+        "https://images.unsplash.com/photo-1464822759844-d150296c5bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sherpa cultural meeting
+        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // High altitude acclimatization
       ],
 
       // Amazon rainforest & Ecuador
       amazon: [
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Dense rainforest
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // River journey
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Exotic birds
-        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Indigenous culture
-        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Canopy walk
-        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Night sounds
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // River dolphins
-        "https://images.unsplash.com/photo-1551524164-6cf2ac12c8b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Jaguar spotting
-        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Wildlife spotting
-        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Medicinal plants
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Dense rainforest arrival
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // River journey by boat
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Exotic colorful birds
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Indigenous culture meeting
+        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Canopy walkway adventure
+        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Night wildlife sounds
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Pink river dolphins
+        "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Jaguar wildlife spotting
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Medicinal plant discovery
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Traditional crafts learning
       ],
 
       // Galápagos Islands
@@ -328,25 +328,68 @@ export default function EnhancedBooking() {
       selectedCollection = imageCollections.europe;
     }
 
-    // Further refine selection based on day activities
-    if (dayTitle.includes('arrival') || dayTitle.includes('airport') || dayTitle.includes('transfer')) {
-      // Use transportation/arrival themed images
-      return selectedCollection[0]; // First image typically shows the destination overview
-    } else if (dayTitle.includes('wildlife') || dayTitle.includes('safari') || dayDescription.includes('animals')) {
-      return imageCollections.safari[index % imageCollections.safari.length];
-    } else if (dayTitle.includes('cultural') || dayTitle.includes('temple') || dayTitle.includes('monastery')) {
-      // Use cultural/heritage images - typically middle range of collection
-      return selectedCollection[Math.floor(selectedCollection.length / 2) + (index % 3)];
-    } else if (dayTitle.includes('adventure') || dayTitle.includes('trek') || dayTitle.includes('hiking')) {
-      // Use adventure/activity images
-      return selectedCollection[1 + (index % 3)]; // Skip first overview image
-    } else if (dayTitle.includes('relaxation') || dayTitle.includes('spa') || dayTitle.includes('leisure')) {
-      // Use relaxation/luxury images
-      return selectedCollection[selectedCollection.length - 1 - (index % 2)]; // Use later images in collection
-    }
+    // Advanced activity-based image selection for maximum relevance
+    const activityKeywords = {
+      arrival: ['arrival', 'airport', 'transfer', 'welcome', 'check-in'],
+      wildlife: ['wildlife', 'safari', 'animals', 'lion', 'elephant', 'giraffe', 'zebra', 'big five', 'migration', 'spotting'],
+      cultural: ['cultural', 'temple', 'monastery', 'village', 'traditional', 'indigenous', 'ceremony', 'local', 'heritage'],
+      adventure: ['trek', 'hiking', 'climbing', 'expedition', 'adventure', 'climb', 'summit', 'trail'],
+      water: ['snorkeling', 'diving', 'swimming', 'water', 'reef', 'marine', 'ocean', 'beach', 'cruise'],
+      relaxation: ['spa', 'relaxation', 'leisure', 'wellness', 'massage', 'yoga', 'meditation'],
+      food: ['cooking', 'cuisine', 'food', 'dining', 'restaurant', 'culinary', 'tasting'],
+      nature: ['forest', 'jungle', 'canopy', 'river', 'mountain', 'peak', 'sunrise', 'sunset'],
+      transportation: ['train', 'boat', 'flight', 'drive', 'journey', 'transfer']
+    };
 
-    // Default cycling through collection for varied display
-    return selectedCollection[index % selectedCollection.length];
+    // Find the most relevant activity type
+    let activityType = 'default';
+    let maxMatches = 0;
+    
+    Object.entries(activityKeywords).forEach(([activity, keywords]) => {
+      const matches = keywords.filter(keyword => 
+        dayTitle.includes(keyword) || dayDescription.includes(keyword)
+      ).length;
+      
+      if (matches > maxMatches) {
+        maxMatches = matches;
+        activityType = activity;
+      }
+    });
+
+    // Select images based on specific activity types
+    switch (activityType) {
+      case 'arrival':
+        return selectedCollection[0]; // Overview/arrival image
+      case 'wildlife':
+        return imageCollections.safari[Math.min(index, imageCollections.safari.length - 1)];
+      case 'cultural':
+        // Use middle portion of collection for cultural activities
+        const culturalStart = Math.floor(selectedCollection.length * 0.3);
+        return selectedCollection[culturalStart + (index % 3)];
+      case 'adventure':
+        // Use adventure-focused images (positions 1-4 typically)
+        return selectedCollection[1 + (index % Math.min(4, selectedCollection.length - 1))];
+      case 'water':
+        // For water activities, use Maldives collection if not already specific
+        if (selectedCollection === imageCollections.maldives) {
+          return selectedCollection[3 + (index % 4)]; // Water activity images
+        }
+        return selectedCollection[index % selectedCollection.length];
+      case 'relaxation':
+        // Use later images in collection (typically spa/relaxation themed)
+        return selectedCollection[selectedCollection.length - 1 - (index % 2)];
+      case 'food':
+        // Use food/cultural images (middle range)
+        const foodIndex = Math.floor(selectedCollection.length * 0.4) + (index % 2);
+        return selectedCollection[foodIndex];
+      case 'nature':
+        // Use nature/landscape images (early-middle range)
+        return selectedCollection[(index + 2) % selectedCollection.length];
+      case 'transportation':
+        return selectedCollection[0]; // Overview transportation image
+      default:
+        return selectedCollection[index % selectedCollection.length];
+    }
   };
 
   // Generate key highlights for each day in dot point format
