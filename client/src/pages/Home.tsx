@@ -204,14 +204,18 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="h-full"
               >
-                <Card className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden h-full flex flex-col">
-                  <div className="relative h-48 flex-shrink-0">
+                <Card 
+                  className="glass-morphism card-tilt cursor-pointer glow-hover overflow-hidden h-full flex flex-col group"
+                  onClick={() => navigate(`/booking/${destination.id}`)}
+                >
+                  <div className="relative h-48 flex-shrink-0 overflow-hidden">
                     <OptimizedImage
                       src={destination.imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
                       alt={destination.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       priority={index < 2}
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute top-4 right-4">
                       <div className="flex items-center space-x-1 bg-black bg-opacity-50 rounded-full px-2 py-1">
                         <Star className="w-3 h-3 text-gold-accent fill-current" />
@@ -221,11 +225,11 @@ export default function Home() {
                   </div>
                   <CardContent className="p-6 flex-1 flex flex-col">
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold mb-2 line-clamp-2 min-h-[3.5rem]">
+                      <h3 className="text-xl font-semibold mb-2 line-clamp-2 min-h-[3.5rem] group-hover:text-gold-accent transition-colors duration-200">
                         {destination.name}
                       </h3>
-                      <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-3 min-h-[4rem]">
-                        {destination.shortDescription || destination.description.slice(0, 100) + "..."}
+                      <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-4 min-h-[5rem]">
+                        {destination.shortDescription || destination.description.slice(0, 180) + "..."}
                       </p>
                     </div>
                     <div className="flex justify-between items-center mt-auto pt-4">
@@ -236,8 +240,11 @@ export default function Home() {
                         <span className="text-xs text-muted-foreground">per person</span>
                       </div>
                       <Button
-                        onClick={() => handleBookNow(destination.id)}
-                        className="bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground transition-all duration-200 px-6"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBookNow(destination.id);
+                        }}
+                        className="bg-lavender-accent hover:bg-lavender-accent/80 text-primary-foreground transition-all duration-200 px-6 hover:scale-105"
                         size="sm"
                       >
                         Book Now
