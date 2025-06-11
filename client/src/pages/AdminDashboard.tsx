@@ -1679,6 +1679,187 @@ export default function AdminDashboard() {
           </DialogContent>
         </Dialog>
 
+        {/* Activity Details Dialog */}
+        <Dialog open={showActivityDetailsDialog} onOpenChange={setShowActivityDetailsDialog}>
+          <DialogContent className="sm:max-w-[600px] glass-morphism border-gold-accent/20">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                <Activity className="w-5 h-5" />
+                <span>Activity Details</span>
+              </DialogTitle>
+            </DialogHeader>
+            {selectedActivity && (
+              <div className="space-y-6 py-4">
+                {/* Activity Header */}
+                <div className="flex items-start space-x-4 p-4 bg-gold-accent/5 rounded-lg border border-gold-accent/20">
+                  <div className={`p-3 rounded-full ${getActivityBadgeColor(getActivityPriority(selectedActivity.action))}`}>
+                    {getActivityIcon(selectedActivity.action)}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-foreground">
+                        {selectedActivity.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      </h3>
+                      <Badge 
+                        variant="outline" 
+                        className={`${getActivityBadgeColor(getActivityPriority(selectedActivity.action))}`}
+                      >
+                        {getActivityPriority(selectedActivity.action)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Activity ID: #{selectedActivity.id}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Activity Details Grid */}
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Timestamp</label>
+                      <p className="text-sm font-mono bg-muted/20 p-2 rounded border">
+                        {format(new Date(selectedActivity.createdAt), 'EEEE, MMMM dd, yyyy')}
+                        <br />
+                        {format(new Date(selectedActivity.createdAt), 'HH:mm:ss')} UTC
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Action Type</label>
+                      <p className="text-sm bg-muted/20 p-2 rounded border">
+                        {selectedActivity.action}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Priority Level</label>
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-3 h-3 rounded-full ${
+                          getActivityPriority(selectedActivity.action) === 'critical' ? 'bg-red-500' :
+                          getActivityPriority(selectedActivity.action) === 'warning' ? 'bg-yellow-500' : 'bg-green-500'
+                        }`}></div>
+                        <span className="text-sm capitalize">
+                          {getActivityPriority(selectedActivity.action)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {selectedActivity.user && (
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Performed By</label>
+                        <div className="flex items-center space-x-3 bg-muted/20 p-3 rounded border">
+                          <div className="w-10 h-10 bg-gradient-to-br from-gold-accent to-lavender-accent rounded-full flex items-center justify-center text-sm font-bold text-background">
+                            {selectedActivity.user.firstName?.[0]}{selectedActivity.user.lastName?.[0]}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">
+                              {selectedActivity.user.firstName} {selectedActivity.user.lastName}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              @{selectedActivity.user.username}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">User ID</label>
+                      <p className="text-sm font-mono bg-muted/20 p-2 rounded border">
+                        {selectedActivity.userId}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Time Since</label>
+                      <p className="text-sm bg-muted/20 p-2 rounded border">
+                        {(() => {
+                          const now = new Date();
+                          const activityTime = new Date(selectedActivity.createdAt);
+                          const diffMs = now.getTime() - activityTime.getTime();
+                          const diffMinutes = Math.floor(diffMs / 60000);
+                          const diffHours = Math.floor(diffMinutes / 60);
+                          const diffDays = Math.floor(diffHours / 24);
+                          
+                          if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+                          if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+                          if (diffMinutes > 0) return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+                          return 'Just now';
+                        })()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Description</label>
+                  <div className="bg-muted/20 p-4 rounded border">
+                    <p className="text-sm leading-relaxed">
+                      {selectedActivity.description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Additional Context */}
+                <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
+                  <h4 className="text-sm font-medium text-blue-400 mb-2">Additional Context</h4>
+                  <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
+                    <div>
+                      <span className="font-medium">Category:</span> {
+                        selectedActivity.action.includes('booking') ? 'Booking Management' :
+                        selectedActivity.action.includes('payment') || selectedActivity.action.includes('financial') ? 'Financial' :
+                        selectedActivity.action.includes('support') ? 'Customer Support' :
+                        selectedActivity.action.includes('user') || selectedActivity.action.includes('login') ? 'User Management' :
+                        selectedActivity.action.includes('destination') ? 'Content Management' :
+                        selectedActivity.action.includes('system') || selectedActivity.action.includes('security') ? 'System Operations' :
+                        'General Activity'
+                      }
+                    </div>
+                    <div>
+                      <span className="font-medium">Impact:</span> {
+                        getActivityPriority(selectedActivity.action) === 'critical' ? 'High Impact' :
+                        getActivityPriority(selectedActivity.action) === 'warning' ? 'Medium Impact' :
+                        'Low Impact'
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-3 pt-4 border-t border-gold-accent/20">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowActivityDetailsDialog(false)}
+                    className="glass-morphism border-gold-accent/30"
+                  >
+                    Close
+                  </Button>
+                  {selectedActivity.user && (
+                    <Button
+                      onClick={() => {
+                        // Find and view the user
+                        const user = users?.find(u => u.id === selectedActivity.userId);
+                        if (user) {
+                          setSelectedUser(user);
+                          setShowActivityDetailsDialog(false);
+                          setShowUserDetailsDialog(true);
+                        }
+                      }}
+                      className="bg-gradient-to-r from-gold-accent to-lavender-accent text-black font-semibold"
+                    >
+                      View User
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
         {/* Notifications Dialog */}
         <Dialog open={showNotificationsDialog} onOpenChange={setShowNotificationsDialog}>
           <DialogContent className="sm:max-w-[500px] glass-morphism border-gold-accent/20">
