@@ -175,50 +175,177 @@ export default function EnhancedBooking() {
     const destinationName = destination?.name.toLowerCase() || '';
     const country = destination?.country?.toLowerCase() || '';
 
-    // Base image collections for different destination types
+    // Comprehensive image collections for different destination types and activities
     const imageCollections = {
+      // Japan & Tokyo collections
       tokyo: [
-        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1554978991-33ef7f31d658?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Tokyo skyline
+        "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Temple
+        "https://images.unsplash.com/photo-1554978991-33ef7f31d658?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cherry blossoms
+        "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Street food
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Traditional garden
+        "https://images.unsplash.com/photo-1492571350019-22de08371fd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Shibuya crossing
+        "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sushi
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mount Fuji
+        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Ryokan
+        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Tea ceremony
       ],
+      
+      // Maldives tropical paradise
       maldives: [
-        "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+        "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Overwater villa
+        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Crystal water
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Beach sunset
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Coral reef
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Tropical fish
+        "https://images.unsplash.com/photo-1520637836862-4d197d17c18a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Hammock beach
+        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Beach dining
+        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Spa treatment
+        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Snorkeling
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Dolphin watching
       ],
+      
+      // Safari & Wildlife
       safari: [
-        "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+        "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Lion pride
+        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Elephant herd
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Zebra migration
+        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Giraffe family
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cheetah hunting
+        "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Safari vehicle
+        "https://images.unsplash.com/photo-1549366021-9f761d040a94?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sunset savanna
+        "https://images.unsplash.com/photo-1552201979-8d5a8c4c6b50?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Maasai culture
+        "https://images.unsplash.com/photo-1563592441-6ebc9f07c5e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Wildebeest
+        "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Big five
       ],
+
+      // Himalayas & Mountain adventures
+      himalayas: [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mountain peaks
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Trekking path
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Prayer flags
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mountain village
+        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Yak caravan
+        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Monastery
+        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Base camp
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sunrise peaks
+        "https://images.unsplash.com/photo-1464822759844-d150296c5bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sherpa culture
+        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // High altitude
+      ],
+
+      // Amazon rainforest & Ecuador
+      amazon: [
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Dense rainforest
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // River journey
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Exotic birds
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Indigenous culture
+        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Canopy walk
+        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Night sounds
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // River dolphins
+        "https://images.unsplash.com/photo-1551524164-6cf2ac12c8b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Jaguar spotting
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Wildlife spotting
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Medicinal plants
+      ],
+
+      // Galápagos Islands
+      galapagos: [
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Giant tortoise
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Marine iguanas
+        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Blue-footed boobies
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Sea lions
+        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Volcanic landscape
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Snorkeling
+        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Darwin research
+        "https://images.unsplash.com/photo-1520637836862-4d197d17c18a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Finches
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Hammerhead sharks
+        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Evolution studies
+      ],
+
+      // Northern Lights & Arctic
+      arctic: [
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Aurora borealis
+        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Ice hotel
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Husky sledding
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Lapland village
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Reindeer herding
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Snow activities
+        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Ice fishing
+        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Arctic wildlife
+        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cross-country skiing
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Sauna experience
+      ],
+
+      // European destinations
+      europe: [
+        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Castle architecture
+        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Medieval towns
+        "https://images.unsplash.com/photo-1549388604-817d15aa0110?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Countryside views
+        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Historic squares
+        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Local cuisine
+        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cultural sites
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Traditional crafts
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Gardens
+        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Festivals
+        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Museums
+      ],
+
+      // Default/general travel
       default: [
-        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Adventure travel
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mountain views
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Forest paths
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Scenic landscapes
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cultural experiences
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Local interactions
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Transportation
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Accommodations
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Beach activities
+        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // City exploration
       ]
     };
 
-    // Determine which image collection to use
+    // Intelligent image selection based on destination characteristics
+    const dayTitle = day?.title?.toLowerCase() || '';
+    const dayDescription = day?.description?.toLowerCase() || '';
     let selectedCollection = imageCollections.default;
     
-    if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
+    // Match destination types to appropriate image collections
+    if (destinationName.includes('tokyo') || destinationName.includes('japan') || country.includes('japan')) {
       selectedCollection = imageCollections.tokyo;
-    } else if (destinationName.includes('maldives')) {
+    } else if (destinationName.includes('maldives') || destinationName.includes('luxury resort')) {
       selectedCollection = imageCollections.maldives;
-    } else if (destinationName.includes('safari') || destinationName.includes('kenya') || country.includes('kenya')) {
+    } else if (destinationName.includes('safari') || destinationName.includes('kenya') || country.includes('kenya') || destinationName.includes('wildlife')) {
       selectedCollection = imageCollections.safari;
+    } else if (destinationName.includes('himalaya') || destinationName.includes('everest') || destinationName.includes('base camp') || country.includes('nepal')) {
+      selectedCollection = imageCollections.himalayas;
+    } else if (destinationName.includes('amazon') || destinationName.includes('rainforest') || country.includes('ecuador')) {
+      selectedCollection = imageCollections.amazon;
+    } else if (destinationName.includes('galápagos') || destinationName.includes('galapagos')) {
+      selectedCollection = imageCollections.galapagos;
+    } else if (destinationName.includes('northern lights') || destinationName.includes('finland') || destinationName.includes('lapland') || country.includes('finland')) {
+      selectedCollection = imageCollections.arctic;
+    } else if (destinationName.includes('castle') || destinationName.includes('medieval') || country.includes('ireland') || country.includes('poland')) {
+      selectedCollection = imageCollections.europe;
     }
 
-    // Return image based on day index, cycling through collection
+    // Further refine selection based on day activities
+    if (dayTitle.includes('arrival') || dayTitle.includes('airport') || dayTitle.includes('transfer')) {
+      // Use transportation/arrival themed images
+      return selectedCollection[0]; // First image typically shows the destination overview
+    } else if (dayTitle.includes('wildlife') || dayTitle.includes('safari') || dayDescription.includes('animals')) {
+      return imageCollections.safari[index % imageCollections.safari.length];
+    } else if (dayTitle.includes('cultural') || dayTitle.includes('temple') || dayTitle.includes('monastery')) {
+      // Use cultural/heritage images - typically middle range of collection
+      return selectedCollection[Math.floor(selectedCollection.length / 2) + (index % 3)];
+    } else if (dayTitle.includes('adventure') || dayTitle.includes('trek') || dayTitle.includes('hiking')) {
+      // Use adventure/activity images
+      return selectedCollection[1 + (index % 3)]; // Skip first overview image
+    } else if (dayTitle.includes('relaxation') || dayTitle.includes('spa') || dayTitle.includes('leisure')) {
+      // Use relaxation/luxury images
+      return selectedCollection[selectedCollection.length - 1 - (index % 2)]; // Use later images in collection
+    }
+
+    // Default cycling through collection for varied display
     return selectedCollection[index % selectedCollection.length];
   };
 
