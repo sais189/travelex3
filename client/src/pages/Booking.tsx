@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useParams } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Star, MapPin, Clock, Users, Calendar, ChevronDown, ChevronUp, CreditCard, Home, Utensils, Plane, Coffee } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Users, Calendar, CreditCard, Home, Utensils, Plane, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { loadStripe } from "@stripe/stripe-js";
 import { RobustImage } from "@/components/ui/robust-image";
+import DayByDayItinerary from "@/components/DayByDayItinerary";
 import type { Destination } from "@shared/schema";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
@@ -31,7 +32,7 @@ export default function Booking() {
   const [guests, setGuests] = useState("2");
   const [travelClass, setTravelClass] = useState("business");
   const [upgrades, setUpgrades] = useState<string[]>([]);
-  const [showItinerary, setShowItinerary] = useState(false);
+
   const [showSuccess, setShowSuccess] = useState(false);
 
   const destinationId = parseInt(params.id || "0");
@@ -256,39 +257,18 @@ export default function Booking() {
               {destination.description}
             </p>
 
-            {/* Itinerary Toggle */}
-            <Card className="glass-morphism mb-8">
-              <CardContent className="p-6">
-                <Button
-                  variant="ghost"
-                  onClick={() => setShowItinerary(!showItinerary)}
-                  className="flex items-center justify-between w-full text-left p-0 h-auto"
-                >
-                  <h3 className="text-xl font-semibold">View Full Itinerary</h3>
-                  {showItinerary ? (
-                    <ChevronUp className="w-5 h-5 text-gold-accent" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-gold-accent" />
-                  )}
-                </Button>
-
-                {showItinerary && (
-                  <motion.div
-                    className="mt-6 space-y-4"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {itinerary.map((item, index) => (
-                      <div key={index} className="border-l-2 border-gold-accent pl-4">
-                        <h4 className="font-semibold text-gold-accent">{item.day}: {item.title}</h4>
-                        <p className="text-muted-foreground">{item.description}</p>
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </CardContent>
-            </Card>
+            {/* Day-by-Day Itinerary */}
+            <div className="mb-8">
+              <DayByDayItinerary 
+                destination={{
+                  id: destination.id,
+                  name: destination.name,
+                  country: destination.country,
+                  imageUrl: destination.imageUrl || '',
+                  itinerary: destination.itinerary as any[] || []
+                }} 
+              />
+            </div>
 
             {/* Included Features */}
             <Card className="glass-morphism">

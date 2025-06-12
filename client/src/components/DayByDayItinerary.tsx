@@ -33,8 +33,8 @@ interface DayByDayItineraryProps {
     id: number;
     name: string;
     country: string;
-    imageUrl: string;
-    itinerary: ItineraryDay[];
+    imageUrl: string | null;
+    itinerary: any[] | unknown;
   };
   activeDay?: number;
   onDaySelect?: (dayIndex: number) => void;
@@ -145,7 +145,8 @@ export default function DayByDayItinerary({
     return Sparkles; // Default icon
   };
 
-  const itinerary = destination?.itinerary || [];
+  const itinerary = Array.isArray(destination?.itinerary) ? destination.itinerary : [];
+  const imageUrl = destination?.imageUrl || '';
 
   return (
     <section id="itinerary-section" className="relative py-20 px-6 overflow-hidden">
