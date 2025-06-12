@@ -108,23 +108,135 @@ export default function DayByDayItinerary({
   const getVariedImageForDay = (destination: any, day: ItineraryDay, index: number) => {
     const destinationName = destination?.name.toLowerCase() || '';
     const country = destination?.country?.toLowerCase() || '';
+    const dayTitle = day?.title?.toLowerCase() || '';
     
-    // Use a variety of image parameters to get different views
-    const imageVariations = [
-      'landscape',
-      'culture',
-      'food',
-      'architecture',
-      'nature',
-      'activities',
-      'sunset'
-    ];
+    // Country-specific image collections with authentic locations
+    const imageCollections = {
+      japan: [
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Tokyo skyline
+        "https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Kinkaku-ji temple
+        "https://images.unsplash.com/photo-1522637739821-45282d6e14ba?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Cherry blossoms
+        "https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Bamboo grove
+        "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Mount Fuji
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Japanese cuisine
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Sensoji temple
+      ],
+      maldives: [
+        "https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Overwater bungalows
+        "https://images.unsplash.com/photo-1494278251643-83efc7e71e34?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Crystal lagoon
+        "https://images.unsplash.com/photo-1541184121-90a6eb74db33?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Coral reef
+        "https://images.unsplash.com/photo-1524743292513-8ad6a045b3a7?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Sunset beach
+        "https://images.unsplash.com/photo-1466693115751-f9b5b2c8b6b5?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Seaplane view
+        "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Traditional dhoni
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Beach dinner
+      ],
+      nepal: [
+        "https://images.unsplash.com/photo-1605783960019-8bd5a0639a37?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Mount Everest
+        "https://images.unsplash.com/photo-1506203469682-3f8b5d4e2e00?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Himalayan range
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2ac1?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Sherpa village
+        "https://images.unsplash.com/photo-1579420883471-b6de4a5e4a4e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Prayer flags
+        "https://images.unsplash.com/photo-1534870439272-475715ad6266?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Tengboche monastery
+        "https://images.unsplash.com/photo-1564575137824-e3c4fc8c6bf7?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Suspension bridge
+        "https://images.unsplash.com/photo-1542652184-fe00ee5b7337?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Kathmandu heritage
+      ],
+      kenya: [
+        "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Lion pride
+        "https://images.unsplash.com/photo-1539640705205-b6f86e3c4321?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Elephant migration
+        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Zebra herds
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Giraffe
+        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Hot air balloon
+        "https://images.unsplash.com/photo-1551971963-66b7b3e7b8d3?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Masai culture
+        "https://images.unsplash.com/photo-1602030127743-52a734b56ead?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Safari vehicle
+      ],
+      iceland: [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Aurora Borealis
+        "https://images.unsplash.com/photo-1570372444682-1a34b88de3d8?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Gullfoss waterfall
+        "https://images.unsplash.com/photo-1473774514473-0b48ac6fdf60?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Geysir eruption
+        "https://images.unsplash.com/photo-1460518451285-97b6aa326961?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Blue Lagoon
+        "https://images.unsplash.com/photo-1553788194-28d9b01fc540?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Diamond Beach
+        "https://images.unsplash.com/photo-1516715094483-75da06b80015?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Black sand beach
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Glacier lagoon
+      ],
+      // Generic collection for other destinations
+      generic: [
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Mountain landscape
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Beach sunset
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // City architecture
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Forest path
+        "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Ocean waves
+        "https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Desert landscape
+        "https://images.unsplash.com/photo-1543037409-87cbeac7ac70?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Local market
+      ]
+    };
     
-    const variation = imageVariations[index % imageVariations.length];
-    const baseUrl = `https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80`;
+    // Determine image collection based on destination
+    let selectedCollection = imageCollections.generic;
     
-    // Add variation parameters
-    return `${baseUrl}&sig=${index}&var=${variation}`;
+    if (destinationName.includes('tokyo') || destinationName.includes('japan') || country.includes('japan')) {
+      selectedCollection = imageCollections.japan;
+    } else if (destinationName.includes('maldives') || country.includes('maldives')) {
+      selectedCollection = imageCollections.maldives;
+    } else if (destinationName.includes('kenya') || destinationName.includes('safari') || country.includes('kenya')) {
+      selectedCollection = imageCollections.kenya;
+    } else if (destinationName.includes('nepal') || destinationName.includes('himalaya') || destinationName.includes('everest') || country.includes('nepal')) {
+      selectedCollection = imageCollections.nepal;
+    } else if (destinationName.includes('iceland') || country.includes('iceland')) {
+      selectedCollection = imageCollections.iceland;
+    }
+    
+    // Smart image selection based on day content and position
+    const dayType = getDayType(day, index);
+    
+    // Use different strategies to ensure variety
+    let imageIndex = index % selectedCollection.length;
+    
+    // Apply day-type specific offset to create more variation
+    switch (dayType) {
+      case 'arrival':
+        imageIndex = 0; // Always use the first iconic image for arrival
+        break;
+      case 'adventure':
+        imageIndex = (index + 2) % selectedCollection.length; // Offset by 2
+        break;
+      case 'cultural':
+        imageIndex = (index + 4) % selectedCollection.length; // Offset by 4
+        break;
+      case 'nature':
+        imageIndex = (index + 1) % selectedCollection.length; // Offset by 1
+        break;
+      case 'food':
+        imageIndex = (index + 3) % selectedCollection.length; // Offset by 3
+        break;
+      case 'relaxation':
+        imageIndex = (selectedCollection.length - 1 - (index % 2)); // Use later images
+        break;
+      default:
+        // For mixed or unknown types, use a formula that creates good distribution
+        imageIndex = (index * 3 + 1) % selectedCollection.length;
+    }
+    
+    return selectedCollection[imageIndex];
+  };
+  
+  // Helper function to determine day type
+  const getDayType = (day: ItineraryDay, index: number) => {
+    const dayTitle = day?.title?.toLowerCase() || '';
+    
+    if (dayTitle.includes('arrival') || dayTitle.includes('departure') || index === 0) {
+      return 'arrival';
+    } else if (dayTitle.includes('adventure') || dayTitle.includes('excursion') || dayTitle.includes('trek')) {
+      return 'adventure';
+    } else if (dayTitle.includes('cultural') || dayTitle.includes('traditional') || dayTitle.includes('village')) {
+      return 'cultural';
+    } else if (dayTitle.includes('relax') || dayTitle.includes('spa') || dayTitle.includes('leisure')) {
+      return 'relaxation';
+    } else if (dayTitle.includes('food') || dayTitle.includes('cuisine') || dayTitle.includes('dining')) {
+      return 'food';
+    } else if (dayTitle.includes('nature') || dayTitle.includes('wildlife') || dayTitle.includes('scenic')) {
+      return 'nature';
+    }
+    
+    return 'mixed';
   };
 
   // Get appropriate icon for each day
