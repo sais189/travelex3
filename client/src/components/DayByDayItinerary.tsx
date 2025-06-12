@@ -18,102 +18,126 @@ import {
 } from "lucide-react";
 import { RobustImage } from "@/components/ui/robust-image";
 
-// Landmark images for each destination's day-by-day itineraries
+// Landmark images for each specific destination
 const DESTINATION_LANDMARK_IMAGES = {
-  // Japan destinations
-  japan: {
-    day1: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Tokyo skyline
-    day2: "https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Kinkaku-ji Golden Pavilion
-    day3: "https://images.unsplash.com/photo-1522637739821-45282d6e14ba?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Cherry blossoms at Chidorigafuchi
-    day4: "https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Arashiyama Bamboo Grove
-    day5: "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Mount Fuji
-    day6: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Sensoji Temple
-    day7: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Meiji Shrine
-    fallback: "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80"
+  // Maldives Luxury Resort (ID: 2)
+  "maldives_luxury_resort": {
+    day1: "https://images.unsplash.com/photo-1544896478-d5b709926297?w=800&h=600&fit=crop&auto=format&q=80", // Overwater bungalows
+    day2: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=800&h=600&fit=crop&auto=format&q=80", // Crystal lagoon
+    day3: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80", // Coral reef diving
+    day4: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&h=600&fit=crop&auto=format&q=80", // Sunset beach
+    day5: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80", // Seaplane transfer
+    day6: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80", // Private beach dinner
+    day7: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&auto=format&q=80", // Resort spa
+    fallback: "https://images.unsplash.com/photo-1544896478-d5b709926297?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
-  // Maldives destinations  
-  maldives: {
-    day1: "https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Overwater bungalows
-    day2: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Crystal clear lagoon
-    day3: "https://images.unsplash.com/photo-1541184121-90a6eb74db33?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Coral reef underwater
-    day4: "https://images.unsplash.com/photo-1524743292513-8ad6a045b3a7?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Sunset beach villa
-    day5: "https://images.unsplash.com/photo-1466693115751-f9b5b2c8b6b5?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Seaplane aerial view
-    day6: "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Traditional dhoni boat
-    day7: "https://images.unsplash.com/photo-1494278251643-83efc7e71e34?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Paradise beach
-    fallback: "https://images.unsplash.com/photo-1463734275205-e8c7d79daab3?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80"
+  // Tokyo Adventure (ID: 3)
+  "tokyo_adventure": {
+    day1: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&h=600&fit=crop&auto=format&q=80", // Tokyo skyline
+    day2: "https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800&h=600&fit=crop&auto=format&q=80", // Shibuya crossing
+    day3: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&h=600&fit=crop&auto=format&q=80", // Sensoji Temple
+    day4: "https://images.unsplash.com/photo-1560707303-4e980ce876ad?w=800&h=600&fit=crop&auto=format&q=80", // Golden Pavilion
+    day5: "https://images.unsplash.com/photo-1578637387939-43c4eecb3985?w=800&h=600&fit=crop&auto=format&q=80", // Mount Fuji
+    day6: "https://images.unsplash.com/photo-1554797589-7241bb691973?w=800&h=600&fit=crop&auto=format&q=80", // Cherry blossoms
+    day7: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Traditional garden
+    fallback: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
-  // Nepal/Himalaya destinations
-  nepal: {
-    day1: "https://images.unsplash.com/photo-1605783960019-8bd5a0639a37?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Mount Everest peak
-    day2: "https://images.unsplash.com/photo-1534870439272-475715ad6266?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Tengboche Monastery
-    day3: "https://images.unsplash.com/photo-1579420883471-b6de4a5e4a4e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Prayer flags in Himalayas
-    day4: "https://images.unsplash.com/photo-1518709268805-4e9042af2ac1?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Sherpa village
-    day5: "https://images.unsplash.com/photo-1564575137824-e3c4fc8c6bf7?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Suspension bridge
-    day6: "https://images.unsplash.com/photo-1506203469682-3f8b5d4e2e00?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Himalayan range
-    day7: "https://images.unsplash.com/photo-1542652184-fe00ee5b7337?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Kathmandu Durbar Square
-    fallback: "https://images.unsplash.com/photo-1566555102687-b33de5f73e56?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80"
+  // Himalayan Expedition (ID: 4)
+  "himalayan_expedition": {
+    day1: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&auto=format&q=80", // Everest Base Camp
+    day2: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&h=600&fit=crop&auto=format&q=80", // Mountain monastery
+    day3: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&h=600&fit=crop&auto=format&q=80", // Prayer flags
+    day4: "https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=800&h=600&fit=crop&auto=format&q=80", // Sherpa village
+    day5: "https://images.unsplash.com/photo-1464822759844-d150baef493e?w=800&h=600&fit=crop&auto=format&q=80", // Mountain trek
+    day6: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Himalayan sunrise
+    day7: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&auto=format&q=80", // Mountain camp
+    fallback: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
-  // Kenya/Safari destinations
-  kenya: {
-    day1: "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Lions in Masai Mara
-    day2: "https://images.unsplash.com/photo-1539640705205-b6f86e3c4321?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Elephant migration
-    day3: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Zebra herds
-    day4: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Giraffes at Amboseli
-    day5: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Hot air balloon safari
-    day6: "https://images.unsplash.com/photo-1551971963-66b7b3e7b8d3?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Masai culture
-    day7: "https://images.unsplash.com/photo-1602030127743-52a734b56ead?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Safari sunset
-    fallback: "https://images.unsplash.com/photo-1612436079767-5f9c924eb7aa?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80"
+  // African Safari (ID: 5)
+  "african_safari": {
+    day1: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop&auto=format&q=80", // Lions in savanna
+    day2: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Elephants migration
+    day3: "https://images.unsplash.com/photo-1566555110834-0af5e5cf38c5?w=800&h=600&fit=crop&auto=format&q=80", // Zebra herds
+    day4: "https://images.unsplash.com/photo-1566649112285-e6d2e8cd3c5b?w=800&h=600&fit=crop&auto=format&q=80", // Giraffe at sunset
+    day5: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Safari balloon
+    day6: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800&h=600&fit=crop&auto=format&q=80", // Masai culture
+    day7: "https://images.unsplash.com/photo-1549318441-e6324cbb769e?w=800&h=600&fit=crop&auto=format&q=80", // African sunset
+    fallback: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
-  // Iceland destinations
-  iceland: {
-    day1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Northern Lights
-    day2: "https://images.unsplash.com/photo-1570372444682-1a34b88de3d8?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Gullfoss waterfall
-    day3: "https://images.unsplash.com/photo-1473774514473-0b48ac6fdf60?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Geysir eruption
-    day4: "https://images.unsplash.com/photo-1460518451285-97b6aa326961?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Blue Lagoon
-    day5: "https://images.unsplash.com/photo-1553788194-28d9b01fc540?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Diamond Beach
-    day6: "https://images.unsplash.com/photo-1516715094483-75da06b80015?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Black sand beach
-    day7: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Jokulsarlon glacier lagoon
-    fallback: "https://images.unsplash.com/photo-1531835207847-b1b5d8f61ee3?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80"
+  // Iceland Adventure (ID: 6)
+  "iceland_adventure": {
+    day1: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Northern Lights
+    day2: "https://images.unsplash.com/photo-1551524164-6cf96ac834fb?w=800&h=600&fit=crop&auto=format&q=80", // Gullfoss waterfall
+    day3: "https://images.unsplash.com/photo-1539650116574-75c0c6d90469?w=800&h=600&fit=crop&auto=format&q=80", // Geysir eruption
+    day4: "https://images.unsplash.com/photo-1573160813959-df05c19ffc85?w=800&h=600&fit=crop&auto=format&q=80", // Blue Lagoon
+    day5: "https://images.unsplash.com/photo-1565214075252-4dc0b7ab3e40?w=800&h=600&fit=crop&auto=format&q=80", // Diamond Beach
+    day6: "https://images.unsplash.com/photo-1569163139394-de4e6d43e4e5?w=800&h=600&fit=crop&auto=format&q=80", // Black sand beach
+    day7: "https://images.unsplash.com/photo-1564844536879-d7b5b95a9d29?w=800&h=600&fit=crop&auto=format&q=80", // Glacier lagoon
+    fallback: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
-  // Australia destinations
-  australia: {
-    day1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Sydney Opera House
-    day2: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Uluru/Ayers Rock
-    day3: "https://images.unsplash.com/photo-1544966503-7cc5ac882d24?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Great Barrier Reef
-    day4: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Blue Mountains
-    day5: "https://images.unsplash.com/photo-1552832230-592acb1c342e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Twelve Apostles
-    day6: "https://images.unsplash.com/photo-1527004013197-933c4bb611b3?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Kangaroo Island
-    day7: "https://images.unsplash.com/photo-1544966503-7cc5ac882d24?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Port Jackson
-    fallback: "https://images.unsplash.com/photo-1552832230-592acb1c342e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80"
+  // Swiss Alps (ID: 7)
+  "swiss_alps": {
+    day1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Alpine village
+    day2: "https://images.unsplash.com/photo-1464822759844-d150baef493e?w=800&h=600&fit=crop&auto=format&q=80", // Mountain peaks
+    day3: "https://images.unsplash.com/photo-1568393691622-c7ba131d63b4?w=800&h=600&fit=crop&auto=format&q=80", // Lake reflection
+    day4: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80", // Cable car
+    day5: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop&auto=format&q=80", // Alpine meadow
+    day6: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80", // Swiss chalet
+    day7: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&auto=format&q=80", // Mountain sunset
+    fallback: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
-  // Egypt destinations
-  egypt: {
-    day1: "https://images.unsplash.com/photo-1539650116574-75c0c6d90469?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Pyramids of Giza
-    day2: "https://images.unsplash.com/photo-1582746461557-e4c96e20e0f5?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Sphinx
-    day3: "https://images.unsplash.com/photo-1463734275205-e8c7d79daab3?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Valley of the Kings
-    day4: "https://images.unsplash.com/photo-1582746461557-e4c96e20e0f5?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Karnak Temple
-    day5: "https://images.unsplash.com/photo-1482263231623-6121096b0938?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Abu Simbel
-    day6: "https://images.unsplash.com/photo-1504277569279-34ef57a0b0a6?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Nile River cruise
-    day7: "https://images.unsplash.com/photo-1582746461557-e4c96e20e0f5?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Temple of Philae
-    fallback: "https://images.unsplash.com/photo-1539650116574-75c0c6d90469?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80"
+  // Great Barrier Reef (ID: 8)
+  "great_barrier_reef": {
+    day1: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Coral reef aerial
+    day2: "https://images.unsplash.com/photo-1564844536879-d7b5b95a9d29?w=800&h=600&fit=crop&auto=format&q=80", // Underwater coral
+    day3: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80", // Diving experience
+    day4: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=800&h=600&fit=crop&auto=format&q=80", // Marine life
+    day5: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80", // Boat tour
+    day6: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80", // Beach relaxation
+    day7: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&auto=format&q=80", // Sunset cruise
+    fallback: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
-  // Generic for other destinations
+  // Australian Outback (ID: 9)
+  "australian_outback": {
+    day1: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=800&h=600&fit=crop&auto=format&q=80", // Uluru sunrise
+    day2: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80", // Red desert
+    day3: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80", // Aboriginal art
+    day4: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80", // Outback camp
+    day5: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&auto=format&q=80", // Desert wildlife
+    day6: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Stargazing
+    day7: "https://images.unsplash.com/photo-1564844536879-d7b5b95a9d29?w=800&h=600&fit=crop&auto=format&q=80", // Outback sunset
+    fallback: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+  
+  // Norwegian Fjords (ID: 10)
+  "norwegian_fjords": {
+    day1: "https://images.unsplash.com/photo-1464822759844-d150baef493e?w=800&h=600&fit=crop&auto=format&q=80", // Geirangerfjord
+    day2: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Waterfall view
+    day3: "https://images.unsplash.com/photo-1568393691622-c7ba131d63b4?w=800&h=600&fit=crop&auto=format&q=80", // Fjord cruise
+    day4: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80", // Mountain hiking
+    day5: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop&auto=format&q=80", // Preikestolen cliff
+    day6: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80", // Viking heritage
+    day7: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&auto=format&q=80", // Aurora viewing
+    fallback: "https://images.unsplash.com/photo-1464822759844-d150baef493e?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+  
+  // Generic fallback for unknown destinations
   generic: {
-    day1: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Mountain landscape
-    day2: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Tropical beach
-    day3: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // City architecture
-    day4: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Forest landscape
-    day5: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Ocean waves
-    day6: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Desert landscape
-    day7: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Cultural site
-    fallback: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80"
+    day1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80",
+    day2: "https://images.unsplash.com/photo-1464822759844-d150baef493e?w=800&h=600&fit=crop&auto=format&q=80",
+    day3: "https://images.unsplash.com/photo-1568393691622-c7ba131d63b4?w=800&h=600&fit=crop&auto=format&q=80",
+    day4: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80",
+    day5: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop&auto=format&q=80",
+    day6: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80",
+    day7: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&auto=format&q=80",
+    fallback: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80"
   }
 };
 
@@ -205,31 +229,52 @@ export default function DayByDayItinerary({
 
   // Get landmark image for specific day based on destination
   const getLandmarkImageForDay = (destination: any, dayIndex: number) => {
-    const destinationName = destination?.name.toLowerCase() || '';
-    const country = destination?.country?.toLowerCase() || '';
+    const destinationName = destination?.name.toLowerCase().replace(/\s+/g, '_') || '';
+    const destinationId = destination?.id;
     
-    // Determine destination type for landmark images
-    let destinationType = 'generic';
+    // Create destination key from name
+    let destinationKey = 'generic';
     
-    if (destinationName.includes('tokyo') || destinationName.includes('japan') || country.includes('japan')) {
-      destinationType = 'japan';
-    } else if (destinationName.includes('maldives') || country.includes('maldives')) {
-      destinationType = 'maldives';
-    } else if (destinationName.includes('kenya') || destinationName.includes('safari') || country.includes('kenya')) {
-      destinationType = 'kenya';
-    } else if (destinationName.includes('nepal') || destinationName.includes('himalaya') || destinationName.includes('everest') || country.includes('nepal')) {
-      destinationType = 'nepal';
-    } else if (destinationName.includes('iceland') || country.includes('iceland')) {
-      destinationType = 'iceland';
-    } else if (destinationName.includes('australia') || destinationName.includes('sydney') || destinationName.includes('outback') || country.includes('australia')) {
-      destinationType = 'australia';
-    } else if (destinationName.includes('egypt') || destinationName.includes('cairo') || destinationName.includes('giza') || country.includes('egypt')) {
-      destinationType = 'egypt';
+    // Direct mapping based on destination names and IDs
+    if (destinationName.includes('maldives') && destinationName.includes('luxury')) {
+      destinationKey = 'maldives_luxury_resort';
+    } else if (destinationName.includes('tokyo') || destinationName.includes('adventure')) {
+      destinationKey = 'tokyo_adventure';
+    } else if (destinationName.includes('himalayan') || destinationName.includes('expedition')) {
+      destinationKey = 'himalayan_expedition';
+    } else if (destinationName.includes('african') || destinationName.includes('safari')) {
+      destinationKey = 'african_safari';
+    } else if (destinationName.includes('iceland') || destinationName.includes('adventure')) {
+      destinationKey = 'iceland_adventure';
+    } else if (destinationName.includes('swiss') || destinationName.includes('alps')) {
+      destinationKey = 'swiss_alps';
+    } else if (destinationName.includes('barrier') || destinationName.includes('reef')) {
+      destinationKey = 'great_barrier_reef';
+    } else if (destinationName.includes('australian') || destinationName.includes('outback')) {
+      destinationKey = 'australian_outback';
+    } else if (destinationName.includes('norwegian') || destinationName.includes('fjords')) {
+      destinationKey = 'norwegian_fjords';
+    }
+    
+    // Fallback based on ID if name matching fails
+    if (destinationKey === 'generic') {
+      switch (destinationId) {
+        case 2: destinationKey = 'maldives_luxury_resort'; break;
+        case 3: destinationKey = 'tokyo_adventure'; break;
+        case 4: destinationKey = 'himalayan_expedition'; break;
+        case 5: destinationKey = 'african_safari'; break;
+        case 6: destinationKey = 'iceland_adventure'; break;
+        case 7: destinationKey = 'swiss_alps'; break;
+        case 8: destinationKey = 'great_barrier_reef'; break;
+        case 9: destinationKey = 'australian_outback'; break;
+        case 10: destinationKey = 'norwegian_fjords'; break;
+        default: destinationKey = 'generic';
+      }
     }
     
     // Get the specific day image or fallback
     const dayKey = `day${dayIndex + 1}` as keyof typeof DESTINATION_LANDMARK_IMAGES.generic;
-    const imageSet = DESTINATION_LANDMARK_IMAGES[destinationType as keyof typeof DESTINATION_LANDMARK_IMAGES];
+    const imageSet = DESTINATION_LANDMARK_IMAGES[destinationKey as keyof typeof DESTINATION_LANDMARK_IMAGES] || DESTINATION_LANDMARK_IMAGES.generic;
     
     return imageSet[dayKey] || imageSet.fallback;
   };
