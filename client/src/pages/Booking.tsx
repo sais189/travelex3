@@ -416,6 +416,10 @@ export default function Booking() {
 
                 {/* Coupon Code Section */}
                 <div className="border-t border-border pt-6">
+                  <div className="mb-4">
+                    <Label className="text-base font-semibold">Coupon Code</Label>
+                    <p className="text-sm text-muted-foreground">Enter a promo code to get a discount on your booking</p>
+                  </div>
                   <CouponCodeInput
                     availableCouponCode={destination.couponCode}
                     onCouponApplied={(code, discount) => {
