@@ -55,6 +55,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { format, addDays } from "date-fns";
 import { RobustImage } from "@/components/ui/robust-image";
+import DayByDayItinerary from "@/components/DayByDayItinerary";
 
 interface Destination {
   id: number;
@@ -167,8 +168,7 @@ export default function EnhancedBooking() {
     { id: 5, title: "Complete", description: "Adventure awaits" }
   ];
 
-  // Use the real destination itinerary data from the database
-  const mockItinerary = destination?.itinerary || [];
+
 
   // Generate varied images for each day based on destination and day content
   const getVariedImageForDay = (destination: any, day: any, index: number) => {
@@ -1024,203 +1024,12 @@ export default function EnhancedBooking() {
         </motion.div>
       </section>
 
-      {/* Day-by-Day Itinerary with Layered Slide-In */}
-      <section id="itinerary-section" className="relative py-20 px-6 overflow-hidden">
-        {/* Fixed Background with Parallax */}
-        <motion.div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url(${destination.imageUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed'
-          }}
-        />
-        
-        <div className="relative z-10 max-w-6xl mx-auto">
-          {/* Left-to-right slide-in for title */}
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            viewport={{ once: true, amount: 0.3 }}
-            className="text-center mb-16"
-          >
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gold-accent to-lavender-accent bg-clip-text text-transparent mb-4"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              Your Journey Unfolds
-            </motion.h2>
-            
-            {/* Right-to-left slide-in for subtitle */}
-            <motion.p 
-              className="text-xl text-muted-foreground max-w-2xl mx-auto"
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              viewport={{ once: true }}
-            >
-              Experience every moment of your {destination.duration}-day adventure through {destination.country}
-            </motion.p>
-          </motion.div>
-
-          {/* Day Tabs with Timeline */}
-          <div className="space-y-12">
-            <div className="flex justify-center">
-              <div className="relative flex space-x-1 bg-black/20 rounded-full p-1 backdrop-blur-sm">
-                {mockItinerary.map((day: any, index: number) => (
-                  <motion.button
-                    key={day.day}
-                    onClick={() => handleDayTabClick(day.day)}
-                    className={`relative px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                      activeItineraryDay === day.day
-                        ? 'text-white shadow-lg'
-                        : 'text-muted-foreground hover:text-gold-accent hover:bg-white/10'
-                    }`}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    {activeItineraryDay === day.day && (
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-gold-accent to-lavender-accent rounded-full"
-                        layoutId="activeTab"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      />
-                    )}
-                    <span className="relative z-10">Day {day.day}</span>
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-
-            {/* Layered Journey Cards - Each Day Slides In Differently */}
-            <div className="space-y-24">
-              {mockItinerary.map((day: any, index: number) => (
-                <motion.div
-                  key={day.day}
-                  id={`day-${day.day}`}
-                  initial={{ opacity: 0, y: 100 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    duration: 1, 
-                    delay: index * 0.2,
-                    ease: "easeOut"
-                  }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  className="max-w-6xl mx-auto"
-                >
-                  <Card className="glass-morphism border-gold-accent/20 overflow-hidden">
-                    <div className={`grid md:grid-cols-2 gap-0 ${index % 2 === 1 ? 'md:grid-flow-col-dense' : ''}`}>
-                      {/* Image slides in from alternating directions */}
-                      <motion.div 
-                        className={`relative h-96 md:h-auto ${index % 2 === 1 ? 'md:col-start-2' : ''}`}
-                        initial={{ opacity: 0, x: index % 2 === 0 ? -150 : 150 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ 
-                          duration: 1.2, 
-                          delay: 0.3,
-                          ease: "easeOut"
-                        }}
-                        viewport={{ once: true }}
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        <RobustImage
-                          src={getVariedImageForDay(destination, day, index)}
-                          alt={day.title}
-                          className="w-full h-full object-cover"
-                          fallbackSrc="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
-                        
-                        {/* Day number overlay */}
-                        <motion.div 
-                          className="absolute top-6 left-6 w-16 h-16 bg-gradient-to-br from-gold-accent to-lavender-accent rounded-full flex items-center justify-center shadow-lg"
-                          initial={{ scale: 0 }}
-                          whileInView={{ scale: 1 }}
-                          transition={{ delay: 0.8, type: "spring" }}
-                          viewport={{ once: true }}
-                        >
-                          <span className="text-white font-bold text-xl">{day.day}</span>
-                        </motion.div>
-                      </motion.div>
-
-                      {/* Content slides in with staggered animation */}
-                      <motion.div 
-                        className="p-8 flex flex-col justify-center"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ 
-                          duration: 0.8, 
-                          delay: 0.5,
-                          ease: "easeOut"
-                        }}
-                        viewport={{ once: true }}
-                      >
-                        <Badge className="mb-4 w-fit text-xs px-3 py-1 bg-lavender-accent/20 text-lavender-accent border-lavender-accent/30">
-                          Day {day.day}
-                        </Badge>
-                        
-                        <motion.h3 
-                          className="text-2xl md:text-3xl font-bold mb-4 text-gold-accent"
-                          initial={{ opacity: 0, x: -30 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.7, duration: 0.6 }}
-                          viewport={{ once: true }}
-                        >
-                          {day.title}
-                        </motion.h3>
-                        
-                        <motion.p 
-                          className="text-muted-foreground text-lg leading-relaxed mb-6"
-                          initial={{ opacity: 0, x: -30 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.9, duration: 0.6 }}
-                          viewport={{ once: true }}
-                        >
-                          {day.description}
-                        </motion.p>
-
-                        {/* Key highlights in dot points */}
-                        <motion.div
-                          className="space-y-3"
-                          initial={{ opacity: 0, y: 20 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 1.1, duration: 0.6 }}
-                          viewport={{ once: true }}
-                        >
-                          <h4 className="text-lg font-semibold text-gold-accent mb-3">Key Highlights:</h4>
-                          <div className="grid grid-cols-1 gap-2">
-                            {getHighlightsForDay(day, index).map((highlight: string, idx: number) => (
-                              <motion.div
-                                key={idx}
-                                className="flex items-start space-x-3"
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 1.2 + idx * 0.1, duration: 0.4 }}
-                                viewport={{ once: true }}
-                              >
-                                <div className="w-2 h-2 rounded-full bg-gold-accent mt-2 flex-shrink-0" />
-                                <span className="text-muted-foreground">{highlight}</span>
-                              </motion.div>
-                            ))}
-                          </div>
-                        </motion.div>
-                      </motion.div>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Day-by-Day Itinerary Component */}
+      <DayByDayItinerary 
+        destination={destination}
+        activeDay={activeItineraryDay}
+        onDaySelect={setActiveItineraryDay}
+      />
 
       {/* Interactive Features & Booking Section */}
       <section className="py-20 px-6 bg-gradient-to-b from-background to-muted/20">
