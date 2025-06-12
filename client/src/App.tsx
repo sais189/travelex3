@@ -19,6 +19,7 @@ const Payment = lazy(() => import("@/pages/Payment"));
 const MyTrips = lazy(() => import("@/pages/MyTrips"));
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
 const ImageTest = lazy(() => import("@/pages/ImageTest"));
+const ImageValidationTest = lazy(() => import("@/pages/ImageValidationTest"));
 const Login = lazy(() => import("@/pages/Login"));
 const Signup = lazy(() => import("@/pages/Signup"));
 const About = lazy(() => import("@/pages/About"));
@@ -52,6 +53,7 @@ function Router() {
           <Route path="/admin" component={AdminDashboard} />
           <Route path="/admin/:tab" component={AdminDashboard} />
           <Route path="/image-test" component={ImageTest} />
+          <Route path="/image-validation-test" component={ImageValidationTest} />
           <Route path="/auth" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/about" component={About} />

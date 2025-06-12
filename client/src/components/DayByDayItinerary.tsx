@@ -57,19 +57,19 @@ const DESTINATION_LANDMARK_IMAGES = {
   },
   
   // African Safari (ID: 5)
-  "african_safari": {
-    "day1": "https://unsplash.com/photos/a-herd-of-elephants-walking-across-a-lush-green-field-Ds66UJVowBw", // Herd of elephants in African game reserve
-    "day2": "https://unsplash.com/photos/a-herd-of-zebra-grazing-on-a-lush-green-field-NQdnNTU5A-c", // Zebras grazing in South Africa
-    "day3": "https://unsplash.com/photos/a-giraffe-standing-in-a-field-at-sunset-u_mdmleqBB8", // Giraffe at sunset in Amboseli, Kenya
-    "day4": "https://unsplash.com/photos/a-group-of-people-standing-next-to-each-other-Xeyas5qNg3U", // Masai community in Kenya
-    "day5": "https://unsplash.com/photos/the-african-sunset-over-safari-vehicles-in-the-masai-mara-nairobi-Lv7PRE8e_ew", // African sunset over Masai Mara
-    "day6": "https://unsplash.com/photos/a-pride-of-lions-in-etosha-national-park-namibia-mgMhRhy4lvk", // Pride of lions in Namibia
-    "day7": "https://unsplash.com/photos/person-standing-near-a-tent-in-an-african-safari-HBdCCv4DGdk", // Safari camp in Africa
-    "fallback": "https://unsplash.com/photos/a-herd-of-elephants-walking-across-a-lush-green-field-Ds66UJVowBw"
-  }
+  african_safari: {
+    day1: "https://unsplash.com/photos/a-herd-of-elephants-walking-across-a-lush-green-field-Ds66UJVowBw", // Herd of elephants in African game reserve
+    day2: "https://unsplash.com/photos/a-herd-of-zebra-grazing-on-a-lush-green-field-NQdnNTU5A-c", // Zebras grazing in South Africa
+    day3: "https://unsplash.com/photos/a-giraffe-standing-in-a-field-at-sunset-u_mdmleqBB8", // Giraffe at sunset in Amboseli, Kenya
+    day4: "https://unsplash.com/photos/a-group-of-people-standing-next-to-each-other-Xeyas5qNg3U", // Masai community in Kenya
+    day5: "https://unsplash.com/photos/the-african-sunset-over-safari-vehicles-in-the-masai-mara-nairobi-Lv7PRE8e_ew", // African sunset over Masai Mara
+    day6: "https://unsplash.com/photos/a-pride-of-lions-in-etosha-national-park-namibia-mgMhRhy4lvk", // Pride of lions in Namibia
+    day7: "https://unsplash.com/photos/person-standing-near-a-tent-in-an-african-safari-HBdCCv4DGdk", // Safari camp in Africa
+    fallback: "https://unsplash.com/photos/a-herd-of-elephants-walking-across-a-lush-green-field-Ds66UJVowBw"
+  },
   
   // Iceland Adventure (ID: 6)
-  "iceland_adventure": {
+  iceland_adventure: {
     day1: "https://images.unsplash.com/photo-1551524164-6cf96ac834fb?w=800&h=600&fit=crop&auto=format&q=80", // Gullfoss waterfall
     day2: "https://images.unsplash.com/photo-1539650116574-75c0c6d90469?w=800&h=600&fit=crop&auto=format&q=80", // Geysir eruption
     day3: "https://images.unsplash.com/photo-1573160813959-df05c19ffc85?w=800&h=600&fit=crop&auto=format&q=80", // Blue Lagoon
