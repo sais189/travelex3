@@ -160,7 +160,9 @@ export default function Booking() {
     const upgrade = upgradeOptions.find(u => u.id === upgradeId);
     return total + (upgrade?.price || 0);
   }, 0);
-  const totalAmount = Math.round((basePrice * classMultiplier) + upgradeTotal);
+  const subtotal = Math.round((basePrice * classMultiplier) + upgradeTotal);
+  const couponDiscount = appliedCoupon ? Math.round(subtotal * (appliedCoupon.discount / 100)) : 0;
+  const totalAmount = subtotal - couponDiscount;
 
   const handleUpgradeChange = (upgradeId: string, checked: boolean) => {
     if (checked) {
@@ -188,6 +190,9 @@ export default function Booking() {
       travelClass,
       upgrades,
       totalAmount,
+      originalAmount: subtotal,
+      appliedCouponCode: appliedCoupon?.code || null,
+      couponDiscount,
       status: "pending",
       paymentStatus: "pending",
     };
@@ -409,13 +414,50 @@ export default function Booking() {
                   </div>
                 </div>
 
-                {/* Total & Book Button */}
+                {/* Coupon Code Section */}
                 <div className="border-t border-border pt-6">
-                  <div className="flex justify-between items-center mb-6">
-                    <span className="text-lg font-semibold">Total</span>
-                    <span className="text-2xl font-bold text-gold-accent">
-                      ${totalAmount.toLocaleString()}
-                    </span>
+                  <CouponCodeInput
+                    availableCouponCode={destination.couponCode}
+                    onCouponApplied={(code, discount) => {
+                      setAppliedCoupon({ code, discount });
+                      toast({
+                        title: "Coupon Applied!",
+                        description: `${discount}% discount has been applied to your booking.`,
+                        variant: "default",
+                      });
+                    }}
+                    onCouponRemoved={() => {
+                      setAppliedCoupon(null);
+                      toast({
+                        title: "Coupon Removed",
+                        description: "The coupon discount has been removed.",
+                        variant: "default",
+                      });
+                    }}
+                    appliedCoupon={appliedCoupon}
+                    className="mb-6"
+                  />
+                </div>
+
+                {/* Pricing Breakdown & Total */}
+                <div className="border-t border-border pt-6">
+                  <div className="space-y-3 mb-6">
+                    <div className="flex justify-between text-sm">
+                      <span>Subtotal</span>
+                      <span>${subtotal.toLocaleString()}</span>
+                    </div>
+                    {appliedCoupon && (
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                        <span>Coupon Discount ({appliedCoupon.code})</span>
+                        <span>-${couponDiscount.toLocaleString()}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center border-t pt-3">
+                      <span className="text-lg font-semibold">Total</span>
+                      <span className="text-2xl font-bold text-gold-accent">
+                        ${totalAmount.toLocaleString()}
+                      </span>
+                    </div>
                   </div>
 
                   <Button
