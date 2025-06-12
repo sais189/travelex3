@@ -17,6 +17,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { loadStripe } from "@stripe/stripe-js";
 import { RobustImage } from "@/components/ui/robust-image";
 import DayByDayItinerary from "@/components/DayByDayItinerary";
+import CouponCodeInput from "@/components/CouponCodeInput";
 import type { Destination } from "@shared/schema";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
@@ -32,6 +33,10 @@ export default function Booking() {
   const [guests, setGuests] = useState("2");
   const [travelClass, setTravelClass] = useState("business");
   const [upgrades, setUpgrades] = useState<string[]>([]);
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discount: number;
+  } | null>(null);
 
   const [showSuccess, setShowSuccess] = useState(false);
 

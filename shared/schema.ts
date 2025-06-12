@@ -90,6 +90,9 @@ export const bookings = pgTable("bookings", {
   travelClass: varchar("travel_class", { length: 50 }).default("economy"), // economy, business
   upgrades: jsonb("upgrades"), // array of selected upgrades
   totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull(),
+  originalAmount: decimal("original_amount", { precision: 10, scale: 2 }), // before coupon discount
+  appliedCouponCode: varchar("applied_coupon_code", { length: 20 }), // coupon code used
+  couponDiscount: decimal("coupon_discount", { precision: 10, scale: 2 }).default("0"), // discount amount from coupon
   status: varchar("status", { length: 50 }).default("pending"), // pending, confirmed, cancelled, completed
   paymentStatus: varchar("payment_status", { length: 50 }).default("pending"), // pending, paid, failed, refunded
   stripePaymentIntentId: varchar("stripe_payment_intent_id"),

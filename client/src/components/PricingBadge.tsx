@@ -186,11 +186,11 @@ export default function PricingBadge({
         <Badge 
           variant="destructive" 
           className={cn(
-            "flex items-center gap-1 text-xs font-bold bg-red-600 text-white border-red-700",
-            isFlashSaleExpiringSoon && "animate-pulse"
+            "flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-red-500 to-red-600 text-white border-red-400 shadow-lg shadow-red-500/30 hover:shadow-red-500/50 transition-all duration-300 animate-pulse",
+            "drop-shadow-md backdrop-blur-sm border-2"
           )}
         >
-          <Zap className="w-3 h-3" />
+          <Zap className="w-3 h-3 animate-bounce" />
           ⚡ FLASH SALE
         </Badge>
       )}
@@ -200,8 +200,9 @@ export default function PricingBadge({
         <Badge 
           variant={getBadgeVariant(promoTag)}
           className={cn(
-            "flex items-center gap-1 text-xs font-medium",
-            isExpiringSoon && "animate-pulse"
+            "flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-blue-500 to-blue-600 text-white border-blue-400 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300",
+            "drop-shadow-md backdrop-blur-sm border-2",
+            isExpiringSoon && "animate-pulse from-orange-500 to-orange-600 border-orange-400 shadow-orange-500/30"
           )}
         >
           {getBadgeIcon(promoTag)}
@@ -213,7 +214,7 @@ export default function PricingBadge({
       {seasonalTag && (
         <Badge 
           variant="outline" 
-          className="flex items-center gap-1 text-xs font-medium bg-gradient-to-r from-blue-50 to-purple-50 text-purple-700 border-purple-200 dark:from-purple-900/20 dark:to-blue-900/20 dark:text-purple-300"
+          className="flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-purple-400 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 drop-shadow-md backdrop-blur-sm border-2"
         >
           {getSeasonalIcon(seasonalTag)}
           {seasonalTag}
@@ -225,10 +226,10 @@ export default function PricingBadge({
         <Badge 
           variant="secondary" 
           className={cn(
-            "flex items-center gap-1 text-xs font-bold",
+            "flex items-center gap-1 text-xs font-bold shadow-lg transition-all duration-300 drop-shadow-md backdrop-blur-sm border-2",
             discountType === 'bogo' 
-              ? "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" 
-              : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+              ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white border-orange-400 shadow-orange-500/30 hover:shadow-orange-500/50" 
+              : "bg-gradient-to-r from-green-500 to-green-600 text-white border-green-400 shadow-green-500/30 hover:shadow-green-500/50"
           )}
         >
           {discountType === 'bogo' ? <Gift className="w-3 h-3" /> : <Percent className="w-3 h-3" />}
@@ -238,7 +239,7 @@ export default function PricingBadge({
 
       {/* Group Discount */}
       {groupDiscountMin > 0 && (
-        <Badge variant="outline" className="flex items-center gap-1 text-xs font-medium bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300">
+        <Badge variant="outline" className="flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-400 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300 drop-shadow-md backdrop-blur-sm border-2">
           <Users className="w-3 h-3" />
           {groupDiscountMin}+ Group Deal
         </Badge>
@@ -246,7 +247,7 @@ export default function PricingBadge({
 
       {/* Loyalty Discount */}
       {loyaltyDiscount > 0 && (
-        <Badge variant="outline" className="flex items-center gap-1 text-xs font-medium bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300">
+        <Badge variant="outline" className="flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-pink-500 to-purple-600 text-white border-pink-400 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 transition-all duration-300 drop-shadow-md backdrop-blur-sm border-2">
           <Heart className="w-3 h-3" />
           +{loyaltyDiscount}% Loyalty
         </Badge>
@@ -254,7 +255,7 @@ export default function PricingBadge({
 
       {/* Coupon Code */}
       {couponCode && (
-        <Badge variant="outline" className="flex items-center gap-1 text-xs font-mono bg-yellow-50 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300">
+        <Badge variant="outline" className="flex items-center gap-1 text-xs font-mono font-bold bg-gradient-to-r from-yellow-500 to-amber-600 text-white border-yellow-400 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 transition-all duration-300 drop-shadow-md backdrop-blur-sm border-2 animate-pulse">
           <Tag className="w-3 h-3" />
           {couponCode}
         </Badge>
@@ -262,7 +263,7 @@ export default function PricingBadge({
 
       {/* Bundle Deal */}
       {bundleDeal && (
-        <Badge variant="outline" className="flex items-center gap-1 text-xs font-medium bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300">
+        <Badge variant="outline" className="flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-emerald-400 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all duration-300 drop-shadow-md backdrop-blur-sm border-2">
           <ShoppingBag className="w-3 h-3" />
           Bundle Deal
         </Badge>
