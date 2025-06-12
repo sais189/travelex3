@@ -130,14 +130,14 @@ const DESTINATION_LANDMARK_IMAGES = {
   
   // Generic fallback for unknown destinations
   generic: {
-    day1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80",
-    day2: "https://images.unsplash.com/photo-1464822759844-d150baef493e?w=800&h=600&fit=crop&auto=format&q=80",
-    day3: "https://images.unsplash.com/photo-1568393691622-c7ba131d63b4?w=800&h=600&fit=crop&auto=format&q=80",
-    day4: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80",
-    day5: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop&auto=format&q=80",
-    day6: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80",
-    day7: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&auto=format&q=80",
-    fallback: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80"
+    day1: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80", // Travel wanderlust
+    day2: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop&auto=format&q=80", // Adventure landscape
+    day3: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=600&fit=crop&auto=format&q=80", // Ocean horizon
+    day4: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80", // Forest path
+    day5: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Mountain vista
+    day6: "https://images.unsplash.com/photo-1464822759844-d150baef493e?w=800&h=600&fit=crop&auto=format&q=80", // Nature escape
+    day7: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop&auto=format&q=80", // Sunset journey
+    fallback: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80"
   }
 };
 
