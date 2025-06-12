@@ -14,6 +14,7 @@ import Navbar from "@/components/Navbar";
 
 // Lazy loaded pages for code splitting
 const Destinations = lazy(() => import("@/pages/Destinations"));
+const Promotions = lazy(() => import("@/pages/Promotions"));
 const EnhancedBooking = lazy(() => import("@/pages/EnhancedBooking"));
 const Payment = lazy(() => import("@/pages/Payment"));
 const MyTrips = lazy(() => import("@/pages/MyTrips"));
@@ -47,6 +48,7 @@ function Router() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/destinations" component={Destinations} />
+          <Route path="/promotions" component={Promotions} />
           <Route path="/booking/:id" component={EnhancedBooking} />
           <Route path="/payment/:bookingId" component={Payment} />
           <Route path="/my-trips" component={MyTrips} />
