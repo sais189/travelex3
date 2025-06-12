@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useParams } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Star, MapPin, Clock, Users, Calendar, CreditCard, Home, Utensils, Plane, Coffee } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Users, Calendar, CreditCard, Home, Utensils, Plane, Coffee, Tag, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
@@ -37,6 +38,7 @@ export default function Booking() {
     code: string;
     discount: number;
   } | null>(null);
+  const [couponInput, setCouponInput] = useState("");
 
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -169,6 +171,37 @@ export default function Booking() {
       setUpgrades(prev => [...prev, upgradeId]);
     } else {
       setUpgrades(prev => prev.filter(id => id !== upgradeId));
+    }
+  };
+
+  const handleApplyCoupon = () => {
+    if (!couponInput.trim()) return;
+    
+    // Define valid coupon codes and their discounts
+    const validCoupons: Record<string, number> = {
+      'SUMMER15': 15,
+      'TOKYO20': 20,
+      'WILD25': 25,
+      'PEACE15': 15,
+      'DEMO15': 15
+    };
+
+    const discount = validCoupons[couponInput.trim()];
+    
+    if (discount) {
+      setAppliedCoupon({ code: couponInput.trim(), discount });
+      setCouponInput("");
+      toast({
+        title: "Coupon Applied!",
+        description: `${discount}% discount has been applied to your booking.`,
+        variant: "default",
+      });
+    } else {
+      toast({
+        title: "Invalid Coupon",
+        description: "The coupon code you entered is not valid.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -415,32 +448,99 @@ export default function Booking() {
                 </div>
 
                 {/* Coupon Code Section */}
-                <div className="border-t border-border pt-6">
+                <div className="border-t border-border pt-6 bg-slate-50 dark:bg-slate-900/50 rounded-lg p-4 mb-4">
                   <div className="mb-4">
-                    <Label className="text-base font-semibold">Coupon Code</Label>
-                    <p className="text-sm text-muted-foreground">Enter a promo code to get a discount on your booking</p>
+                    <Label className="text-base font-semibold flex items-center gap-2">
+                      <Tag className="w-4 h-4" />
+                      Coupon Code
+                    </Label>
+                    <p className="text-sm text-muted-foreground mt-1">Enter a promo code to get a discount on your booking</p>
                   </div>
-                  <CouponCodeInput
-                    availableCouponCode={destination.couponCode}
-                    onCouponApplied={(code, discount) => {
-                      setAppliedCoupon({ code, discount });
-                      toast({
-                        title: "Coupon Applied!",
-                        description: `${discount}% discount has been applied to your booking.`,
-                        variant: "default",
-                      });
-                    }}
-                    onCouponRemoved={() => {
-                      setAppliedCoupon(null);
-                      toast({
-                        title: "Coupon Removed",
-                        description: "The coupon discount has been removed.",
-                        variant: "default",
-                      });
-                    }}
-                    appliedCoupon={appliedCoupon}
-                    className="mb-6"
-                  />
+                  
+                  {/* Debug info */}
+                  {destination.couponCode && (
+                    <div className="mb-3 p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded text-sm">
+                      Available: {destination.couponCode}
+                    </div>
+                  )}
+                  
+                  {/* Quick Apply Available Coupon */}
+                  {destination.couponCode && !appliedCoupon && (
+                    <div className="flex items-center gap-2 p-3 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800 mb-3">
+                      <Tag className="w-4 h-4 text-yellow-600" />
+                      <span className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                        Available coupon: <span className="font-mono font-bold">{destination.couponCode}</span>
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setAppliedCoupon({ code: destination.couponCode!, discount: 15 });
+                          toast({
+                            title: "Coupon Applied!",
+                            description: `15% discount has been applied to your booking.`,
+                            variant: "default",
+                          });
+                        }}
+                        className="ml-auto bg-yellow-100 hover:bg-yellow-200 text-yellow-800 border-yellow-300"
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Applied Coupon Display */}
+                  {appliedCoupon && (
+                    <div className="flex items-center gap-2 p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-200 dark:border-green-800 mb-3">
+                      <Check className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                        Coupon applied: <span className="font-mono font-bold">{appliedCoupon.code}</span>
+                      </span>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded text-xs font-bold">
+                        {appliedCoupon.discount}% OFF
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setAppliedCoupon(null);
+                          toast({
+                            title: "Coupon Removed",
+                            description: "The coupon discount has been removed.",
+                            variant: "default",
+                          });
+                        }}
+                        className="ml-auto text-green-600 hover:text-green-800 hover:bg-green-100"
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Manual Coupon Input */}
+                  {!appliedCoupon && (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Enter coupon code"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                        className="flex-1 font-mono"
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            handleApplyCoupon();
+                          }
+                        }}
+                      />
+                      <Button
+                        variant="outline"
+                        onClick={handleApplyCoupon}
+                        disabled={!couponInput.trim()}
+                      >
+                        <Tag className="w-4 h-4 mr-1" />
+                        Apply
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Pricing Breakdown & Total */}
