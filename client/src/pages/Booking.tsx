@@ -19,6 +19,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { RobustImage } from "@/components/ui/robust-image";
 import DayByDayItinerary from "@/components/DayByDayItinerary";
 import CouponCodeInput from "@/components/CouponCodeInput";
+import Reviews from "@/components/Reviews";
 import type { Destination } from "@shared/schema";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
@@ -702,6 +703,13 @@ export default function Booking() {
           </motion.div>
         </div>
       </div>
+
+      {/* Guest Reviews Section */}
+      <section className="py-16 px-6 bg-gradient-to-b from-muted/10 to-background">
+        <div className="max-w-6xl mx-auto">
+          <Reviews destinationId={destination.id} destinationName={destination.name} />
+        </div>
+      </section>
 
       {/* Success Modal */}
       <Dialog open={showSuccess} onOpenChange={setShowSuccess}>

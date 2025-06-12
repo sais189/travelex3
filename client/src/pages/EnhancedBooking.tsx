@@ -1090,6 +1090,13 @@ export default function EnhancedBooking() {
         onDaySelect={setActiveItineraryDay}
       />
 
+      {/* Guest Reviews Section */}
+      <section className="py-16 px-6 bg-gradient-to-b from-muted/10 to-background">
+        <div className="max-w-6xl mx-auto">
+          <Reviews destinationId={destination.id} destinationName={destination.name} />
+        </div>
+      </section>
+
       {/* Interactive Features & Booking Section */}
       <section className="py-20 px-6 bg-gradient-to-b from-background to-muted/20">
         <div className="max-w-7xl mx-auto">
