@@ -428,6 +428,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/destinations/:id/reviews', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const reviews = await storage.getDestinationReviews(id);
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+  });
+
+  app.get('/api/destinations/:id/review-stats', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const stats = await storage.getReviewStats(id);
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching review stats:", error);
+      res.status(500).json({ message: "Failed to fetch review stats" });
+    }
+  });
+
   // Admin routes - destinations management
   app.post('/api/admin/destinations', isAuthenticated, async (req: any, res) => {
     try {

@@ -3,6 +3,7 @@ import {
   destinations,
   bookings,
   activityLogs,
+  reviews,
   type User,
   type UpsertUser,
   type Destination,
@@ -13,6 +14,9 @@ import {
   type ActivityLog,
   type InsertActivityLog,
   type DestinationWithStats,
+  type Review,
+  type InsertReview,
+  type ReviewWithUser,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, lte, count, sum, sql, not } from "drizzle-orm";
@@ -51,6 +55,11 @@ export interface IStorage {
   // Activity logs
   createActivityLog(log: InsertActivityLog): Promise<ActivityLog>;
   getActivityLogs(limit?: number): Promise<ActivityLog[]>;
+
+  // Reviews operations
+  getDestinationReviews(destinationId: number): Promise<ReviewWithUser[]>;
+  createReview(review: InsertReview): Promise<Review>;
+  getReviewStats(destinationId: number): Promise<{ averageRating: number; totalReviews: number }>;
 
   // Analytics
   getRevenue(startDate?: Date, endDate?: Date): Promise<{ total: string; period: string }>;
@@ -490,6 +499,50 @@ export class DatabaseStorage implements IStorage {
       .from(activityLogs)
       .orderBy(desc(activityLogs.createdAt))
       .limit(limit);
+  }
+
+  // Reviews operations
+  async getDestinationReviews(destinationId: number): Promise<ReviewWithUser[]> {
+    return await db
+      .select({
+        id: reviews.id,
+        destinationId: reviews.destinationId,
+        userId: reviews.userId,
+        rating: reviews.rating,
+        title: reviews.title,
+        comment: reviews.comment,
+        tripDate: reviews.tripDate,
+        createdAt: reviews.createdAt,
+        updatedAt: reviews.updatedAt,
+        user: users,
+      })
+      .from(reviews)
+      .innerJoin(users, eq(reviews.userId, users.id))
+      .where(eq(reviews.destinationId, destinationId))
+      .orderBy(desc(reviews.createdAt));
+  }
+
+  async createReview(review: InsertReview): Promise<Review> {
+    const [newReview] = await db
+      .insert(reviews)
+      .values(review)
+      .returning();
+    return newReview;
+  }
+
+  async getReviewStats(destinationId: number): Promise<{ averageRating: number; totalReviews: number }> {
+    const [stats] = await db
+      .select({
+        averageRating: sql<number>`ROUND(AVG(${reviews.rating}), 1)`,
+        totalReviews: count(reviews.id),
+      })
+      .from(reviews)
+      .where(eq(reviews.destinationId, destinationId));
+    
+    return {
+      averageRating: stats?.averageRating || 0,
+      totalReviews: stats?.totalReviews || 0,
+    };
   }
 
   // Analytics

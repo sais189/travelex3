@@ -57,6 +57,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { format, addDays } from "date-fns";
 import { RobustImage } from "@/components/ui/robust-image";
 import DayByDayItinerary from "@/components/DayByDayItinerary";
+import Reviews from "@/components/Reviews";
 
 interface Destination {
   id: number;
