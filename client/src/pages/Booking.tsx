@@ -259,15 +259,7 @@ export default function Booking() {
 
             {/* Day-by-Day Itinerary */}
             <div className="mb-8">
-              <DayByDayItinerary 
-                destination={{
-                  id: destination.id,
-                  name: destination.name,
-                  country: destination.country,
-                  imageUrl: destination.imageUrl || '',
-                  itinerary: destination.itinerary as any[] || []
-                }} 
-              />
+              <DayByDayItinerary destination={destination} />
             </div>
 
             {/* Included Features */}

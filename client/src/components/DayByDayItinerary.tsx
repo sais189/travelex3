@@ -154,7 +154,7 @@ export default function DayByDayItinerary({
       <motion.div 
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: `url(${destination.imageUrl})`,
+          backgroundImage: `url(${imageUrl})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed'
