@@ -15,6 +15,7 @@ export default function Destinations() {
   const [regionFilter, setRegionFilter] = useState("all");
   const [budgetFilter, setBudgetFilter] = useState("all");
   const [durationFilter, setDurationFilter] = useState("all");
+  const [dealsFilter, setDealsFilter] = useState("all");
 
   const { data: destinations = [], isLoading } = useQuery<Destination[]>({
     queryKey: ["/api/destinations"],
@@ -129,6 +130,35 @@ export default function Destinations() {
       }
     }
 
+    // Deals filter
+    if (dealsFilter !== "all") {
+      const hasActivePromo = Boolean(
+        destination.promoTag || 
+        (destination.discountPercentage && destination.discountPercentage > 0) || 
+        destination.seasonalTag || 
+        destination.flashSale ||
+        destination.couponCode ||
+        (destination.groupDiscountMin && destination.groupDiscountMin > 0) ||
+        (destination.loyaltyDiscount && destination.loyaltyDiscount > 0) ||
+        destination.bundleDeal
+      );
+
+      switch (dealsFilter) {
+        case "flash-sales":
+          matches = matches && (destination.flashSale === true);
+          break;
+        case "seasonal":
+          matches = matches && Boolean(destination.seasonalTag);
+          break;
+        case "group-discounts":
+          matches = matches && ((destination.groupDiscountMin || 0) > 0);
+          break;
+        case "current-deals":
+          matches = matches && hasActivePromo;
+          break;
+      }
+    }
+
     return matches;
   });
 
@@ -176,7 +206,7 @@ export default function Destinations() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <Select value={regionFilter} onValueChange={setRegionFilter}>
               <SelectTrigger className="bg-slate-panel border-border focus:border-gold-accent">
                 <SelectValue placeholder="All Regions" />
@@ -213,6 +243,19 @@ export default function Destinations() {
                 <SelectItem value="6-7">6-7 days</SelectItem>
                 <SelectItem value="8-14">1-2 weeks</SelectItem>
                 <SelectItem value="15-plus">2+ weeks</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={dealsFilter} onValueChange={setDealsFilter}>
+              <SelectTrigger className="bg-slate-panel border-border focus:border-gold-accent">
+                <SelectValue placeholder="Current Deals" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Destinations</SelectItem>
+                <SelectItem value="current-deals">Current Deals</SelectItem>
+                <SelectItem value="flash-sales">Flash Sales</SelectItem>
+                <SelectItem value="seasonal">Seasonal Offers</SelectItem>
+                <SelectItem value="group-discounts">Group Discounts</SelectItem>
               </SelectContent>
             </Select>
 
@@ -262,7 +305,15 @@ export default function Destinations() {
                     <PricingBadge 
                       promoTag={destination.promoTag}
                       discountPercentage={destination.discountPercentage ?? 0}
-                      promoExpiry={destination.promoExpiry ? new Date(destination.promoExpiry).toISOString() : undefined}
+                      promoExpiry={destination.promoExpiry ? destination.promoExpiry.toString() : undefined}
+                      seasonalTag={destination.seasonalTag ?? undefined}
+                      flashSale={destination.flashSale ?? false}
+                      flashSaleEnd={destination.flashSaleEnd ? destination.flashSaleEnd.toString() : undefined}
+                      couponCode={destination.couponCode || undefined}
+                      discountType={destination.discountType || undefined}
+                      groupDiscountMin={destination.groupDiscountMin ?? 0}
+                      loyaltyDiscount={destination.loyaltyDiscount ?? 0}
+                      bundleDeal={destination.bundleDeal}
                     />
                   </div>
                   <div className="absolute top-4 right-4">
