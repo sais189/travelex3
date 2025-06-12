@@ -14,6 +14,12 @@ interface CouponCodeInputProps {
     discount: number;
   } | null;
   className?: string;
+  destination?: {
+    id: number;
+    name: string;
+    couponCode?: string | null;
+    discountPercentage?: number | null;
+  };
 }
 
 export default function CouponCodeInput({
@@ -21,7 +27,8 @@ export default function CouponCodeInput({
   onCouponApplied,
   onCouponRemoved,
   appliedCoupon,
-  className
+  className,
+  destination
 }: CouponCodeInputProps) {
   const [couponInput, setCouponInput] = useState("");
   const [isValidating, setIsValidating] = useState(false);
@@ -34,14 +41,25 @@ export default function CouponCodeInput({
     // Simulate validation delay
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Check if the code matches the available coupon
-    if (availableCouponCode && code.toUpperCase() === availableCouponCode.toUpperCase()) {
-      // For demo purposes, apply a 15% discount
+    const inputCode = code.toUpperCase();
+    
+    // Check if the entered coupon matches the destination's specific coupon code
+    if (destination?.couponCode && inputCode === destination.couponCode.toUpperCase()) {
+      // Apply the destination-specific discount
+      const discount = destination.discountPercentage || 15;
+      onCouponApplied(inputCode, discount);
+      setCouponInput("");
+    } else if (availableCouponCode && inputCode === availableCouponCode.toUpperCase()) {
+      // Fallback to availableCouponCode if provided
       const discount = 15;
-      onCouponApplied(code.toUpperCase(), discount);
+      onCouponApplied(inputCode, discount);
       setCouponInput("");
     } else {
-      setValidationError("Invalid coupon code");
+      setValidationError(
+        destination?.couponCode 
+          ? `This coupon code is not valid for ${destination.name}. Try ${destination.couponCode} instead.`
+          : "Invalid coupon code"
+      );
     }
 
     setIsValidating(false);

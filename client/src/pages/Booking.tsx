@@ -175,31 +175,28 @@ export default function Booking() {
   };
 
   const handleApplyCoupon = () => {
-    if (!couponInput.trim()) return;
+    if (!couponInput.trim() || !destination) return;
     
-    // Define valid coupon codes and their discounts
-    const validCoupons: Record<string, number> = {
-      'SUMMER15': 15,
-      'AUSSIE25': 25,
-      'WILD25': 25,
-      'PEACE15': 15,
-      'DEMO15': 15
-    };
-
-    const discount = validCoupons[couponInput.trim()];
+    const inputCode = couponInput.trim().toUpperCase();
     
-    if (discount) {
-      setAppliedCoupon({ code: couponInput.trim(), discount });
+    // Check if the entered coupon matches the destination's specific coupon code
+    if (destination.couponCode && inputCode === destination.couponCode.toUpperCase()) {
+      // Apply the destination-specific discount
+      const discount = destination.discountPercentage || 15; // Use destination's discount or default to 15%
+      
+      setAppliedCoupon({ code: inputCode, discount });
       setCouponInput("");
       toast({
         title: "Coupon Applied!",
-        description: `${discount}% discount has been applied to your booking.`,
+        description: `${discount}% discount has been applied to your ${destination.name} booking.`,
         variant: "default",
       });
     } else {
       toast({
         title: "Invalid Coupon",
-        description: "The coupon code you entered is not valid.",
+        description: destination.couponCode 
+          ? `This coupon code is not valid for ${destination.name}. Try ${destination.couponCode} instead.`
+          : `This coupon code is not valid for ${destination.name}.`,
         variant: "destructive",
       });
     }
