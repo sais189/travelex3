@@ -28,7 +28,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day4: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&h=600&fit=crop&auto=format&q=80", // Sunset beach
     day5: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80", // Seaplane transfer
     day6: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80", // Private beach dinner
-    day7: "https://images.unsplash.com/photo-1463734275205-e8c7d79daab3?w=800&h=600&fit=crop&auto=format&q=80", // Maldivian sunset
+    day7: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=800&h=600&fit=crop&auto=format&q=80", // Maldivian sunset paradise
     fallback: "https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&h=600&fit=crop&auto=format&q=80"
   },
   

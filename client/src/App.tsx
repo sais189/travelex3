@@ -18,7 +18,7 @@ const EnhancedBooking = lazy(() => import("@/pages/EnhancedBooking"));
 const Payment = lazy(() => import("@/pages/Payment"));
 const MyTrips = lazy(() => import("@/pages/MyTrips"));
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
-const ImageValidationTest = lazy(() => import("@/pages/ImageValidationTest"));
+const ImageTest = lazy(() => import("@/pages/ImageTest"));
 const Login = lazy(() => import("@/pages/Login"));
 const Signup = lazy(() => import("@/pages/Signup"));
 const About = lazy(() => import("@/pages/About"));
@@ -51,7 +51,7 @@ function Router() {
           <Route path="/my-trips" component={MyTrips} />
           <Route path="/admin" component={AdminDashboard} />
           <Route path="/admin/:tab" component={AdminDashboard} />
-          <Route path="/admin/image-validation-test" component={ImageValidationTest} />
+          <Route path="/image-test" component={ImageTest} />
           <Route path="/auth" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/about" component={About} />
