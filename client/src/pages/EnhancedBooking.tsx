@@ -1315,20 +1315,266 @@ export default function EnhancedBooking() {
 
                   <Separator />
 
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span>Subtotal ({guests} guests)</span>
-                      <span>${calculateSubtotal().toFixed(2)}</span>
+                  {/* Detailed Pricing Breakdown */}
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-base mb-4">Price Breakdown</h4>
+                    
+                    {/* Base Price */}
+                    <div className="flex justify-between text-sm">
+                      <span>Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
+                      <span>${(parseFloat(destination?.price || "0") * guests).toLocaleString()}</span>
                     </div>
-                    {appliedCoupon && (
-                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
-                        <span>Coupon Discount ({appliedCoupon.code})</span>
-                        <span>-${Math.round(calculateSubtotal() * (appliedCoupon.discount / 100)).toFixed(2)}</span>
+                    
+                    {/* Travel Class Premium */}
+                    {travelClass === "business" && (
+                      <div className="flex justify-between text-sm">
+                        <span>Business class upgrade</span>
+                        <span>+${(travelClasses.find(tc => tc.value === travelClass)?.price || 0).toLocaleString()}</span>
                       </div>
                     )}
-                    <div className="flex justify-between text-lg font-semibold">
-                      <span>Total</span>
-                      <span className="text-gold-accent">${calculateTotal().toFixed(2)}</span>
+                    
+                    {/* Individual Upgrades */}
+                    {selectedUpgrades.map((upgradeId) => {
+                      const upgrade = upgrades.find(u => u.id === upgradeId);
+                      return upgrade ? (
+                        <div key={upgradeId} className="flex justify-between text-sm">
+                          <span>{upgrade.name}</span>
+                          <span>+${upgrade.price.toLocaleString()}</span>
+                        </div>
+                      ) : null;
+                    })}
+                    
+                    {/* Destination-specific inclusions and fees */}
+                    {destination?.name.toLowerCase().includes('maldives') && (
+                      <>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Seaplane transfers</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Overwater villa access</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Marine conservation fee</span>
+                          <span>$25</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Diving equipment rental</span>
+                          <span>Included</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {destination?.name.toLowerCase().includes('tokyo') && (
+                      <>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>JR Pass (7 days)</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Cultural experiences</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Tourist tax</span>
+                          <span>$15</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Temple entrance fees</span>
+                          <span>Included</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {(destination?.name.toLowerCase().includes('safari') || destination?.name.toLowerCase().includes('kenya') || destination?.name.toLowerCase().includes('serengeti')) && (
+                      <>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Game drive vehicle</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Professional guide</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Park entrance fees</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Conservation levy</span>
+                          <span>$50</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {(destination?.name.toLowerCase().includes('himalayas') || destination?.name.toLowerCase().includes('everest') || destination?.name.toLowerCase().includes('nepal')) && (
+                      <>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Trekking permits</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Sherpa guide</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Porter services</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Altitude sickness insurance</span>
+                          <span>Included</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {destination?.name.toLowerCase().includes('santorini') && (
+                      <>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Ferry transfers</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Wine tasting tours</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Tourism tax</span>
+                          <span>$20</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {destination?.name.toLowerCase().includes('iceland') && (
+                      <>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Northern lights tours</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Geothermal spa access</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Environmental tax</span>
+                          <span>$30</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {destination?.name.toLowerCase().includes('amazon') && (
+                      <>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Jungle guide services</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Wildlife research permits</span>
+                          <span>Included</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Conservation fee</span>
+                          <span>$35</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {/* General inclusions for all destinations */}
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Airport transfers</span>
+                      <span>Included</span>
+                    </div>
+                    
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>24/7 customer support</span>
+                      <span>Included</span>
+                    </div>
+                    
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Travel insurance</span>
+                      <span>Included</span>
+                    </div>
+                    
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Taxes & service fees</span>
+                      <span>Included</span>
+                    </div>
+                    
+                    {/* Subtotal */}
+                    <div className="flex justify-between text-sm font-medium border-t pt-2">
+                      <span>Subtotal</span>
+                      <span>${calculateSubtotal().toLocaleString()}</span>
+                    </div>
+                    
+                    {/* Coupon Discount */}
+                    {appliedCoupon && (
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-medium">
+                        <span>Coupon Discount ({appliedCoupon.code} - {appliedCoupon.discount}% off)</span>
+                        <span>-${Math.round(calculateSubtotal() * (appliedCoupon.discount / 100)).toLocaleString()}</span>
+                      </div>
+                    )}
+                    
+                    {/* Final Total */}
+                    <div className="flex justify-between items-center border-t pt-3 mt-4">
+                      <span className="text-lg font-semibold">Total Amount</span>
+                      <span className="text-2xl font-bold text-gold-accent">
+                        ${calculateTotal().toLocaleString()}
+                      </span>
+                    </div>
+                    
+                    {/* Per Person Breakdown */}
+                    {guests > 1 && (
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>Per person</span>
+                        <span>${Math.round(calculateTotal() / guests).toLocaleString()}</span>
+                      </div>
+                    )}
+                    
+                    {/* Duration Information */}
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Duration</span>
+                      <span>{destination?.duration || 7} days, {(destination?.duration || 7) - 1} nights</span>
+                    </div>
+                    
+                    {/* Payment Information */}
+                    <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                      <h5 className="text-sm font-medium mb-2">Payment Details</h5>
+                      <div className="space-y-1 text-xs text-muted-foreground">
+                        <div className="flex justify-between">
+                          <span>Deposit required (20%)</span>
+                          <span>${Math.round(calculateTotal() * 0.2).toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Balance due before departure</span>
+                          <span>${Math.round(calculateTotal() * 0.8).toLocaleString()}</span>
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-2">
+                          Secure payment processing via Stripe
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Cancellation Policy */}
+                    <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <h5 className="text-sm font-medium mb-2 text-blue-800 dark:text-blue-200">Cancellation Policy</h5>
+                      <div className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
+                        <div>• Free cancellation up to 48 hours before departure</div>
+                        <div>• 50% refund up to 7 days before departure</div>
+                        <div>• Travel insurance included for full protection</div>
+                        <div>• Weather guarantee - full refund for cancellations</div>
+                      </div>
+                    </div>
+                    
+                    {/* Value Highlights */}
+                    <div className="mt-3 p-3 bg-gold-accent/10 rounded-lg">
+                      <h5 className="text-sm font-medium mb-2 text-gold-accent">What's Included</h5>
+                      <div className="space-y-1 text-xs text-muted-foreground">
+                        <div>• Luxury accommodations & meals</div>
+                        <div>• Professional guide services</div>
+                        <div>• All transportation & transfers</div>
+                        <div>• Equipment & activity fees</div>
+                      </div>
                     </div>
                   </div>
 
