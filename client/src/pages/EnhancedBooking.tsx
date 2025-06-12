@@ -175,147 +175,147 @@ export default function EnhancedBooking() {
     const destinationName = destination?.name.toLowerCase() || '';
     const country = destination?.country?.toLowerCase() || '';
 
-    // Verified unique image collections - no duplicates across destinations
+    // Aesthetic landscape and architectural images - no people visible
     const imageCollections = {
-      // Japan & Tokyo collections - 15 unique images
+      // Japan & Tokyo collections - 15 aesthetic images
       tokyo: [
-        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=80", // Tokyo skyline arrival
-        "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1200&q=80", // Traditional temple visit
-        "https://images.unsplash.com/photo-1522637739821-45282d6e14ba?w=1200&q=80", // Cherry blossoms experience
-        "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=1200&q=80", // Sushi cooking class
-        "https://images.unsplash.com/photo-1566639046106-4e5dd0604a93?w=1200&q=80", // Traditional garden exploration
-        "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=1200&q=80", // Shibuya crossing culture
-        "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=1200&q=80", // Mount Fuji day trip
-        "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=1200&q=80", // Traditional village visit
-        "https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=1200&q=80", // Kyoto bamboo forest
-        "https://images.unsplash.com/photo-1589952283406-b53dd93b766b?w=1200&q=80", // Tea ceremony experience
-        "https://images.unsplash.com/photo-1528181304800-259b08848526?w=1200&q=80", // Golden pavilion
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=80", // Tokyo skyline at dusk
+        "https://images.unsplash.com/photo-1528181304800-259b08848526?w=1200&q=80", // Golden pavilion temple
+        "https://images.unsplash.com/photo-1522637739821-45282d6e14ba?w=1200&q=80", // Cherry blossoms pathway
+        "https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=1200&q=80", // Bamboo forest paths
+        "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=1200&q=80", // Mount Fuji landscape
+        "https://images.unsplash.com/photo-1566639046106-4e5dd0604a93?w=1200&q=80", // Traditional garden zen
         "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200&q=80", // Traditional architecture
-        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=1200&q=80", // Japanese cuisine
-        "https://images.unsplash.com/photo-1580654712603-eb43273aff33?w=1200&q=80", // Cultural ceremony
-        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80"  // Night illuminations
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80", // Night temple lights
+        "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1200&q=80", // Temple courtyard
+        "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=1200&q=80", // Traditional village rooftops
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=1200&q=80", // Japanese cuisine presentation
+        "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=1200&q=80", // Sushi aesthetic arrangement
+        "https://images.unsplash.com/photo-1580654712603-eb43273aff33?w=1200&q=80", // Traditional ceremony setup
+        "https://images.unsplash.com/photo-1589952283406-b53dd93b766b?w=1200&q=80", // Tea ceremony table setting
+        "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=1200&q=80"  // Urban architecture
       ],
       
-      // Maldives tropical paradise - 15 unique images
+      // Maldives tropical paradise - 15 aesthetic images (no people)
       maldives: [
-        "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1200&q=80", // Tropical island arrival
-        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&q=80", // Overwater villa luxury
-        "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=1200&q=80", // Crystal clear waters
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80", // Coral reef snorkeling
-        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80", // Marine life exploration
-        "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?w=1200&q=80", // Beach relaxation
-        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?w=1200&q=80", // Beachfront dining
-        "https://images.unsplash.com/photo-1540206395-68808572332f?w=1200&q=80", // Spa wellness treatment
-        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=1200&q=80", // Water sports adventure
-        "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=80", // Sunset cruise experience
-        "https://images.unsplash.com/photo-1537956965359-7573183d1180?w=1200&q=80", // Private villa deck
-        "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80", // Infinity pool
-        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&q=80", // Underwater dining
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Dolphin encounter
-        "https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=1200&q=80"  // Seaplane transfer
+        "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1200&q=80", // Pristine tropical island
+        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&q=80", // Overwater villa architecture
+        "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=1200&q=80", // Crystal clear lagoon
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80", // Underwater coral reef
+        "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?w=1200&q=80", // Pristine white sand beach
+        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?w=1200&q=80", // Ocean dining setup
+        "https://images.unsplash.com/photo-1540206395-68808572332f?w=1200&q=80", // Spa treatment setup
+        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=1200&q=80", // Water sports equipment
+        "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=80", // Sunset over ocean
+        "https://images.unsplash.com/photo-1537956965359-7573183d1180?w=1200&q=80", // Villa deck over water
+        "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80", // Infinity pool view
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&q=80", // Underwater restaurant view
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Ocean wildlife habitat
+        "https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=1200&q=80", // Seaplane on water
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80"  // Marine life underwater
       ],
       
-      // Safari & Wildlife - 15 images
+      // Safari & Wildlife - 15 aesthetic landscape images (no people)
       safari: [
-        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80", // Lion pride
-        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1200&q=80", // Elephant herd
-        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200&q=80", // Giraffe family
-        "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?w=1200&q=80", // Safari vehicle
-        "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=1200&q=80", // Sunset savanna
-        "https://images.unsplash.com/photo-1552201979-8d5a8c6b50?w=1200&q=80", // Maasai culture
-        "https://images.unsplash.com/photo-1563592441-6ebc9f07c5e7?w=1200&q=80", // Wildebeest migration
-        "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?w=1200&q=80", // Leopard spotting
-        "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80", // Rhino encounter
-        "https://images.unsplash.com/photo-1581852017103-68ac65514cf4?w=1200&q=80", // African buffalo
-        "https://images.unsplash.com/photo-1555993539-1732b0258327?w=1200&q=80", // Hot air balloon safari
-        "https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=1200&q=80", // Traditional village
-        "https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?w=1200&q=80", // Safari camp luxury
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Zebra migration
-        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80"  // Cheetah hunting
+        "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=1200&q=80", // Golden savanna sunset
+        "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?w=1200&q=80", // Safari vehicle in landscape
+        "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=80", // Acacia tree silhouette
+        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80", // Lions in natural habitat
+        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1200&q=80", // Elephants at waterhole
+        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200&q=80", // Giraffes on horizon
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Zebra herd migration
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cheetah in grassland
+        "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80", // Rhino in wilderness
+        "https://images.unsplash.com/photo-1581852017103-68ac65514cf4?w=1200&q=80", // Buffalo in savanna
+        "https://images.unsplash.com/photo-1555993539-1732b0258327?w=1200&q=80", // Hot air balloon over landscape
+        "https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=1200&q=80", // Traditional huts landscape
+        "https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?w=1200&q=80", // Safari camp architecture
+        "https://images.unsplash.com/photo-1563592441-6ebc9f07c5e7?w=1200&q=80", // Wildebeest in grassland
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?w=1200&q=80"  // Leopard in tree
       ],
 
-      // Himalayas & Mountain adventures - 10 unique images
+      // Himalayas & Mountain adventures - 10 aesthetic landscape images
       himalayas: [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Mountain peaks arrival
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Trekking path adventure
-        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=80", // Colorful prayer flags
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Traditional mountain village
-        "https://images.unsplash.com/photo-1571708513618-b2fc5d8e0064?w=1200&q=80", // Suspension bridge crossing
-        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?w=1200&q=80", // Ancient monastery visit
-        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=1200&q=80", // Everest base camp
-        "https://images.unsplash.com/photo-1464822759844-d150296c5bc3?w=1200&q=80", // Sunrise over peaks
-        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?w=1200&q=80", // Sherpa cultural meeting
-        "https://images.unsplash.com/photo-1626103849488-3f5ac40c4f90?w=1200&q=80"  // High altitude acclimatization
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Snow-capped mountain peaks
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Mountain trekking trail
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=80", // Prayer flags in wind
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Mountain village architecture
+        "https://images.unsplash.com/photo-1571708513618-b2fc5d8e0064?w=1200&q=80", // Suspension bridge landscape
+        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?w=1200&q=80", // Ancient monastery building
+        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=1200&q=80", // Base camp landscape
+        "https://images.unsplash.com/photo-1464822759844-d150296c5bc3?w=1200&q=80", // Sunrise mountain vista
+        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?w=1200&q=80", // High altitude scenery
+        "https://images.unsplash.com/photo-1626103849488-3f5ac40c4f90?w=1200&q=80"  // Alpine landscape
       ],
 
-      // Amazon rainforest & Ecuador - 10 unique images
+      // Amazon rainforest & Ecuador - 10 nature landscape images
       amazon: [
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Dense rainforest arrival
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // River journey by boat
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&q=80", // Exotic colorful birds
-        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80", // Indigenous culture meeting
-        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=1200&q=80", // Canopy walkway adventure
-        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?w=1200&q=80", // Night wildlife sounds
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80", // Pink river dolphins
-        "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1200&q=80", // Jaguar wildlife spotting
-        "https://images.unsplash.com/photo-1629732298425-6b6b1ea44999?w=1200&q=80", // Medicinal plant discovery
-        "https://images.unsplash.com/photo-1625501715616-d19dfe10dd0d?w=1200&q=80"  // Traditional crafts learning
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Dense rainforest canopy
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // River through jungle
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&q=80", // Tropical birds in trees
+        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=1200&q=80", // Canopy walkway structure
+        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?w=1200&q=80", // Night jungle sounds
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80", // River wildlife habitat
+        "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1200&q=80", // Jungle wildlife spotting
+        "https://images.unsplash.com/photo-1629732298425-6b6b1ea44999?w=1200&q=80", // Medicinal plants display
+        "https://images.unsplash.com/photo-1625501715616-d19dfe10dd0d?w=1200&q=80", // Traditional craft setup
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80"  // Cultural village layout
       ],
 
-      // Galápagos Islands - 10 unique images
+      // Galápagos Islands - 10 natural landscape images
       galapagos: [
-        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=1200&q=80", // Giant tortoise
-        "https://images.unsplash.com/photo-1522633374897-e13b2395a4b6?w=1200&q=80", // Marine iguanas
-        "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&q=80", // Blue-footed boobies
-        "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1200&q=80", // Sea lions
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80", // Volcanic landscape
-        "https://images.unsplash.com/photo-1633439932734-5edfbb7a5f7b?w=1200&q=80", // Snorkeling
-        "https://images.unsplash.com/photo-1647123135582-cd97671f31da?w=1200&q=80", // Darwin research
-        "https://images.unsplash.com/photo-1632165093188-00a07b0b88b8?w=1200&q=80", // Endemic finches
-        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=80", // Hammerhead sharks
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"  // Evolution studies
+        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=1200&q=80", // Giant tortoise habitat
+        "https://images.unsplash.com/photo-1522633374897-e13b2395a4b6?w=1200&q=80", // Marine iguana rocks
+        "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&q=80", // Blue-footed booby nesting
+        "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1200&q=80", // Sea lion beach habitat
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80", // Volcanic rock formations
+        "https://images.unsplash.com/photo-1633439932734-5edfbb7a5f7b?w=1200&q=80", // Underwater coral view
+        "https://images.unsplash.com/photo-1647123135582-cd97671f31da?w=1200&q=80", // Research station setup
+        "https://images.unsplash.com/photo-1632165093188-00a07b0b88b8?w=1200&q=80", // Endemic bird habitat
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=80", // Marine ecosystem
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"  // Evolution study area
       ],
 
-      // Northern Lights & Arctic - 10 unique images
+      // Northern Lights & Arctic - 10 aesthetic landscape images
       arctic: [
-        "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=1200&q=80", // Aurora borealis
-        "https://images.unsplash.com/photo-1541278135-bb115c14c5d5?w=1200&q=80", // Ice hotel
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Husky sledding
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Lapland village
-        "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=1200&q=80", // Reindeer herding
-        "https://images.unsplash.com/photo-1611068813222-6df73ac77a31?w=1200&q=80", // Snow activities
-        "https://images.unsplash.com/photo-1647885978144-5b59b3a8defd?w=1200&q=80", // Ice fishing
-        "https://images.unsplash.com/photo-1604170044814-ea8fc9074d3a?w=1200&q=80", // Arctic wildlife
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Cross-country skiing
-        "https://images.unsplash.com/photo-1612807522717-76f56ee0b4de?w=1200&q=80"  // Sauna experience
+        "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=1200&q=80", // Aurora borealis display
+        "https://images.unsplash.com/photo-1541278135-bb115c14c5d5?w=1200&q=80", // Ice hotel architecture
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Dog sled in snow
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Arctic village landscape
+        "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=1200&q=80", // Reindeer in tundra
+        "https://images.unsplash.com/photo-1611068813222-6df73ac77a31?w=1200&q=80", // Snow activity setup
+        "https://images.unsplash.com/photo-1647885978144-5b59b3a8defd?w=1200&q=80", // Ice fishing hole
+        "https://images.unsplash.com/photo-1604170044814-ea8fc9074d3a?w=1200&q=80", // Arctic wildlife habitat
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Cross-country ski trail
+        "https://images.unsplash.com/photo-1612807522717-76f56ee0b4de?w=1200&q=80"  // Traditional sauna building
       ],
 
-      // European destinations - 10 unique images
+      // European destinations - 10 architectural/landscape images
       europe: [
-        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&q=80", // Castle architecture
-        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?w=1200&q=80", // Medieval towns
-        "https://images.unsplash.com/photo-1549388604-817d15aa0110?w=1200&q=80", // Countryside views
-        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?w=1200&q=80", // Historic squares
-        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?w=1200&q=80", // Local cuisine
-        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=1200&q=80", // Cultural sites
-        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80", // Traditional crafts
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // Gardens
-        "https://images.unsplash.com/photo-1615544847497-4df54ecf7a63?w=1200&q=80", // Festivals
-        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?w=1200&q=80"  // Museums
+        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&q=80", // Castle on hillside
+        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?w=1200&q=80", // Medieval town streets
+        "https://images.unsplash.com/photo-1549388604-817d15aa0110?w=1200&q=80", // Rolling countryside
+        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?w=1200&q=80", // Historic town square
+        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?w=1200&q=80", // Traditional cuisine setup
+        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=1200&q=80", // Cultural monument
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80", // Traditional craft display
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // Formal gardens
+        "https://images.unsplash.com/photo-1615544847497-4df54ecf7a63?w=1200&q=80", // Festival decorations
+        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?w=1200&q=80"  // Museum architecture
       ],
 
-      // Default/general travel - 10 unique images
+      // Default/general travel - 10 aesthetic landscape images
       default: [
-        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80", // Adventure travel
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Mountain views
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Forest paths
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80", // Scenic landscapes
-        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cultural experiences
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&q=80", // Local interactions
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Transportation
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Accommodations
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80", // Beach activities
-        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?w=1200&q=80"  // City exploration
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80", // Adventure landscape
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Mountain vista
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Forest pathway
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80", // Scenic wilderness
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cultural landscape
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&q=80", // Natural habitat
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Transportation view
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Accommodation setting
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80", // Coastal scenery
+        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?w=1200&q=80"  // Urban exploration
       ]
     };
 
