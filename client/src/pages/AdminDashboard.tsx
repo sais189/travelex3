@@ -24,7 +24,11 @@ import {
   Bell,
   LogOut,
   Download,
-  RefreshCw
+  RefreshCw,
+  AlertTriangle,
+  ExternalLink,
+  Star,
+  TrendingUp
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -116,8 +120,152 @@ export default function AdminDashboard() {
   });
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const [showNotificationsDialog, setShowNotificationsDialog] = useState(false);
+  const [showNotificationDetailsDialog, setShowNotificationDetailsDialog] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const dashboardRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Notification data with detailed information
+  const notifications = [
+    {
+      id: 1,
+      type: 'system',
+      priority: 'critical',
+      title: 'System Alert',
+      description: 'High server load detected. Consider scaling resources.',
+      timestamp: new Date(Date.now() - 2 * 60 * 1000), // 2 minutes ago
+      isRead: false,
+      color: 'red',
+      icon: 'AlertTriangle',
+      details: {
+        category: 'System Performance',
+        impact: 'High',
+        affectedServices: ['API Server', 'Database', 'File Storage'],
+        currentLoad: '87%',
+        recommendedAction: 'Scale server resources or distribute load',
+        estimatedResolution: '15-30 minutes',
+        relatedMetrics: {
+          cpuUsage: '87%',
+          memoryUsage: '92%',
+          activeConnections: 1247,
+          responseTime: '2.3s'
+        }
+      }
+    },
+    {
+      id: 2,
+      type: 'user',
+      priority: 'info',
+      title: 'New User Registration',
+      description: '5 new users registered in the last hour.',
+      timestamp: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
+      isRead: false,
+      color: 'blue',
+      icon: 'Users',
+      details: {
+        category: 'User Management',
+        impact: 'Low',
+        newUsersCount: 5,
+        registrationSource: ['Direct signup: 3', 'Social login: 2'],
+        geographicDistribution: ['US: 2', 'UK: 1', 'Canada: 1', 'Australia: 1'],
+        conversionRate: '12.5%',
+        totalActiveUsers: 2847
+      }
+    },
+    {
+      id: 3,
+      type: 'booking',
+      priority: 'success',
+      title: 'Booking Milestone',
+      description: 'Reached 1000 bookings this month! Revenue up 15%.',
+      timestamp: new Date(Date.now() - 60 * 60 * 1000), // 1 hour ago
+      isRead: true,
+      color: 'green',
+      icon: 'TrendingUp',
+      details: {
+        category: 'Business Metrics',
+        impact: 'High',
+        milestone: '1000 bookings',
+        revenueIncrease: '15%',
+        totalRevenue: '$125,000',
+        topDestinations: ['Tokyo: 145 bookings', 'Paris: 132 bookings', 'Maldives: 98 bookings'],
+        averageBookingValue: '$125',
+        projectedMonthEnd: '1,250 bookings'
+      }
+    },
+    {
+      id: 4,
+      type: 'payment',
+      priority: 'info',
+      title: 'Payment Processed',
+      description: 'Large booking payment of $12,500 processed successfully.',
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      isRead: true,
+      color: 'gold',
+      icon: 'DollarSign',
+      details: {
+        category: 'Financial',
+        impact: 'Medium',
+        amount: '$12,500',
+        bookingId: 'BK-2024-5847',
+        customerName: 'Sarah Johnson',
+        destination: 'Luxury Maldives Resort',
+        paymentMethod: 'Credit Card (****4152)',
+        transactionId: 'TXN-789456123',
+        processingFee: '$375',
+        netAmount: '$12,125'
+      }
+    },
+    {
+      id: 5,
+      type: 'feedback',
+      priority: 'info',
+      title: 'User Feedback',
+      description: 'New 5-star review received for Tokyo Adventure package.',
+      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+      isRead: true,
+      color: 'purple',
+      icon: 'Star',
+      details: {
+        category: 'Customer Experience',
+        impact: 'Low',
+        rating: 5,
+        reviewText: 'Absolutely amazing experience! The Tokyo Adventure package exceeded all expectations. Great organization and wonderful guides.',
+        customerName: 'Michael Chen',
+        destination: 'Tokyo Adventure Package',
+        bookingDate: '2024-11-15',
+        previousRating: 4.7,
+        newAverageRating: 4.8
+      }
+    },
+    {
+      id: 6,
+      type: 'maintenance',
+      priority: 'warning',
+      title: 'Maintenance Reminder',
+      description: 'Scheduled system maintenance tomorrow at 2:00 AM UTC.',
+      timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
+      isRead: true,
+      color: 'orange',
+      icon: 'Settings',
+      details: {
+        category: 'System Maintenance',
+        impact: 'Medium',
+        scheduledTime: 'Tomorrow at 2:00 AM UTC',
+        estimatedDuration: '2-3 hours',
+        affectedServices: ['Website', 'Mobile App', 'Admin Dashboard'],
+        maintenanceType: 'Database optimization and security updates',
+        backupStatus: 'Completed',
+        contingencyPlan: 'Rollback procedures ready'
+      }
+    }
+  ];
+
+  // Handler for notification click
+  const handleNotificationClick = (notification: any) => {
+    setSelectedNotification(notification);
+    setShowNotificationDetailsDialog(true);
+  };
 
   // Fetch analytics data
   const { data: analytics } = useQuery<Analytics>({
@@ -1873,83 +2021,90 @@ export default function AdminDashboard() {
             <div className="space-y-4 py-4 max-h-96 overflow-y-auto">
               {/* Recent notifications */}
               <div className="space-y-3">
-                <div className="flex items-start space-x-3 p-3 rounded-lg border border-red-500/20 bg-red-500/5">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mt-2 animate-pulse"></div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-red-400">System Alert</h4>
-                      <span className="text-xs text-muted-foreground">2 min ago</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      High server load detected. Consider scaling resources.
-                    </p>
-                  </div>
-                </div>
+                {notifications.map((notification) => {
+                  const getTimeAgo = (timestamp: Date) => {
+                    const now = new Date();
+                    const diffInMs = now.getTime() - timestamp.getTime();
+                    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+                    const diffInHours = Math.floor(diffInMinutes / 60);
+                    
+                    if (diffInMinutes < 60) {
+                      return `${diffInMinutes} min ago`;
+                    } else if (diffInHours < 24) {
+                      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+                    } else {
+                      const diffInDays = Math.floor(diffInHours / 24);
+                      return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+                    }
+                  };
 
-                <div className="flex items-start space-x-3 p-3 rounded-lg border border-blue-500/20 bg-blue-500/5">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-blue-400">New User Registration</h4>
-                      <span className="text-xs text-muted-foreground">15 min ago</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      5 new users registered in the last hour.
-                    </p>
-                  </div>
-                </div>
+                  const getNotificationStyles = (color: string) => {
+                    const styles = {
+                      red: 'border-red-500/20 bg-red-500/5 hover:bg-red-500/10',
+                      blue: 'border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10',
+                      green: 'border-green-500/20 bg-green-500/5 hover:bg-green-500/10',
+                      gold: 'border-yellow-500/20 bg-yellow-500/5 hover:bg-yellow-500/10',
+                      purple: 'border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10',
+                      orange: 'border-orange-500/20 bg-orange-500/5 hover:bg-orange-500/10'
+                    };
+                    return styles[color as keyof typeof styles] || styles.blue;
+                  };
 
-                <div className="flex items-start space-x-3 p-3 rounded-lg border border-green-500/20 bg-green-500/5">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-green-400">Booking Milestone</h4>
-                      <span className="text-xs text-muted-foreground">1 hour ago</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Reached 1000 bookings this month! Revenue up 15%.
-                    </p>
-                  </div>
-                </div>
+                  const getDotStyles = (color: string) => {
+                    const styles = {
+                      red: 'bg-red-500',
+                      blue: 'bg-blue-500',
+                      green: 'bg-green-500',
+                      gold: 'bg-yellow-500',
+                      purple: 'bg-purple-500',
+                      orange: 'bg-orange-500'
+                    };
+                    return styles[color as keyof typeof styles] || styles.blue;
+                  };
 
-                <div className="flex items-start space-x-3 p-3 rounded-lg border border-gold-accent/20 bg-gold-accent/5">
-                  <div className="w-2 h-2 bg-gold-accent rounded-full mt-2"></div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-gold-accent">Payment Processed</h4>
-                      <span className="text-xs text-muted-foreground">2 hours ago</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Large booking payment of $12,500 processed successfully.
-                    </p>
-                  </div>
-                </div>
+                  const getTitleStyles = (color: string) => {
+                    const styles = {
+                      red: 'text-red-400 group-hover:text-red-300',
+                      blue: 'text-blue-400 group-hover:text-blue-300',
+                      green: 'text-green-400 group-hover:text-green-300',
+                      gold: 'text-yellow-400 group-hover:text-yellow-300',
+                      purple: 'text-purple-400 group-hover:text-purple-300',
+                      orange: 'text-orange-400 group-hover:text-orange-300'
+                    };
+                    return styles[color as keyof typeof styles] || styles.blue;
+                  };
 
-                <div className="flex items-start space-x-3 p-3 rounded-lg border border-purple-500/20 bg-purple-500/5">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-purple-400">User Feedback</h4>
-                      <span className="text-xs text-muted-foreground">3 hours ago</span>
+                  return (
+                    <div 
+                      key={notification.id}
+                      className={`flex items-start space-x-3 p-3 rounded-lg border ${getNotificationStyles(notification.color)} cursor-pointer transition-colors group`}
+                      onClick={() => handleNotificationClick(notification)}
+                    >
+                      <div className={`w-2 h-2 ${getDotStyles(notification.color)} rounded-full mt-2 ${!notification.isRead ? 'animate-pulse' : ''}`}></div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className={`font-medium ${getTitleStyles(notification.color)}`}>
+                            {notification.title}
+                          </h4>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs text-muted-foreground">
+                              {getTimeAgo(notification.timestamp)}
+                            </span>
+                            <ExternalLink className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {notification.description}
+                        </p>
+                        {!notification.isRead && (
+                          <Badge variant="secondary" className="mt-2 text-xs">
+                            New
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      New 5-star review received for Tokyo Adventure package.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3 p-3 rounded-lg border border-orange-500/20 bg-orange-500/5">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-orange-400">Maintenance Reminder</h4>
-                      <span className="text-xs text-muted-foreground">6 hours ago</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Scheduled system maintenance tomorrow at 2:00 AM UTC.
-                    </p>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
 
               {/* Action Buttons */}
@@ -1978,6 +2133,299 @@ export default function AdminDashboard() {
                 </Button>
               </div>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Notification Details Dialog */}
+        <Dialog open={showNotificationDetailsDialog} onOpenChange={setShowNotificationDetailsDialog}>
+          <DialogContent className="sm:max-w-[600px] glass-morphism border-gold-accent/20 max-h-[80vh] overflow-y-auto">
+            {selectedNotification && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="flex items-center space-x-3">
+                    <div className={`w-3 h-3 ${getDotStyles(selectedNotification.color)} rounded-full ${!selectedNotification.isRead ? 'animate-pulse' : ''}`}></div>
+                    <span>{selectedNotification.title}</span>
+                    <Badge 
+                      variant={selectedNotification.priority === 'critical' ? 'destructive' : 
+                              selectedNotification.priority === 'warning' ? 'secondary' : 'default'}
+                      className="ml-2"
+                    >
+                      {selectedNotification.priority}
+                    </Badge>
+                  </DialogTitle>
+                </DialogHeader>
+
+                <div className="space-y-6 py-4">
+                  {/* Basic Information */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-muted-foreground">Timestamp</h4>
+                      <p className="text-sm">{selectedNotification.timestamp.toLocaleString()}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-muted-foreground">Category</h4>
+                      <p className="text-sm">{selectedNotification.details.category}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-muted-foreground">Impact Level</h4>
+                      <p className="text-sm">{selectedNotification.details.impact}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-muted-foreground">Type</h4>
+                      <p className="text-sm capitalize">{selectedNotification.type}</p>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium text-muted-foreground">Description</h4>
+                    <div className="bg-muted/20 p-3 rounded border">
+                      <p className="text-sm">{selectedNotification.description}</p>
+                    </div>
+                  </div>
+
+                  {/* Detailed Information - Dynamic based on notification type */}
+                  <div className={`bg-${selectedNotification.color}-500/5 border border-${selectedNotification.color}-500/20 rounded-lg p-4`}>
+                    <h4 className={`text-sm font-medium text-${selectedNotification.color}-400 mb-3`}>Detailed Information</h4>
+                    
+                    {selectedNotification.type === 'system' && (
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="font-medium text-muted-foreground">Affected Services:</span>
+                          <ul className="mt-1 space-y-1">
+                            {selectedNotification.details.affectedServices?.map((service: string, idx: number) => (
+                              <li key={idx} className="text-sm">• {service}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Current Load:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.currentLoad}</p>
+                        </div>
+                        {selectedNotification.details.relatedMetrics && (
+                          <>
+                            <div>
+                              <span className="font-medium text-muted-foreground">CPU Usage:</span>
+                              <p className="text-sm mt-1">{selectedNotification.details.relatedMetrics.cpuUsage}</p>
+                            </div>
+                            <div>
+                              <span className="font-medium text-muted-foreground">Memory Usage:</span>
+                              <p className="text-sm mt-1">{selectedNotification.details.relatedMetrics.memoryUsage}</p>
+                            </div>
+                            <div>
+                              <span className="font-medium text-muted-foreground">Active Connections:</span>
+                              <p className="text-sm mt-1">{selectedNotification.details.relatedMetrics.activeConnections}</p>
+                            </div>
+                            <div>
+                              <span className="font-medium text-muted-foreground">Response Time:</span>
+                              <p className="text-sm mt-1">{selectedNotification.details.relatedMetrics.responseTime}</p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+
+                    {selectedNotification.type === 'user' && (
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="font-medium text-muted-foreground">New Users:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.newUsersCount}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Conversion Rate:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.conversionRate}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Registration Sources:</span>
+                          <ul className="mt-1 space-y-1">
+                            {selectedNotification.details.registrationSource?.map((source: string, idx: number) => (
+                              <li key={idx} className="text-sm">• {source}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Geographic Distribution:</span>
+                          <ul className="mt-1 space-y-1">
+                            {selectedNotification.details.geographicDistribution?.map((location: string, idx: number) => (
+                              <li key={idx} className="text-sm">• {location}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedNotification.type === 'booking' && (
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="font-medium text-muted-foreground">Milestone:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.milestone}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Revenue Increase:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.revenueIncrease}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Total Revenue:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.totalRevenue}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Average Booking Value:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.averageBookingValue}</p>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="font-medium text-muted-foreground">Top Destinations:</span>
+                          <ul className="mt-1 space-y-1">
+                            {selectedNotification.details.topDestinations?.map((destination: string, idx: number) => (
+                              <li key={idx} className="text-sm">• {destination}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedNotification.type === 'payment' && (
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="font-medium text-muted-foreground">Amount:</span>
+                          <p className="text-sm mt-1 font-semibold text-green-400">{selectedNotification.details.amount}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Customer:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.customerName}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Booking ID:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.bookingId}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Transaction ID:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.transactionId}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Payment Method:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.paymentMethod}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Processing Fee:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.processingFee}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedNotification.type === 'feedback' && (
+                      <div className="space-y-3 text-xs">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <span className="font-medium text-muted-foreground">Rating:</span>
+                            <div className="flex items-center mt-1">
+                              {[...Array(selectedNotification.details.rating)].map((_, i) => (
+                                <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                              ))}
+                              <span className="ml-2 text-sm">{selectedNotification.details.rating}/5</span>
+                            </div>
+                          </div>
+                          <div>
+                            <span className="font-medium text-muted-foreground">Customer:</span>
+                            <p className="text-sm mt-1">{selectedNotification.details.customerName}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Review:</span>
+                          <div className="bg-muted/20 p-2 rounded border mt-1">
+                            <p className="text-sm italic">"{selectedNotification.details.reviewText}"</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedNotification.type === 'maintenance' && (
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="font-medium text-muted-foreground">Scheduled Time:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.scheduledTime}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Duration:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.estimatedDuration}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Backup Status:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.backupStatus}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Maintenance Type:</span>
+                          <p className="text-sm mt-1">{selectedNotification.details.maintenanceType}</p>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="font-medium text-muted-foreground">Affected Services:</span>
+                          <ul className="mt-1 space-y-1">
+                            {selectedNotification.details.affectedServices?.map((service: string, idx: number) => (
+                              <li key={idx} className="text-sm">• {service}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Recommended Actions */}
+                  {selectedNotification.details.recommendedAction && (
+                    <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
+                      <h4 className="text-sm font-medium text-blue-400 mb-2">Recommended Action</h4>
+                      <p className="text-sm text-muted-foreground">{selectedNotification.details.recommendedAction}</p>
+                      {selectedNotification.details.estimatedResolution && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          <span className="font-medium">Estimated Resolution:</span> {selectedNotification.details.estimatedResolution}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-between items-center pt-4 border-t border-gold-accent/20">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="glass-morphism border-gold-accent/30"
+                      onClick={() => {
+                        toast({
+                          title: "Notification Marked as Read",
+                          description: `"${selectedNotification.title}" has been marked as read`,
+                        });
+                      }}
+                    >
+                      Mark as Read
+                    </Button>
+                    
+                    <div className="space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="glass-morphism border-lavender-accent/30"
+                        onClick={() => setShowNotificationDetailsDialog(false)}
+                      >
+                        Close
+                      </Button>
+                      
+                      {selectedNotification.type === 'system' && (
+                        <Button
+                          size="sm"
+                          className="bg-gradient-to-r from-gold-accent to-lavender-accent text-black font-semibold"
+                          onClick={() => {
+                            toast({
+                              title: "Action Initiated",
+                              description: "System scaling procedures have been initiated",
+                            });
+                          }}
+                        >
+                          Take Action
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </DialogContent>
         </Dialog>
       </div>

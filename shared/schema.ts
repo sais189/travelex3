@@ -66,8 +66,12 @@ export const destinations = pgTable("destinations", {
 // Bookings table
 export const bookings = pgTable("bookings", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id").notNull().references(() => users.id),
-  destinationId: integer("destination_id").notNull().references(() => destinations.id),
+  userId: varchar("user_id")
+    .notNull()
+    .references(() => users.id),
+  destinationId: integer("destination_id")
+    .notNull()
+    .references(() => destinations.id),
   checkIn: date("check_in").notNull(),
   checkOut: date("check_out").notNull(),
   guests: integer("guests").notNull(),
