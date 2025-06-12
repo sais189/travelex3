@@ -95,6 +95,11 @@ export default function EnhancedBooking() {
   const [guests, setGuests] = useState(2);
   const [travelClass, setTravelClass] = useState("economy");
   const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([]);
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discount: number;
+  } | null>(null);
+  const [couponInput, setCouponInput] = useState("");
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const [activeItineraryDay, setActiveItineraryDay] = useState(1);
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
@@ -857,6 +862,21 @@ export default function EnhancedBooking() {
       return total + (upgrade?.price || 0);
     }, 0);
     
+    const subtotal = (basePrice * guests) + classPrice + upgradesTotal;
+    const couponDiscount = appliedCoupon ? Math.round(subtotal * (appliedCoupon.discount / 100)) : 0;
+    
+    return subtotal - couponDiscount;
+  };
+
+  // Calculate subtotal (before coupon discount)
+  const calculateSubtotal = () => {
+    const basePrice = parseFloat(destination?.price || "0");
+    const classPrice = travelClasses.find(tc => tc.value === travelClass)?.price || 0;
+    const upgradesTotal = selectedUpgrades.reduce((total, upgradeId) => {
+      const upgrade = upgrades.find(u => u.id === upgradeId);
+      return total + (upgrade?.price || 0);
+    }, 0);
+    
     return (basePrice * guests) + classPrice + upgradesTotal;
   };
 
@@ -866,6 +886,48 @@ export default function EnhancedBooking() {
         ? prev.filter(id => id !== upgradeId)
         : [...prev, upgradeId]
     );
+  };
+
+  // Coupon code handlers
+  const handleApplyCoupon = () => {
+    if (!couponInput.trim()) return;
+    
+    // Define valid coupon codes and their discounts
+    const validCoupons: Record<string, number> = {
+      'SUMMER15': 15,
+      'TOKYO20': 20,
+      'WILD25': 25,
+      'PEACE15': 15,
+      'DEMO15': 15,
+      'ADVENTURE20': 20,
+      'LUXURY25': 25
+    };
+
+    const discount = validCoupons[couponInput.trim().toUpperCase()];
+    
+    if (discount) {
+      setAppliedCoupon({ code: couponInput.trim().toUpperCase(), discount });
+      setCouponInput("");
+      toast({
+        title: "Coupon Applied!",
+        description: `${discount}% discount has been applied to your booking.`,
+        variant: "default",
+      });
+    } else {
+      toast({
+        title: "Invalid Coupon",
+        description: "The coupon code you entered is not valid.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    toast({
+      title: "Coupon Removed",
+      description: "Discount has been removed from your booking.",
+    });
   };
 
   const handleDayTabClick = (dayNumber: number) => {
@@ -1200,14 +1262,72 @@ export default function EnhancedBooking() {
 
                   <Separator />
 
+                  {/* Coupon Code Section */}
+                  <div className="space-y-4">
+                    <Label className="text-base font-semibold">Promo Code</Label>
+                    <p className="text-sm text-muted-foreground">Enter a coupon code for additional savings</p>
+                    
+                    {/* Applied Coupon Display */}
+                    {appliedCoupon && (
+                      <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                              Applied: <span className="font-mono font-bold">{appliedCoupon.code}</span>
+                            </p>
+                            <p className="text-xs text-green-600 dark:text-green-300">{appliedCoupon.discount}% discount active</p>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handleRemoveCoupon}
+                            className="text-green-600 border-green-300 hover:bg-green-100"
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Manual Coupon Input */}
+                    {!appliedCoupon && (
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Enter coupon code (e.g., ADVENTURE20)"
+                          value={couponInput}
+                          onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                          className="flex-1 font-mono"
+                          onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                        />
+                        <Button
+                          variant="outline"
+                          onClick={handleApplyCoupon}
+                          disabled={!couponInput.trim()}
+                          className="flex items-center gap-1"
+                        >
+                          <Tag className="w-4 h-4" />
+                          Apply
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
+                  <Separator />
+
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Subtotal ({guests} guests)</span>
-                      <span>${(parseFloat(destination.price) * guests).toFixed(2)}</span>
+                      <span>${calculateSubtotal().toFixed(2)}</span>
                     </div>
+                    {appliedCoupon && (
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                        <span>Coupon Discount ({appliedCoupon.code})</span>
+                        <span>-${Math.round(calculateSubtotal() * (appliedCoupon.discount / 100)).toFixed(2)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-lg font-semibold">
                       <span>Total</span>
-                      <span>${calculateTotal().toFixed(2)}</span>
+                      <span className="text-gold-accent">${calculateTotal().toFixed(2)}</span>
                     </div>
                   </div>
 
