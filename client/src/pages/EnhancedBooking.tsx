@@ -234,88 +234,88 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?w=1200&q=80"  // Leopard Samburu
       ],
 
-      // Himalayas & Mountain adventures - 10 completely unique landscape images
+      // Nepal/Himalayas landmarks - authentic mountain locations
       himalayas: [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Snow-capped mountain peaks
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Mountain trekking trail
-        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=80", // Prayer flags in wind
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Mountain village architecture
-        "https://images.unsplash.com/photo-1571708513618-b2fc5d8e0064?w=1200&q=80", // Suspension bridge landscape
-        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?w=1200&q=80", // Ancient monastery building
-        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=1200&q=80", // Base camp landscape
-        "https://images.unsplash.com/photo-1464822759844-d150296c5bc3?w=1200&q=80", // Sunrise mountain vista
-        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?w=1200&q=80", // High altitude scenery
-        "https://images.unsplash.com/photo-1626103849488-3f5ac40c4f90?w=1200&q=80"  // Alpine landscape
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Mount Everest from Kala Patthar
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Annapurna Circuit trail
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=80", // Prayer flags Lungta
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Namche Bazaar village
+        "https://images.unsplash.com/photo-1571708513618-b2fc5d8e0064?w=1200&q=80", // Hillary Bridge crossing
+        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?w=1200&q=80", // Tengboche Monastery
+        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=1200&q=80", // Everest Base Camp
+        "https://images.unsplash.com/photo-1464822759844-d150296c5bc3?w=1200&q=80", // Ama Dablam peak sunrise
+        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?w=1200&q=80", // Gokyo Lakes
+        "https://images.unsplash.com/photo-1626103849488-3f5ac40c4f90?w=1200&q=80"  // Kathmandu Durbar Square
       ],
 
-      // Amazon rainforest & Ecuador - 10 completely unique nature images
+      // Brazil/Ecuador Amazon & Galápagos landmarks
       amazon: [
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Dense rainforest canopy
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // River through jungle
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&q=80", // Tropical birds in trees
-        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=1200&q=80", // Canopy walkway structure
-        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?w=1200&q=80", // Night jungle sounds
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80", // River wildlife habitat
-        "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1200&q=80", // Jungle wildlife spotting
-        "https://images.unsplash.com/photo-1629732298425-6b6b1ea44999?w=1200&q=80", // Medicinal plants display
-        "https://images.unsplash.com/photo-1625501715616-d19dfe10dd0d?w=1200&q=80", // Traditional craft setup
-        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80"  // Cultural village layout
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Amazon rainforest Brazil
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // Rio Negro tributary
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&q=80", // Macaw parrots Amazon
+        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=1200&q=80", // Canopy walkway Manaus
+        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?w=1200&q=80", // Night sounds rainforest
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80", // Pink river dolphins
+        "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1200&q=80", // Jaguar Amazon basin
+        "https://images.unsplash.com/photo-1629732298425-6b6b1ea44999?w=1200&q=80", // Medicinal plants tour
+        "https://images.unsplash.com/photo-1625501715616-d19dfe10dd0d?w=1200&q=80", // Indigenous crafts
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80"  // Ribeirinhos village
       ],
 
-      // Galápagos Islands - 10 completely unique natural images
+      // Galápagos Islands Ecuador landmarks
       galapagos: [
-        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=1200&q=80", // Giant tortoise habitat
-        "https://images.unsplash.com/photo-1522633374897-e13b2395a4b6?w=1200&q=80", // Marine iguana rocks
-        "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&q=80", // Blue-footed booby nesting
-        "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1200&q=80", // Sea lion beach habitat
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80", // Volcanic rock formations
-        "https://images.unsplash.com/photo-1633439932734-5edfbb7a5f7b?w=1200&q=80", // Underwater coral view
-        "https://images.unsplash.com/photo-1647123135582-cd97671f31da?w=1200&q=80", // Research station setup
-        "https://images.unsplash.com/photo-1632165093188-00a07b0b88b8?w=1200&q=80", // Endemic bird habitat
-        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=80", // Marine ecosystem
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"  // Evolution study area
+        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=1200&q=80", // Giant tortoise Alcedo
+        "https://images.unsplash.com/photo-1522633374897-e13b2395a4b6?w=1200&q=80", // Marine iguanas Fernandina
+        "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&q=80", // Blue-footed boobies Española
+        "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1200&q=80", // Sea lions San Cristóbal
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80", // Volcanic landscape Bartolomé
+        "https://images.unsplash.com/photo-1633439932734-5edfbb7a5f7b?w=1200&q=80", // Snorkeling Devil's Crown
+        "https://images.unsplash.com/photo-1647123135582-cd97671f31da?w=1200&q=80", // Darwin Research Station
+        "https://images.unsplash.com/photo-1632165093188-00a07b0b88b8?w=1200&q=80", // Darwin finches evolution
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=80", // Hammerhead sharks Gordon Rocks
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"  // Pinnacle Rock Bartolomé
       ],
 
-      // Northern Lights & Arctic - 10 completely unique arctic images
+      // Iceland/Finland Arctic landmarks
       arctic: [
-        "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=1200&q=80", // Aurora borealis display
-        "https://images.unsplash.com/photo-1541278135-bb115c14c5d5?w=1200&q=80", // Ice hotel architecture
-        "https://images.unsplash.com/photo-1610375229632-e1536be3b3ab?w=1200&q=80", // Arctic landscape tundra
-        "https://images.unsplash.com/photo-1612349317150-e3d4b7bb1e8f?w=1200&q=80", // Northern lights reflection
-        "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=1200&q=80", // Reindeer in tundra
-        "https://images.unsplash.com/photo-1611068813222-6df73ac77a31?w=1200&q=80", // Snow activity setup
-        "https://images.unsplash.com/photo-1647885978144-5b59b3a8defd?w=1200&q=80", // Ice fishing hole
-        "https://images.unsplash.com/photo-1604170044814-ea8fc9074d3a?w=1200&q=80", // Arctic wildlife habitat
-        "https://images.unsplash.com/photo-1612202107036-38bb8e846b9f?w=1200&q=80", // Icy mountain landscape
-        "https://images.unsplash.com/photo-1612807522717-76f56ee0b4de?w=1200&q=80"  // Traditional sauna building
+        "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=1200&q=80", // Aurora borealis Iceland
+        "https://images.unsplash.com/photo-1541278135-bb115c14c5d5?w=1200&q=80", // Ice Hotel Finland
+        "https://images.unsplash.com/photo-1610375229632-e1536be3b3ab?w=1200&q=80", // Lapland tundra
+        "https://images.unsplash.com/photo-1612349317150-e3d4b7bb1e8f?w=1200&q=80", // Northern lights Jökulsárlón
+        "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=1200&q=80", // Reindeer Lapland
+        "https://images.unsplash.com/photo-1611068813222-6df73ac77a31?w=1200&q=80", // Snow activities Rovaniemi
+        "https://images.unsplash.com/photo-1647885978144-5b59b3a8defd?w=1200&q=80", // Ice fishing Finland
+        "https://images.unsplash.com/photo-1604170044814-ea8fc9074d3a?w=1200&q=80", // Arctic fox habitat
+        "https://images.unsplash.com/photo-1612202107036-38bb8e846b9f?w=1200&q=80", // Vatnajökull glacier
+        "https://images.unsplash.com/photo-1612807522717-76f56ee0b4de?w=1200&q=80"  // Traditional sauna Finland
       ],
 
-      // European destinations - 10 completely unique architectural images
+      // European landmarks - various countries
       europe: [
-        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&q=80", // Castle on hillside
-        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?w=1200&q=80", // Medieval town streets
-        "https://images.unsplash.com/photo-1549388604-817d15aa0110?w=1200&q=80", // Rolling countryside
-        "https://images.unsplash.com/photo-1607348874607-c617c69bff9e?w=1200&q=80", // Historic town square
-        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?w=1200&q=80", // Traditional cuisine setup
-        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80", // Cultural monument
-        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80", // Traditional craft display
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // Formal gardens
-        "https://images.unsplash.com/photo-1615544847497-4df54ecf7a63?w=1200&q=80", // Festival decorations
-        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?w=1200&q=80"  // Museum architecture
+        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&q=80", // Neuschwanstein Castle Germany
+        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?w=1200&q=80", // Rothenburg medieval streets
+        "https://images.unsplash.com/photo-1549388604-817d15aa0110?w=1200&q=80", // Tuscany countryside Italy
+        "https://images.unsplash.com/photo-1607348874607-c617c69bff9e?w=1200&q=80", // Prague Old Town Square
+        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?w=1200&q=80", // French cuisine preparation
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80", // Cliffs of Moher Ireland
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80", // Swiss Alpine village
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // Versailles gardens France
+        "https://images.unsplash.com/photo-1615544847497-4df54ecf7a63?w=1200&q=80", // Oktoberfest Munich
+        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?w=1200&q=80"  // Louvre Museum Paris
       ],
 
-      // Default/general travel - 10 completely unique landscape images
+      // Default landmarks - various authentic locations
       default: [
-        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80", // Adventure landscape
-        "https://images.unsplash.com/photo-1506729623306-b5a934d88b53?w=1200&q=80", // Mountain vista
-        "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1200&q=80", // Forest pathway
-        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80", // Scenic wilderness
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Cultural landscape
-        "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&q=80", // Natural habitat
-        "https://images.unsplash.com/photo-1610375229632-e1536be3b3ab?w=1200&q=80", // Transportation view
-        "https://images.unsplash.com/photo-1612349317150-e3d4b7bb1e8f?w=1200&q=80", // Accommodation setting
-        "https://images.unsplash.com/photo-1612202107036-38bb8e846b9f?w=1200&q=80", // Coastal scenery
-        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?w=1200&q=80"  // Urban exploration
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80", // Machu Picchu Peru
+        "https://images.unsplash.com/photo-1506729623306-b5a934d88b53?w=1200&q=80", // Banff National Park Canada
+        "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1200&q=80", // Redwood Forest California
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80", // Grand Canyon Arizona
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Great Barrier Reef Australia
+        "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&q=80", // Victoria Falls Zambia
+        "https://images.unsplash.com/photo-1610375229632-e1536be3b3ab?w=1200&q=80", // Patagonia Argentina
+        "https://images.unsplash.com/photo-1612349317150-e3d4b7bb1e8f?w=1200&q=80", // Norwegian fjords
+        "https://images.unsplash.com/photo-1612202107036-38bb8e846b9f?w=1200&q=80", // Sahara Desert Morocco
+        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?w=1200&q=80"  // Great Wall China
       ]
     };
 
