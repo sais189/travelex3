@@ -22,14 +22,14 @@ import { RobustImage } from "@/components/ui/robust-image";
 const DESTINATION_LANDMARK_IMAGES = {
   // Maldives Luxury Resort (ID: 2)
   "maldives_luxury_resort": {
-    day1: "https://images.unsplash.com/photo-1544896478-d5b709926297?w=800&h=600&fit=crop&auto=format&q=80", // Overwater bungalows
+    day1: "https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&h=600&fit=crop&auto=format&q=80", // Overwater bungalows
     day2: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=800&h=600&fit=crop&auto=format&q=80", // Crystal lagoon
     day3: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80", // Coral reef diving
     day4: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&h=600&fit=crop&auto=format&q=80", // Sunset beach
     day5: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&h=600&fit=crop&auto=format&q=80", // Seaplane transfer
     day6: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=600&fit=crop&auto=format&q=80", // Private beach dinner
-    day7: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&auto=format&q=80", // Resort spa
-    fallback: "https://images.unsplash.com/photo-1544896478-d5b709926297?w=800&h=600&fit=crop&auto=format&q=80"
+    day7: "https://images.unsplash.com/photo-1463734275205-e8c7d79daab3?w=800&h=600&fit=crop&auto=format&q=80", // Maldivian sunset
+    fallback: "https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
   // Tokyo Adventure (ID: 3)
@@ -38,9 +38,9 @@ const DESTINATION_LANDMARK_IMAGES = {
     day2: "https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800&h=600&fit=crop&auto=format&q=80", // Shibuya crossing
     day3: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&h=600&fit=crop&auto=format&q=80", // Sensoji Temple
     day4: "https://images.unsplash.com/photo-1560707303-4e980ce876ad?w=800&h=600&fit=crop&auto=format&q=80", // Golden Pavilion
-    day5: "https://images.unsplash.com/photo-1578637387939-43c4eecb3985?w=800&h=600&fit=crop&auto=format&q=80", // Mount Fuji
+    day5: "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=800&h=600&fit=crop&auto=format&q=80", // Mount Fuji
     day6: "https://images.unsplash.com/photo-1554797589-7241bb691973?w=800&h=600&fit=crop&auto=format&q=80", // Cherry blossoms
-    day7: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Traditional garden
+    day7: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&h=600&fit=crop&auto=format&q=80", // Meiji Shrine
     fallback: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
