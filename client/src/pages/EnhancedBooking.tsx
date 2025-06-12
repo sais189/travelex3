@@ -276,46 +276,46 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"  // Evolution studies
       ],
 
-      // Northern Lights & Arctic
+      // Northern Lights & Arctic - 10 unique images
       arctic: [
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Aurora borealis
-        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Ice hotel
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Husky sledding
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Lapland village
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Reindeer herding
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Snow activities
-        "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Ice fishing
-        "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Arctic wildlife
-        "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cross-country skiing
-        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Sauna experience
+        "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=1200&q=80", // Aurora borealis
+        "https://images.unsplash.com/photo-1541278135-bb115c14c5d5?w=1200&q=80", // Ice hotel
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Husky sledding
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Lapland village
+        "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=1200&q=80", // Reindeer herding
+        "https://images.unsplash.com/photo-1611068813222-6df73ac77a31?w=1200&q=80", // Snow activities
+        "https://images.unsplash.com/photo-1647885978144-5b59b3a8defd?w=1200&q=80", // Ice fishing
+        "https://images.unsplash.com/photo-1604170044814-ea8fc9074d3a?w=1200&q=80", // Arctic wildlife
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Cross-country skiing
+        "https://images.unsplash.com/photo-1612807522717-76f56ee0b4de?w=1200&q=80"  // Sauna experience
       ],
 
-      // European destinations
+      // European destinations - 10 unique images
       europe: [
-        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Castle architecture
-        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Medieval towns
-        "https://images.unsplash.com/photo-1549388604-817d15aa0110?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Countryside views
-        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Historic squares
-        "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Local cuisine
-        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cultural sites
-        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Traditional crafts
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Gardens
-        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Festivals
-        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // Museums
+        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&q=80", // Castle architecture
+        "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?w=1200&q=80", // Medieval towns
+        "https://images.unsplash.com/photo-1549388604-817d15aa0110?w=1200&q=80", // Countryside views
+        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?w=1200&q=80", // Historic squares
+        "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?w=1200&q=80", // Local cuisine
+        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=1200&q=80", // Cultural sites
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80", // Traditional crafts
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // Gardens
+        "https://images.unsplash.com/photo-1615544847497-4df54ecf7a63?w=1200&q=80", // Festivals
+        "https://images.unsplash.com/photo-1546195643-70ca58e96cda?w=1200&q=80"  // Museums
       ],
 
-      // Default/general travel
+      // Default/general travel - 10 unique images
       default: [
-        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Adventure travel
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Mountain views
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Forest paths
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Scenic landscapes
-        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Cultural experiences
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Local interactions
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Transportation
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Accommodations
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", // Beach activities
-        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"  // City exploration
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80", // Adventure travel
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Mountain views
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Forest paths
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80", // Scenic landscapes
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cultural experiences
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&q=80", // Local interactions
+        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Transportation
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Accommodations
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80", // Beach activities
+        "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?w=1200&q=80"  // City exploration
       ]
     };
 
@@ -1056,6 +1056,7 @@ export default function EnhancedBooking() {
                           src={getVariedImageForDay(destination, day, index)}
                           alt={day.title}
                           className="w-full h-full object-cover"
+                          fallbackSrc="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80"
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
                         
