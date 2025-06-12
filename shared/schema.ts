@@ -100,6 +100,21 @@ export const bookings = pgTable("bookings", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Reviews table
+export const reviews = pgTable("reviews", {
+  id: serial("id").primaryKey(),
+  destinationId: integer("destination_id")
+    .notNull()
+    .references(() => destinations.id),
+  userId: varchar("user_id").references(() => users.id),
+  rating: integer("rating").notNull(), // 1-5 stars
+  title: varchar("title", { length: 255 }).notNull(),
+  comment: text("comment").notNull(),
+  tripDate: date("trip_date"), // when they took the trip
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Activity logs table
 export const activityLogs = pgTable("activity_logs", {
   id: serial("id").primaryKey(),
@@ -118,6 +133,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const destinationsRelations = relations(destinations, ({ many }) => ({
   bookings: many(bookings),
+  reviews: many(reviews),
 }));
 
 export const bookingsRelations = relations(bookings, ({ one }) => ({
@@ -128,6 +144,17 @@ export const bookingsRelations = relations(bookings, ({ one }) => ({
   destination: one(destinations, {
     fields: [bookings.destinationId],
     references: [destinations.id],
+  }),
+}));
+
+export const reviewsRelations = relations(reviews, ({ one }) => ({
+  destination: one(destinations, {
+    fields: [reviews.destinationId],
+    references: [destinations.id],
+  }),
+  user: one(users, {
+    fields: [reviews.userId],
+    references: [users.id],
   }),
 }));
 
@@ -156,6 +183,12 @@ export const insertBookingSchema = createInsertSchema(bookings).omit({
   updatedAt: true,
 });
 
+export const insertReviewSchema = createInsertSchema(reviews).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertActivityLogSchema = createInsertSchema(activityLogs).omit({
   id: true,
   createdAt: true,
@@ -172,6 +205,9 @@ export type InsertDestination = z.infer<typeof insertDestinationSchema>;
 export type Booking = typeof bookings.$inferSelect;
 export type InsertBooking = z.infer<typeof insertBookingSchema>;
 
+export type Review = typeof reviews.$inferSelect;
+export type InsertReview = z.infer<typeof insertReviewSchema>;
+
 export type ActivityLog = typeof activityLogs.$inferSelect;
 export type InsertActivityLog = z.infer<typeof insertActivityLogSchema>;
 
@@ -184,4 +220,8 @@ export type BookingWithDetails = Booking & {
 export type DestinationWithStats = Destination & {
   bookingCount?: number;
   revenue?: string;
+};
+
+export type ReviewWithUser = Review & {
+  user: User;
 };
