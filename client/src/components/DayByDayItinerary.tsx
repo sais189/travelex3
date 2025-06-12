@@ -95,14 +95,14 @@ const DESTINATION_IMAGES = {
     fallback: "https://images.unsplash.com/photo-1531835207847-b1b5d8f61ee3?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Volcanic highlands
   },
   generic: {
-    day1: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Mountain landscape
-    day2: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Beach sunset
-    day3: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // City architecture
-    day4: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Forest path
-    day5: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Ocean waves
-    day6: "https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Desert landscape
-    day7: "https://images.unsplash.com/photo-1543037409-87cbeac7ac70?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Local market
-    fallback: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Travel scene
+    day1: "https://unsplash.com/photos/green-fields-and-mountains-under-a-pale-sky-DPfSY8MOIUg w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Mountain landscape
+    day2: "https://unsplash.com/photos/low-angle-photo-of-coconut-trees-beside-body-of-water-ueBIGLmiI5A w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Beach sunset
+    day3: "https://unsplash.com/photos/a-tall-building-with-a-curved-roof-next-to-other-tall-buildings-lUPL-4C8DLk w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // City architecture
+    day4: "https://unsplash.com/photos/pathway-between-trees-during-daytime-PAxyBxTCCz4 w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Forest path
+    day5: "https://unsplash.com/photos/a-large-wave-is-breaking-in-the-ocean-JOvEHA9PJMs w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Ocean waves
+    day6: "https://unsplash.com/photos/landscape-photography-of-sand-dunes-DV1mP1-H9GU w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Desert landscape
+    day7: "https://unsplash.com/photos/a-market-with-lots-of-items-YjjxIieZTkU w=800&h=600&fit=crop&crop=entropy&auto=format&q=80", // Local market
+    fallback: "https://unsplash.com/photos/a-boat-is-in-a-large-body-of-water-ciYOQZ7eKQ4", // Travel scene
   }
 };
 
