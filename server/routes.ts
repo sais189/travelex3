@@ -620,6 +620,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = createBookingSchema.parse(req.body);
       console.log("Validated data:", validatedData);
       
+      // Validate coupon code if provided
+      if (validatedData.appliedCouponCode) {
+        const destination = await storage.getDestination(validatedData.destinationId);
+        if (!destination) {
+          return res.status(404).json({ message: "Destination not found" });
+        }
+        
+        // Check if the coupon code belongs to this specific destination
+        if (!destination.couponCode || 
+            validatedData.appliedCouponCode.toUpperCase() !== destination.couponCode.toUpperCase()) {
+          return res.status(400).json({ 
+            message: `Invalid coupon code for ${destination.name}. This coupon cannot be used for this destination.` 
+          });
+        }
+      }
+      
       // Check for duplicate booking
       const isDuplicate = await storage.checkDuplicateBooking(
         userId,
