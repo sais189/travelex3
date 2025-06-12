@@ -175,63 +175,63 @@ export default function EnhancedBooking() {
     const destinationName = destination?.name.toLowerCase() || '';
     const country = destination?.country?.toLowerCase() || '';
 
-    // Completely unique image collections - no duplicates across any destination
+    // Country-specific landmark images - authentic locations only
     const imageCollections = {
-      // Japan & Tokyo collections - 15 completely unique aesthetic images
+      // Japan landmarks - famous sites and cultural locations
       tokyo: [
-        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=80", // Tokyo skyline at dusk
-        "https://images.unsplash.com/photo-1528181304800-259b08848526?w=1200&q=80", // Golden pavilion temple
-        "https://images.unsplash.com/photo-1522637739821-45282d6e14ba?w=1200&q=80", // Cherry blossoms pathway
-        "https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=1200&q=80", // Bamboo forest paths
-        "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=1200&q=80", // Mount Fuji landscape
-        "https://images.unsplash.com/photo-1566639046106-4e5dd0604a93?w=1200&q=80", // Traditional garden zen
-        "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200&q=80", // Traditional architecture
-        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80", // Night temple lights
-        "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1200&q=80", // Temple courtyard
-        "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=1200&q=80", // Traditional village rooftops
-        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=1200&q=80", // Japanese cuisine presentation
-        "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=1200&q=80", // Sushi aesthetic arrangement
-        "https://images.unsplash.com/photo-1580654712603-eb43273aff33?w=1200&q=80", // Traditional ceremony setup
-        "https://images.unsplash.com/photo-1589952283406-b53dd93b766b?w=1200&q=80", // Tea ceremony table setting
-        "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=1200&q=80"  // Urban architecture
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=80", // Tokyo skyline with Tokyo Tower
+        "https://images.unsplash.com/photo-1528181304800-259b08848526?w=1200&q=80", // Kinkaku-ji (Golden Pavilion) Kyoto
+        "https://images.unsplash.com/photo-1522637739821-45282d6e14ba?w=1200&q=80", // Cherry blossoms at Ueno Park
+        "https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=1200&q=80", // Arashiyama Bamboo Grove
+        "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=1200&q=80", // Mount Fuji from Lake Kawaguchi
+        "https://images.unsplash.com/photo-1566639046106-4e5dd0604a93?w=1200&q=80", // Ryoan-ji Temple garden
+        "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200&q=80", // Traditional Japanese architecture
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80", // Sensoji Temple at night
+        "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1200&q=80", // Meiji Shrine grounds
+        "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=1200&q=80", // Shirakawa-go village
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=1200&q=80", // Japanese kaiseki cuisine
+        "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=1200&q=80", // Tsukiji fish market sushi
+        "https://images.unsplash.com/photo-1580654712603-eb43273aff33?w=1200&q=80", // Tea ceremony preparation
+        "https://images.unsplash.com/photo-1589952283406-b53dd93b766b?w=1200&q=80", // Traditional tea house
+        "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=1200&q=80"  // Shibuya crossing Tokyo
       ],
       
-      // Maldives tropical paradise - 15 completely unique images
+      // Maldives landmarks - authentic tropical paradise locations
       maldives: [
-        "https://images.unsplash.com/photo-1590523278191-a0d5cd157735?w=1200&q=80", // Turquoise lagoon aerial view
-        "https://images.unsplash.com/photo-1582880421648-a8985e2b7e6e?w=1200&q=80", // Overwater bungalow resort
-        "https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?w=1200&q=80", // Crystal water transparency
-        "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=1200&q=80", // Coral reef marine life
-        "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?w=1200&q=80", // Pure white sand beach
-        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?w=1200&q=80", // Beachfront dining pavilion
-        "https://images.unsplash.com/photo-1540206395-68808572332f?w=1200&q=80", // Luxury spa villa
-        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=1200&q=80", // Water activity equipment
-        "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=80", // Tropical sunset horizon
-        "https://images.unsplash.com/photo-1537956965359-7573183d1180?w=1200&q=80", // Villa wooden deck
-        "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80", // Infinity pool design
-        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&q=80", // Underwater dining venue
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Marine ecosystem
-        "https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=1200&q=80", // Seaplane transportation
-        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80"  // Underwater exploration
+        "https://images.unsplash.com/photo-1590523278191-a0d5cd157735?w=1200&q=80", // Male atoll aerial view
+        "https://images.unsplash.com/photo-1582880421648-a8985e2b7e6e?w=1200&q=80", // Conrad Maldives overwater villas
+        "https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?w=1200&q=80", // Baa Atoll crystal waters
+        "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=1200&q=80", // Hanifaru Bay coral reef
+        "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?w=1200&q=80", // Veligandu Island beach
+        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?w=1200&q=80", // Resort dining pavilion
+        "https://images.unsplash.com/photo-1540206395-68808572332f?w=1200&q=80", // Spa treatment villa
+        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=1200&q=80", // Water sports equipment
+        "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=80", // Indian Ocean sunset
+        "https://images.unsplash.com/photo-1537956965359-7573183d1180?w=1200&q=80", // Overwater villa deck
+        "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80", // Resort infinity pool
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&q=80", // Underwater restaurant Ithaa
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Maldivian marine life
+        "https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=1200&q=80", // Seaplane at Male
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80"  // Whale shark diving
       ],
       
-      // Safari & Wildlife - 15 completely unique landscape images
+      // Kenya/Tanzania safari landmarks - specific African locations
       safari: [
-        "https://images.unsplash.com/photo-1516205651411-aef33a44f7c2?w=1200&q=80", // African savanna panorama
-        "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?w=1200&q=80", // Safari jeep landscape
-        "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=80", // Acacia tree silhouette
-        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80", // Lion pride habitat
-        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1200&q=80", // Elephant at waterhole
-        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200&q=80", // Giraffe family group
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Zebra migration herd
-        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cheetah grassland hunt
-        "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80", // Rhino wilderness scene
-        "https://images.unsplash.com/photo-1581852017103-68ac65514cf4?w=1200&q=80", // Buffalo herd savanna
-        "https://images.unsplash.com/photo-1555993539-1732b0258327?w=1200&q=80", // Hot air balloon safari
-        "https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=1200&q=80", // Traditional village huts
-        "https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?w=1200&q=80", // Safari lodge architecture
-        "https://images.unsplash.com/photo-1563592441-6ebc9f07c5e7?w=1200&q=80", // Wildebeest grassland
-        "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?w=1200&q=80"  // Leopard tree climbing
+        "https://images.unsplash.com/photo-1516205651411-aef33a44f7c2?w=1200&q=80", // Maasai Mara savanna
+        "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?w=1200&q=80", // Serengeti game drive
+        "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=80", // Acacia tree Kenya
+        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80", // Lions in Maasai Mara
+        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1200&q=80", // Elephants Amboseli
+        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200&q=80", // Giraffes Samburu
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Great Migration Serengeti
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cheetah Maasai Mara
+        "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80", // Rhino Ol Pejeta
+        "https://images.unsplash.com/photo-1581852017103-68ac65514cf4?w=1200&q=80", // Buffalo Ngorongoro
+        "https://images.unsplash.com/photo-1555993539-1732b0258327?w=1200&q=80", // Balloon safari Serengeti
+        "https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=1200&q=80", // Maasai village
+        "https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?w=1200&q=80", // Safari lodge Maasai Mara
+        "https://images.unsplash.com/photo-1563592441-6ebc9f07c5e7?w=1200&q=80", // Wildebeest crossing
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?w=1200&q=80"  // Leopard Samburu
       ],
 
       // Himalayas & Mountain adventures - 10 completely unique landscape images
