@@ -267,6 +267,55 @@ export default function AdminDashboard() {
     setShowNotificationDetailsDialog(true);
   };
 
+  // Notification styling utility functions
+  const getNotificationStyles = (color: string) => {
+    const styles = {
+      red: 'border-red-500/20 bg-red-500/5 hover:bg-red-500/10',
+      blue: 'border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10',
+      green: 'border-green-500/20 bg-green-500/5 hover:bg-green-500/10',
+      gold: 'border-yellow-500/20 bg-yellow-500/5 hover:bg-yellow-500/10',
+      purple: 'border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10',
+      orange: 'border-orange-500/20 bg-orange-500/5 hover:bg-orange-500/10'
+    };
+    return styles[color as keyof typeof styles] || styles.blue;
+  };
+
+  const getDotStyles = (color: string) => {
+    const styles = {
+      red: 'bg-red-500',
+      blue: 'bg-blue-500',
+      green: 'bg-green-500',
+      gold: 'bg-yellow-500',
+      purple: 'bg-purple-500',
+      orange: 'bg-orange-500'
+    };
+    return styles[color as keyof typeof styles] || styles.blue;
+  };
+
+  const getTitleStyles = (color: string) => {
+    const styles = {
+      red: 'text-red-400 group-hover:text-red-300',
+      blue: 'text-blue-400 group-hover:text-blue-300',
+      green: 'text-green-400 group-hover:text-green-300',
+      gold: 'text-yellow-400 group-hover:text-yellow-300',
+      purple: 'text-purple-400 group-hover:text-purple-300',
+      orange: 'text-orange-400 group-hover:text-orange-300'
+    };
+    return styles[color as keyof typeof styles] || styles.blue;
+  };
+
+  const getDetailStyles = (color: string) => {
+    const styles = {
+      red: 'bg-red-500/5 border-red-500/20 text-red-400',
+      blue: 'bg-blue-500/5 border-blue-500/20 text-blue-400',
+      green: 'bg-green-500/5 border-green-500/20 text-green-400',
+      gold: 'bg-yellow-500/5 border-yellow-500/20 text-yellow-400',
+      purple: 'bg-purple-500/5 border-purple-500/20 text-purple-400',
+      orange: 'bg-orange-500/5 border-orange-500/20 text-orange-400'
+    };
+    return styles[color as keyof typeof styles] || styles.blue;
+  };
+
   // Fetch analytics data
   const { data: analytics } = useQuery<Analytics>({
     queryKey: ['/api/admin/analytics'],
@@ -2038,42 +2087,6 @@ export default function AdminDashboard() {
                     }
                   };
 
-                  const getNotificationStyles = (color: string) => {
-                    const styles = {
-                      red: 'border-red-500/20 bg-red-500/5 hover:bg-red-500/10',
-                      blue: 'border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10',
-                      green: 'border-green-500/20 bg-green-500/5 hover:bg-green-500/10',
-                      gold: 'border-yellow-500/20 bg-yellow-500/5 hover:bg-yellow-500/10',
-                      purple: 'border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10',
-                      orange: 'border-orange-500/20 bg-orange-500/5 hover:bg-orange-500/10'
-                    };
-                    return styles[color as keyof typeof styles] || styles.blue;
-                  };
-
-                  const getDotStyles = (color: string) => {
-                    const styles = {
-                      red: 'bg-red-500',
-                      blue: 'bg-blue-500',
-                      green: 'bg-green-500',
-                      gold: 'bg-yellow-500',
-                      purple: 'bg-purple-500',
-                      orange: 'bg-orange-500'
-                    };
-                    return styles[color as keyof typeof styles] || styles.blue;
-                  };
-
-                  const getTitleStyles = (color: string) => {
-                    const styles = {
-                      red: 'text-red-400 group-hover:text-red-300',
-                      blue: 'text-blue-400 group-hover:text-blue-300',
-                      green: 'text-green-400 group-hover:text-green-300',
-                      gold: 'text-yellow-400 group-hover:text-yellow-300',
-                      purple: 'text-purple-400 group-hover:text-purple-300',
-                      orange: 'text-orange-400 group-hover:text-orange-300'
-                    };
-                    return styles[color as keyof typeof styles] || styles.blue;
-                  };
-
                   return (
                     <div 
                       key={notification.id}
@@ -2185,8 +2198,8 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Detailed Information - Dynamic based on notification type */}
-                  <div className={`bg-${selectedNotification.color}-500/5 border border-${selectedNotification.color}-500/20 rounded-lg p-4`}>
-                    <h4 className={`text-sm font-medium text-${selectedNotification.color}-400 mb-3`}>Detailed Information</h4>
+                  <div className={`${getDetailStyles(selectedNotification.color)} border rounded-lg p-4`}>
+                    <h4 className={`text-sm font-medium ${getTitleStyles(selectedNotification.color).split(' ')[0]} mb-3`}>Detailed Information</h4>
                     
                     {selectedNotification.type === 'system' && (
                       <div className="grid grid-cols-2 gap-4 text-xs">
