@@ -220,8 +220,8 @@ export default function Home() {
                     <div className="absolute top-4 left-4">
                       <PricingBadge 
                         promoTag={destination.promoTag}
-                        discountPercentage={destination.discountPercentage}
-                        promoExpiry={destination.promoExpiry}
+                        discountPercentage={destination.discountPercentage ?? 0}
+                        promoExpiry={destination.promoExpiry ? new Date(destination.promoExpiry).toISOString() : undefined}
                       />
                     </div>
                     <div className="absolute top-4 right-4">
@@ -242,9 +242,20 @@ export default function Home() {
                     </div>
                     <div className="flex justify-between items-center mt-auto pt-4">
                       <div className="flex flex-col">
-                        <span className="text-gold-accent font-bold text-xl">
-                          ${parseFloat(destination.price).toLocaleString()}
-                        </span>
+                        {destination.originalPrice && parseFloat(destination.originalPrice) > parseFloat(destination.price) ? (
+                          <div className="flex flex-col">
+                            <span className="text-xs text-muted-foreground line-through">
+                              ${parseFloat(destination.originalPrice).toLocaleString()}
+                            </span>
+                            <span className="text-gold-accent font-bold text-xl">
+                              ${parseFloat(destination.price).toLocaleString()}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-gold-accent font-bold text-xl">
+                            ${parseFloat(destination.price).toLocaleString()}
+                          </span>
+                        )}
                         <span className="text-xs text-muted-foreground">per person</span>
                       </div>
                       <Button

@@ -17,6 +17,7 @@ import {
   TreePalm
 } from "lucide-react";
 import { RobustImage } from "@/components/ui/robust-image";
+import PDFExport from "@/components/PDFExport";
 
 // Landmark images for each specific destination
 const DESTINATION_LANDMARK_IMAGES = {
@@ -333,7 +334,7 @@ export default function DayByDayItinerary({
           </motion.h2>
           
           <motion.p 
-            className="text-xl text-muted-foreground max-w-2xl mx-auto"
+            className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6"
             initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
@@ -341,6 +342,16 @@ export default function DayByDayItinerary({
           >
             Experience every moment of your {destination.name} adventure with our carefully crafted day-by-day itinerary
           </motion.p>
+          
+          <motion.div
+            className="flex justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            viewport={{ once: true }}
+          >
+            <PDFExport destination={destination} />
+          </motion.div>
         </motion.div>
 
         {/* Layered Journey Cards */}
