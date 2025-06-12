@@ -16,7 +16,7 @@ export default function Promotions() {
   });
 
   const activePromotions = destinations?.filter(dest => 
-    dest.promoTag || dest.discountPercentage > 0 || dest.seasonalTag || dest.flashSale
+    dest.promoTag || (dest.discountPercentage && dest.discountPercentage > 0) || dest.seasonalTag || dest.flashSale
   ) || [];
 
   if (isLoading) {
@@ -115,15 +115,15 @@ export default function Promotions() {
                       <div className="absolute top-3 left-3">
                         <PricingBadge
                           promoTag={destination.promoTag}
-                          discountPercentage={destination.discountPercentage}
-                          promoExpiry={destination.promoExpiry}
-                          seasonalTag={destination.seasonalTag}
-                          flashSale={destination.flashSale}
-                          flashSaleEnd={destination.flashSaleEnd}
-                          couponCode={destination.couponCode}
-                          discountType={destination.discountType}
-                          groupDiscountMin={destination.groupDiscountMin}
-                          loyaltyDiscount={destination.loyaltyDiscount}
+                          discountPercentage={destination.discountPercentage ?? 0}
+                          promoExpiry={destination.promoExpiry ? destination.promoExpiry.toString() : undefined}
+                          seasonalTag={destination.seasonalTag ?? undefined}
+                          flashSale={destination.flashSale ?? false}
+                          flashSaleEnd={destination.flashSaleEnd ? destination.flashSaleEnd.toString() : undefined}
+                          couponCode={destination.couponCode ?? undefined}
+                          discountType={destination.discountType || undefined}
+                          groupDiscountMin={destination.groupDiscountMin ?? 0}
+                          loyaltyDiscount={destination.loyaltyDiscount ?? 0}
                           bundleDeal={destination.bundleDeal}
                         />
                       </div>
@@ -157,18 +157,7 @@ export default function Promotions() {
                         {destination.description}
                       </p>
                       
-                      {destination.bundleDeal && (
-                        <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
-                          <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-1">
-                            Bundle Includes:
-                          </p>
-                          <ul className="text-xs text-emerald-600 dark:text-emerald-400 space-y-0.5">
-                            {destination.bundleDeal.includes?.map((item: string, idx: number) => (
-                              <li key={idx}>• {item}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+
                       
                       <Button className="w-full group" size="lg">
                         Book Now
