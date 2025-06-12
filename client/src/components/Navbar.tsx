@@ -28,7 +28,7 @@ export default function Navbar() {
   const { user, isAuthenticated, isLoading } = useAuth();
 
   const isValidRoute = (path: string) => {
-    const validRoutes = ["/", "/destinations", "/promotions", "/booking", "/my-trips", "/admin", "/auth", "/about", "/contact"];
+    const validRoutes = ["/", "/destinations", "/booking", "/my-trips", "/admin", "/auth", "/about", "/contact"];
     return validRoutes.some(route => path.startsWith(route));
   };
 
@@ -46,7 +46,6 @@ export default function Navbar() {
   const navItems = [
     { path: "/", label: "Home", icon: Home },
     { path: "/destinations", label: "Destinations", icon: Map },
-    { path: "/promotions", label: "Promotions", icon: Tag },
     ...(isAuthenticated ? [{ path: "/my-trips", label: "My Trips", icon: Calendar }] : []),
     { path: "/about", label: "About", icon: Users },
     { path: "/contact", label: "Contact", icon: Phone },
