@@ -16,6 +16,7 @@ import {
   Fish,
   TreePalm
 } from "lucide-react";
+import { RobustImage } from "@/components/ui/robust-image";
 
 
 interface ItineraryDay {
