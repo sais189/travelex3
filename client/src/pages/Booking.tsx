@@ -512,7 +512,7 @@ export default function Booking() {
                     {!appliedCoupon && (
                       <div className="flex gap-2">
                         <Input
-                          placeholder="Enter coupon code (e.g., SUMMER15)"
+                          placeholder="Enter coupon code (e.g., AUSSIE25)"
                           value={couponInput}
                           onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                           className="flex-1"
