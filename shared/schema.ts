@@ -51,6 +51,10 @@ export const destinations = pgTable("destinations", {
   shortDescription: varchar("short_description", { length: 500 }),
   imageUrl: varchar("image_url", { length: 500 }).unique(),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  originalPrice: decimal("original_price", { precision: 10, scale: 2 }), // for showing discounts
+  discountPercentage: integer("discount_percentage").default(0), // discount percentage
+  promoTag: varchar("promo_tag", { length: 50 }), // 'Best Offer', 'On Sale', 'Limited Time', etc.
+  promoExpiry: timestamp("promo_expiry"), // when the promotion expires
   duration: integer("duration").notNull(), // in days
   distanceKm: decimal("distance_km", { precision: 8, scale: 2 }), // distance in kilometers
   rating: decimal("rating", { precision: 3, scale: 2 }).default("0"),

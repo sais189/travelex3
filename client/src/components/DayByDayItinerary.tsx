@@ -57,19 +57,19 @@ const DESTINATION_LANDMARK_IMAGES = {
   },
   
   // African Safari (ID: 5)
-  african_safari: {
-    day1: "https://unsplash.com/photos/a-herd-of-elephants-walking-across-a-lush-green-field-Ds66UJVowBw", // Herd of elephants in African game reserve
-    day2: "https://unsplash.com/photos/a-herd-of-zebra-grazing-on-a-lush-green-field-NQdnNTU5A-c", // Zebras grazing in South Africa
-    day3: "https://unsplash.com/photos/a-giraffe-standing-in-a-field-at-sunset-u_mdmleqBB8", // Giraffe at sunset in Amboseli, Kenya
-    day4: "https://unsplash.com/photos/a-group-of-people-standing-next-to-each-other-Xeyas5qNg3U", // Masai community in Kenya
-    day5: "https://unsplash.com/photos/the-african-sunset-over-safari-vehicles-in-the-masai-mara-nairobi-Lv7PRE8e_ew", // African sunset over Masai Mara
-    day6: "https://unsplash.com/photos/a-pride-of-lions-in-etosha-national-park-namibia-mgMhRhy4lvk", // Pride of lions in Namibia
-    day7: "https://unsplash.com/photos/person-standing-near-a-tent-in-an-african-safari-HBdCCv4DGdk", // Safari camp in Africa
-    fallback: "https://unsplash.com/photos/a-herd-of-elephants-walking-across-a-lush-green-field-Ds66UJVowBw"
+  "african_safari": {
+    day1: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Elephants migration
+    day2: "https://images.unsplash.com/photo-1566555110834-0af5e5cf38c5?w=800&h=600&fit=crop&auto=format&q=80", // Zebra herds
+    day3: "https://images.unsplash.com/photo-1566649112285-e6d2e8cd3c5b?w=800&h=600&fit=crop&auto=format&q=80", // Giraffe at sunset
+    day4: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800&h=600&fit=crop&auto=format&q=80", // Masai culture
+    day5: "https://images.unsplash.com/photo-1549318441-e6324cbb769e?w=800&h=600&fit=crop&auto=format&q=80", // African sunset
+    day6: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=600&fit=crop&auto=format&q=80", // Lions pride
+    day7: "https://images.unsplash.com/photo-1564149504063-338de52293c6?w=800&h=600&fit=crop&auto=format&q=80", // Safari camp
+    fallback: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
   // Iceland Adventure (ID: 6)
-  iceland_adventure: {
+  "iceland_adventure": {
     day1: "https://images.unsplash.com/photo-1551524164-6cf96ac834fb?w=800&h=600&fit=crop&auto=format&q=80", // Gullfoss waterfall
     day2: "https://images.unsplash.com/photo-1539650116574-75c0c6d90469?w=800&h=600&fit=crop&auto=format&q=80", // Geysir eruption
     day3: "https://images.unsplash.com/photo-1573160813959-df05c19ffc85?w=800&h=600&fit=crop&auto=format&q=80", // Blue Lagoon

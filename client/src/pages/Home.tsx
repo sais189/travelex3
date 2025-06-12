@@ -9,6 +9,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 import EarthGlobe from "@/components/EarthGlobe";
+import PricingBadge from "@/components/PricingBadge";
 import type { Destination } from "@shared/schema";
 import { useState, useMemo } from "react";
 
@@ -216,6 +217,13 @@ export default function Home() {
                       priority={index < 2}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute top-4 left-4">
+                      <PricingBadge 
+                        promoTag={destination.promoTag}
+                        discountPercentage={destination.discountPercentage}
+                        promoExpiry={destination.promoExpiry}
+                      />
+                    </div>
                     <div className="absolute top-4 right-4">
                       <div className="flex items-center space-x-1 bg-black bg-opacity-50 rounded-full px-2 py-1">
                         <Star className="w-3 h-3 text-gold-accent fill-current" />
