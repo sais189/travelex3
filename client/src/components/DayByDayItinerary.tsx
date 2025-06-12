@@ -159,6 +159,9 @@ interface DayByDayItineraryProps {
     country: string;
     imageUrl: string | null;
     itinerary: any[] | unknown;
+    description?: string;
+    price?: string;
+    duration?: number;
   };
   activeDay?: number;
   onDaySelect?: (dayIndex: number) => void;
@@ -350,7 +353,16 @@ export default function DayByDayItinerary({
             transition={{ duration: 0.6, delay: 0.7 }}
             viewport={{ once: true }}
           >
-            <PDFExport destination={destination} />
+            <PDFExport destination={{
+              id: destination.id,
+              name: destination.name,
+              country: destination.country,
+              description: destination.description || `Experience the beauty of ${destination.name}`,
+              price: destination.price || '0',
+              duration: destination.duration || 7,
+              itinerary: Array.isArray(destination.itinerary) ? destination.itinerary : [],
+              imageUrl: destination.imageUrl
+            }} />
           </motion.div>
         </motion.div>
 

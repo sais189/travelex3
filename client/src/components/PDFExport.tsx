@@ -8,10 +8,11 @@ interface PDFExportProps {
     id: number;
     name: string;
     country: string;
-    description: string;
-    price: string;
-    duration: number;
+    description?: string;
+    price?: string;
+    duration?: number;
     itinerary?: any[];
+    imageUrl?: string | null;
   };
   className?: string;
 }
@@ -33,20 +34,24 @@ export default function PDFExport({ destination, className }: PDFExportProps) {
 
       pdf.setFontSize(14);
       pdf.setFont("helvetica", "normal");
-      pdf.text(`${destination.country} • ${destination.duration} Days`, margin, yPosition);
+      pdf.text(`${destination.country}${destination.duration ? ` • ${destination.duration} Days` : ''}`, margin, yPosition);
       yPosition += 10;
 
-      pdf.setFontSize(16);
-      pdf.setFont("helvetica", "bold");
-      pdf.text(`Price: $${destination.price}`, margin, yPosition);
-      yPosition += 20;
+      if (destination.price) {
+        pdf.setFontSize(16);
+        pdf.setFont("helvetica", "bold");
+        pdf.text(`Price: $${destination.price}`, margin, yPosition);
+        yPosition += 20;
+      }
 
       // Add description
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "normal");
-      const splitDescription = pdf.splitTextToSize(destination.description, pageWidth - 2 * margin);
-      pdf.text(splitDescription, margin, yPosition);
-      yPosition += splitDescription.length * 5 + 15;
+      if (destination.description) {
+        pdf.setFontSize(12);
+        pdf.setFont("helvetica", "normal");
+        const splitDescription = pdf.splitTextToSize(destination.description, pageWidth - 2 * margin);
+        pdf.text(splitDescription, margin, yPosition);
+        yPosition += splitDescription.length * 5 + 15;
+      }
 
       // Add itinerary if available
       if (destination.itinerary && Array.isArray(destination.itinerary)) {
