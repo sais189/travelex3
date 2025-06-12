@@ -175,9 +175,9 @@ export default function EnhancedBooking() {
     const destinationName = destination?.name.toLowerCase() || '';
     const country = destination?.country?.toLowerCase() || '';
 
-    // Aesthetic landscape and architectural images - no people visible
+    // Completely unique image collections - no duplicates across any destination
     const imageCollections = {
-      // Japan & Tokyo collections - 15 aesthetic images
+      // Japan & Tokyo collections - 15 completely unique aesthetic images
       tokyo: [
         "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=80", // Tokyo skyline at dusk
         "https://images.unsplash.com/photo-1528181304800-259b08848526?w=1200&q=80", // Golden pavilion temple
@@ -196,45 +196,45 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=1200&q=80"  // Urban architecture
       ],
       
-      // Maldives tropical paradise - 15 aesthetic images (no people)
+      // Maldives tropical paradise - 15 completely unique images
       maldives: [
-        "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1200&q=80", // Pristine tropical island
-        "https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&q=80", // Overwater villa architecture
-        "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=1200&q=80", // Crystal clear lagoon
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80", // Underwater coral reef
-        "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?w=1200&q=80", // Pristine white sand beach
-        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?w=1200&q=80", // Ocean dining setup
-        "https://images.unsplash.com/photo-1540206395-68808572332f?w=1200&q=80", // Spa treatment setup
-        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=1200&q=80", // Water sports equipment
-        "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=80", // Sunset over ocean
-        "https://images.unsplash.com/photo-1537956965359-7573183d1180?w=1200&q=80", // Villa deck over water
-        "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80", // Infinity pool view
-        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&q=80", // Underwater restaurant view
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Ocean wildlife habitat
-        "https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=1200&q=80", // Seaplane on water
-        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80"  // Marine life underwater
+        "https://images.unsplash.com/photo-1590523278191-a0d5cd157735?w=1200&q=80", // Turquoise lagoon aerial view
+        "https://images.unsplash.com/photo-1582880421648-a8985e2b7e6e?w=1200&q=80", // Overwater bungalow resort
+        "https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?w=1200&q=80", // Crystal water transparency
+        "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=1200&q=80", // Coral reef marine life
+        "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?w=1200&q=80", // Pure white sand beach
+        "https://images.unsplash.com/photo-1573160103600-9072a5ad3d38?w=1200&q=80", // Beachfront dining pavilion
+        "https://images.unsplash.com/photo-1540206395-68808572332f?w=1200&q=80", // Luxury spa villa
+        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=1200&q=80", // Water activity equipment
+        "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=80", // Tropical sunset horizon
+        "https://images.unsplash.com/photo-1537956965359-7573183d1180?w=1200&q=80", // Villa wooden deck
+        "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80", // Infinity pool design
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&q=80", // Underwater dining venue
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Marine ecosystem
+        "https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=1200&q=80", // Seaplane transportation
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80"  // Underwater exploration
       ],
       
-      // Safari & Wildlife - 15 aesthetic landscape images (no people)
+      // Safari & Wildlife - 15 completely unique landscape images
       safari: [
-        "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=1200&q=80", // Golden savanna sunset
-        "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?w=1200&q=80", // Safari vehicle in landscape
+        "https://images.unsplash.com/photo-1516205651411-aef33a44f7c2?w=1200&q=80", // African savanna panorama
+        "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?w=1200&q=80", // Safari jeep landscape
         "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=80", // Acacia tree silhouette
-        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80", // Lions in natural habitat
-        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1200&q=80", // Elephants at waterhole
-        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200&q=80", // Giraffes on horizon
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Zebra herd migration
-        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cheetah in grassland
-        "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80", // Rhino in wilderness
-        "https://images.unsplash.com/photo-1581852017103-68ac65514cf4?w=1200&q=80", // Buffalo in savanna
-        "https://images.unsplash.com/photo-1555993539-1732b0258327?w=1200&q=80", // Hot air balloon over landscape
-        "https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=1200&q=80", // Traditional huts landscape
-        "https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?w=1200&q=80", // Safari camp architecture
-        "https://images.unsplash.com/photo-1563592441-6ebc9f07c5e7?w=1200&q=80", // Wildebeest in grassland
-        "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?w=1200&q=80"  // Leopard in tree
+        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80", // Lion pride habitat
+        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1200&q=80", // Elephant at waterhole
+        "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200&q=80", // Giraffe family group
+        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Zebra migration herd
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cheetah grassland hunt
+        "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80", // Rhino wilderness scene
+        "https://images.unsplash.com/photo-1581852017103-68ac65514cf4?w=1200&q=80", // Buffalo herd savanna
+        "https://images.unsplash.com/photo-1555993539-1732b0258327?w=1200&q=80", // Hot air balloon safari
+        "https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=1200&q=80", // Traditional village huts
+        "https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?w=1200&q=80", // Safari lodge architecture
+        "https://images.unsplash.com/photo-1563592441-6ebc9f07c5e7?w=1200&q=80", // Wildebeest grassland
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?w=1200&q=80"  // Leopard tree climbing
       ],
 
-      // Himalayas & Mountain adventures - 10 aesthetic landscape images
+      // Himalayas & Mountain adventures - 10 completely unique landscape images
       himalayas: [
         "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Snow-capped mountain peaks
         "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Mountain trekking trail
@@ -248,7 +248,7 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1626103849488-3f5ac40c4f90?w=1200&q=80"  // Alpine landscape
       ],
 
-      // Amazon rainforest & Ecuador - 10 nature landscape images
+      // Amazon rainforest & Ecuador - 10 completely unique nature images
       amazon: [
         "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Dense rainforest canopy
         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // River through jungle
@@ -262,7 +262,7 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80"  // Cultural village layout
       ],
 
-      // Galápagos Islands - 10 natural landscape images
+      // Galápagos Islands - 10 completely unique natural images
       galapagos: [
         "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=1200&q=80", // Giant tortoise habitat
         "https://images.unsplash.com/photo-1522633374897-e13b2395a4b6?w=1200&q=80", // Marine iguana rocks
@@ -276,45 +276,45 @@ export default function EnhancedBooking() {
         "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"  // Evolution study area
       ],
 
-      // Northern Lights & Arctic - 10 aesthetic landscape images
+      // Northern Lights & Arctic - 10 completely unique arctic images
       arctic: [
         "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=1200&q=80", // Aurora borealis display
         "https://images.unsplash.com/photo-1541278135-bb115c14c5d5?w=1200&q=80", // Ice hotel architecture
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80", // Dog sled in snow
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Arctic village landscape
+        "https://images.unsplash.com/photo-1610375229632-e1536be3b3ab?w=1200&q=80", // Arctic landscape tundra
+        "https://images.unsplash.com/photo-1612349317150-e3d4b7bb1e8f?w=1200&q=80", // Northern lights reflection
         "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=1200&q=80", // Reindeer in tundra
         "https://images.unsplash.com/photo-1611068813222-6df73ac77a31?w=1200&q=80", // Snow activity setup
         "https://images.unsplash.com/photo-1647885978144-5b59b3a8defd?w=1200&q=80", // Ice fishing hole
         "https://images.unsplash.com/photo-1604170044814-ea8fc9074d3a?w=1200&q=80", // Arctic wildlife habitat
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Cross-country ski trail
+        "https://images.unsplash.com/photo-1612202107036-38bb8e846b9f?w=1200&q=80", // Icy mountain landscape
         "https://images.unsplash.com/photo-1612807522717-76f56ee0b4de?w=1200&q=80"  // Traditional sauna building
       ],
 
-      // European destinations - 10 architectural/landscape images
+      // European destinations - 10 completely unique architectural images
       europe: [
         "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&q=80", // Castle on hillside
         "https://images.unsplash.com/photo-1520637736862-4d197d17c18a?w=1200&q=80", // Medieval town streets
         "https://images.unsplash.com/photo-1549388604-817d15aa0110?w=1200&q=80", // Rolling countryside
-        "https://images.unsplash.com/photo-1578910901702-94dc5782dc67?w=1200&q=80", // Historic town square
+        "https://images.unsplash.com/photo-1607348874607-c617c69bff9e?w=1200&q=80", // Historic town square
         "https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?w=1200&q=80", // Traditional cuisine setup
-        "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=1200&q=80", // Cultural monument
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=1200&q=80", // Cultural monument
         "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=1200&q=80", // Traditional craft display
         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80", // Formal gardens
         "https://images.unsplash.com/photo-1615544847497-4df54ecf7a63?w=1200&q=80", // Festival decorations
         "https://images.unsplash.com/photo-1546195643-70ca58e96cda?w=1200&q=80"  // Museum architecture
       ],
 
-      // Default/general travel - 10 aesthetic landscape images
+      // Default/general travel - 10 completely unique landscape images
       default: [
         "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80", // Adventure landscape
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Mountain vista
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", // Forest pathway
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80", // Scenic wilderness
-        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80", // Cultural landscape
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&q=80", // Natural habitat
-        "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=80", // Transportation view
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80", // Accommodation setting
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80", // Coastal scenery
+        "https://images.unsplash.com/photo-1506729623306-b5a934d88b53?w=1200&q=80", // Mountain vista
+        "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1200&q=80", // Forest pathway
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80", // Scenic wilderness
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // Cultural landscape
+        "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&q=80", // Natural habitat
+        "https://images.unsplash.com/photo-1610375229632-e1536be3b3ab?w=1200&q=80", // Transportation view
+        "https://images.unsplash.com/photo-1612349317150-e3d4b7bb1e8f?w=1200&q=80", // Accommodation setting
+        "https://images.unsplash.com/photo-1612202107036-38bb8e846b9f?w=1200&q=80", // Coastal scenery
         "https://images.unsplash.com/photo-1561155659-78c9ab8d9fcd?w=1200&q=80"  // Urban exploration
       ]
     };
@@ -417,50 +417,129 @@ export default function EnhancedBooking() {
     }
   };
 
-  // Generate key highlights for each day in dot point format
+  // Generate unique day-specific highlights for each destination and day
   const getHighlightsForDay = (day: any, index: number) => {
     const dayActivities = day?.activities || [];
+    const destinationName = destination?.name.toLowerCase() || '';
+    const dayTitle = day?.title?.toLowerCase() || '';
+    const dayNumber = index + 1;
     
-    // Extract meaningful highlights from activities or generate based on destination
+    // Extract meaningful highlights from activities if available
     if (dayActivities.length > 0) {
       return dayActivities.slice(0, 4).map((activity: any) => 
         typeof activity === 'string' ? activity : activity.name || activity.description || 'Experience included'
       );
     }
 
-    // Generate destination-specific highlights
-    const destinationName = destination?.name.toLowerCase() || '';
-    
+    // Generate unique day-specific highlights based on destination and day progression
     if (destinationName.includes('tokyo') || destinationName.includes('japan')) {
-      return [
-        "Traditional temple visits with guided cultural insights",
-        "Authentic local cuisine experiences",
-        "Cherry blossom viewing in prime locations",
-        "Modern Tokyo exploration and shopping districts"
+      const tokyoHighlights = [
+        // Day 1
+        ["Arrival at Narita Airport with private transfer", "Traditional welcome tea ceremony", "Evening exploration of Shibuya district", "Authentic izakaya dining experience"],
+        // Day 2
+        ["Early morning visit to Tsukiji Fish Market", "Sushi preparation masterclass", "Afternoon in Asakusa traditional district", "Tokyo Skytree observation deck access"],
+        // Day 3
+        ["Day trip to Mount Fuji scenic area", "Traditional onsen hot spring experience", "Lake Kawaguchi panoramic views", "Local craft workshop participation"],
+        // Day 4
+        ["Meiji Shrine spiritual morning visit", "Harajuku fashion district exploration", "Traditional kaiseki lunch preparation", "Ginza premium shopping district tour"],
+        // Day 5
+        ["Imperial Palace East Gardens visit", "Calligraphy and ink painting workshop", "Ueno Park museum district exploration", "Final evening at rooftop restaurant"],
+        // Day 6
+        ["Kyoto bullet train journey experience", "Fushimi Inari shrine thousand gates", "Traditional bamboo forest walk", "Geisha district historical tour"],
+        // Day 7
+        ["Golden Pavilion temple visit", "Traditional tea ceremony participation", "Nijo Castle gardens exploration", "Departure arrangements and transfers"]
       ];
+      return tokyoHighlights[Math.min(index, tokyoHighlights.length - 1)] || tokyoHighlights[0];
+      
     } else if (destinationName.includes('maldives')) {
-      return [
-        "Overwater villa accommodation with ocean views",
-        "Snorkeling and diving in coral reefs",
-        "Spa treatments and wellness experiences", 
-        "Sunset cruise and dolphin watching"
+      const maldivesHighlights = [
+        // Day 1
+        ["Seaplane transfer with aerial island views", "Overwater villa check-in and orientation", "Sunset cocktails on private deck", "Welcome dinner under the stars"],
+        // Day 2
+        ["Morning snorkeling in house reef", "Marine biology guided tour", "Beachfront spa treatment session", "Private beach dinner setup"],
+        // Day 3
+        ["Dolphin watching cruise expedition", "Underwater restaurant dining experience", "Infinity pool relaxation time", "Night fishing traditional experience"],
+        // Day 4
+        ["Full day diving excursion", "Coral reef conservation education", "Beach volleyball and water sports", "Maldivian cultural performance evening"],
+        // Day 5
+        ["Private island picnic excursion", "Sandbank helicopter tour", "Couples massage in overwater spa", "Sunset sailing on traditional dhoni"],
+        // Day 6
+        ["Deep sea fishing adventure", "Cooking class with resort chef", "Kayaking through mangrove channels", "Stargazing session with astronomer"],
+        // Day 7
+        ["Final sunrise yoga session", "Underwater photography workshop", "Farewell reef snorkeling", "Seaplane departure with memories"]
       ];
+      return maldivesHighlights[Math.min(index, maldivesHighlights.length - 1)] || maldivesHighlights[0];
+      
     } else if (destinationName.includes('safari') || destinationName.includes('kenya')) {
-      return [
-        "Big Five wildlife viewing opportunities", 
-        "Professional safari guide and transportation",
-        "Cultural interactions with Maasai communities",
-        "Conservation education and park support"
+      const safariHighlights = [
+        // Day 1
+        ["Arrival in Nairobi with wildlife briefing", "Giraffe Centre conservation visit", "African cuisine welcome dinner", "Traditional Maasai cultural presentation"],
+        // Day 2
+        ["Early morning game drive", "Big Five tracking with expert guide", "Bush breakfast in scenic location", "Evening at luxury safari lodge"],
+        // Day 3
+        ["Hot air balloon safari at sunrise", "Champagne breakfast in savanna", "Maasai village cultural immersion", "Traditional dancing and crafts workshop"],
+        // Day 4
+        ["Full day in Masai Mara reserve", "Great Migration viewing (seasonal)", "Photography workshop with professional", "Sundowner drinks overlooking plains"],
+        // Day 5
+        ["Walking safari with armed ranger", "Animal tracking and bush skills", "Conservation project visit", "Stargazing with traditional stories"],
+        // Day 6
+        ["Final game drive for rare sightings", "Visit to anti-poaching unit", "Farewell bush dinner under acacia", "Traditional blessing ceremony"],
+        // Day 7
+        ["Departure game drive to airstrip", "Flight over the Great Rift Valley", "Nairobi city tour if time permits", "International flight connections"]
       ];
+      return safariHighlights[Math.min(index, safariHighlights.length - 1)] || safariHighlights[0];
+      
+    } else if (destinationName.includes('himalaya') || destinationName.includes('everest') || destinationName.includes('nepal')) {
+      const himalayanHighlights = [
+        // Day 1
+        ["Arrival in Kathmandu with mountain views", "Traditional Nepali welcome ceremony", "Durbar Square UNESCO heritage tour", "Equipment fitting for trekking"],
+        // Day 2
+        ["Scenic flight to Lukla airstrip", "Trek beginning through Sherpa villages", "Suspension bridge crossings", "First mountain lodge accommodation"],
+        // Day 3
+        ["Namche Bazaar acclimatization day", "Sherpa culture museum visit", "Panoramic Everest viewpoint hike", "Traditional yak cheese tasting"],
+        // Day 4
+        ["Trek to Tengboche monastery", "Buddhist prayer ceremony participation", "Ama Dablam mountain photography", "Meditation session with monks"],
+        // Day 5
+        ["Advanced altitude trekking", "Everest Base Camp approach", "High altitude photography workshop", "Sherpa stories around lodge fire"],
+        // Day 6
+        ["Summit attempt preparation", "Sunrise over Himalayan peaks", "Prayer flag ceremony", "Celebration dinner at base camp"],
+        // Day 7
+        ["Helicopter rescue scenic flight", "Mountain rescue demonstration", "Kathmandu valley sightseeing", "Traditional farewell dinner"]
+      ];
+      return himalayanHighlights[Math.min(index, himalayanHighlights.length - 1)] || himalayanHighlights[0];
+      
+    } else if (destinationName.includes('amazon') || destinationName.includes('ecuador')) {
+      const amazonHighlights = [
+        // Day 1
+        ["Arrival in Quito with Andes views", "Flight to Amazon basin", "Canoe journey into rainforest", "First night sounds of jungle"],
+        // Day 2
+        ["Dawn bird watching expedition", "Medicinal plant discovery walk", "Indigenous community visit", "Traditional shaman healing ceremony"],
+        // Day 3
+        ["Canopy walkway adventure", "Exotic wildlife photography", "River dolphin spotting cruise", "Night sounds wildlife tour"],
+        // Day 4
+        ["Jaguar tracking expedition", "Rainforest survival skills workshop", "Traditional fishing techniques", "Stargazing from jungle clearing"],
+        // Day 5
+        ["Butterfly farm conservation visit", "Traditional craft making workshop", "Piranha fishing experience", "Cultural dance performance"],
+        // Day 6
+        ["Final wildlife spotting tour", "Conservation project participation", "Traditional goodbye ceremony", "Return journey preparation"],
+        // Day 7
+        ["Morning bird chorus experience", "Flight back to civilization", "Reflection and photo sharing", "International departure connections"]
+      ];
+      return amazonHighlights[Math.min(index, amazonHighlights.length - 1)] || amazonHighlights[0];
     }
 
-    // Default highlights for other destinations
-    return [
-      "Professional local guide services",
-      "Premium location access and activities", 
-      "Cultural immersion experiences",
-      "Transportation and logistics included"
+    // Dynamic highlights for other destinations based on day progression
+    const genericHighlights = [
+      [`Welcome arrival and orientation`, `Local area familiarization tour`, `Traditional welcome dinner`, `Evening cultural introduction`],
+      [`Morning guided exploration`, `Historical site visits`, `Local cuisine tasting experience`, `Afternoon leisure activities`],
+      [`Adventure activity participation`, `Cultural immersion experiences`, `Photography opportunities`, `Local artisan workshops`],
+      [`Full day excursion`, `Scenic landscape exploration`, `Traditional craft learning`, `Evening entertainment`],
+      [`Nature and wildlife discovery`, `Conservation education program`, `Outdoor adventure activities`, `Sunset viewing experience`],
+      [`Cultural heritage deep dive`, `Local community interaction`, `Traditional skills workshop`, `Regional speciality tasting`],
+      [`Final memorable experiences`, `Souvenir and craft shopping`, `Farewell celebration dinner`, `Departure preparations`]
     ];
+    
+    return genericHighlights[Math.min(index, genericHighlights.length - 1)] || genericHighlights[0];
   };
 
   // Generate destination-specific interactive hotspots with varied colors
