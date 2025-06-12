@@ -896,7 +896,7 @@ export default function EnhancedBooking() {
     // Define valid coupon codes and their discounts
     const validCoupons: Record<string, number> = {
       'SUMMER15': 15,
-      'TOKYO20': 20,
+      'AUSSIE25': 25,
       'WILD25': 25,
       'PEACE15': 15,
       'DEMO15': 15,
