@@ -55,6 +55,14 @@ export const destinations = pgTable("destinations", {
   discountPercentage: integer("discount_percentage").default(0), // discount percentage
   promoTag: varchar("promo_tag", { length: 50 }), // 'Best Offer', 'On Sale', 'Limited Time', etc.
   promoExpiry: timestamp("promo_expiry"), // when the promotion expires
+  discountType: varchar("discount_type", { length: 30 }).default("percentage"), // percentage, fixed, bogo, group
+  seasonalTag: varchar("seasonal_tag", { length: 50 }), // 'Summer Special', 'Holiday Deal', 'Black Friday', etc.
+  flashSale: boolean("flash_sale").default(false), // for time-sensitive flash sales
+  flashSaleEnd: timestamp("flash_sale_end"), // when flash sale ends
+  couponCode: varchar("coupon_code", { length: 20 }), // unique coupon code for the destination
+  groupDiscountMin: integer("group_discount_min").default(0), // minimum group size for group discount
+  loyaltyDiscount: integer("loyalty_discount").default(0), // additional discount for returning customers
+  bundleDeal: jsonb("bundle_deal"), // bundle offer details
   duration: integer("duration").notNull(), // in days
   distanceKm: decimal("distance_km", { precision: 8, scale: 2 }), // distance in kilometers
   rating: decimal("rating", { precision: 3, scale: 2 }).default("0"),
