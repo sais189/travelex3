@@ -136,7 +136,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day3: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=600&fit=crop&auto=format&q=80", // Lions hunting
     day4: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=800&h=600&fit=crop&auto=format&q=80", // Mara river crossing
     day5: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800&h=600&fit=crop&auto=format&q=80", // Maasai cultural village
-    day6: "https://images.unsplash.com/photo-1518709268805-4e9042af2ea0?w=800&h=600&fit=crop&auto=format&q=80", // Ngorongoro crater landscape
+    day6: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Ngorongoro crater with wildlife
     day7: "https://images.unsplash.com/photo-1586863475649-a62432b6a9d4?w=800&h=600&fit=crop&auto=format&q=80", // Conservation research station
     day8: "https://images.unsplash.com/photo-1549318441-e6324cbb769e?w=800&h=600&fit=crop&auto=format&q=80", // Final migration sunset
     fallback: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80"
