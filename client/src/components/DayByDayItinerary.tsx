@@ -53,7 +53,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day4: "https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=800&h=600&fit=crop&auto=format&q=80", // Sherpa village
     day5: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&h=600&fit=crop&auto=format&q=80", // Mountain trekking path
     day6: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop&auto=format&q=80", // Himalayan sunrise peaks
-    day7: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&auto=format&q=80", // Mountain camp
+    day7: "https://images.unsplash.com/photo-1617953141905-b27fb1a88ef7?w=800&h=600&fit=crop&auto=format&q=80", // Kathmandu valley farewell
     fallback: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
@@ -127,6 +127,19 @@ const DESTINATION_LANDMARK_IMAGES = {
     day6: "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?w=800&h=600&fit=crop&auto=format&q=80", // Viking museum
     day7: "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800&h=600&fit=crop&auto=format&q=80", // Northern lights
     fallback: "https://images.unsplash.com/photo-1601439678777-b2b3c56fa627?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+  
+  // Serengeti Migration (ID: 21)
+  "serengeti_migration": {
+    day1: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Serengeti entry gates
+    day2: "https://images.unsplash.com/photo-1587736797152-6b4c287ea916?w=800&h=600&fit=crop&auto=format&q=80", // Wildebeest migration herds
+    day3: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=600&fit=crop&auto=format&q=80", // Lions hunting
+    day4: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=800&h=600&fit=crop&auto=format&q=80", // Mara river crossing
+    day5: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800&h=600&fit=crop&auto=format&q=80", // Maasai cultural village
+    day6: "https://images.unsplash.com/photo-1605538883669-825200433431?w=800&h=600&fit=crop&auto=format&q=80", // Ngorongoro crater view
+    day7: "https://images.unsplash.com/photo-1586863475649-a62432b6a9d4?w=800&h=600&fit=crop&auto=format&q=80", // Conservation research station
+    day8: "https://images.unsplash.com/photo-1549318441-e6324cbb769e?w=800&h=600&fit=crop&auto=format&q=80", // Final migration sunset
+    fallback: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
   // Generic fallback for unknown destinations
@@ -246,6 +259,8 @@ export default function DayByDayItinerary({
       destinationKey = 'tokyo_adventure';
     } else if (destinationName.includes('himalayan') || destinationName.includes('expedition')) {
       destinationKey = 'himalayan_expedition';
+    } else if (destinationName.includes('serengeti') || destinationName.includes('migration')) {
+      destinationKey = 'serengeti_migration';
     } else if (destinationName.includes('african') || destinationName.includes('safari')) {
       destinationKey = 'african_safari';
     } else if (destinationName.includes('iceland') || destinationName.includes('adventure')) {
@@ -272,6 +287,7 @@ export default function DayByDayItinerary({
         case 8: destinationKey = 'great_barrier_reef'; break;
         case 9: destinationKey = 'australian_outback'; break;
         case 10: destinationKey = 'norwegian_fjords'; break;
+        case 21: destinationKey = 'serengeti_migration'; break;
         default: destinationKey = 'generic';
       }
     }
