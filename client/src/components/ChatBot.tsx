@@ -64,8 +64,8 @@ export default function ChatBot() {
     };
   }, []);
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -74,75 +74,60 @@ export default function ChatBot() {
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue("");
+    const loadingMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      text: "Thinking...",
+      isBot: true,
+      timestamp: new Date(),
+      isLoading: true,
+    };
 
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponse = getBotResponse(inputValue);
+    setMessages(prev => [...prev, userMessage, loadingMessage]);
+    const messageToSend = inputValue;
+    setInputValue("");
+    setIsLoading(true);
+
+    try {
+      const botResponse = await getBotResponse(messageToSend);
       const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: (Date.now() + 2).toString(),
         text: botResponse,
         isBot: true,
         timestamp: new Date(),
       };
-      setMessages(prev => [...prev, botMessage]);
-    }, 1000);
+      
+      // Replace loading message with actual response
+      setMessages(prev => prev.slice(0, -1).concat(botMessage));
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 2).toString(),
+        text: "I'm having trouble connecting right now. Please try again in a moment.",
+        isBot: true,
+        timestamp: new Date(),
+      };
+      setMessages(prev => prev.slice(0, -1).concat(errorMessage));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const getBotResponse = (input: string): string => {
-    const lowerInput = input.toLowerCase();
-
-    if (lowerInput.includes("faq") || lowerInput.includes("frequently asked")) {
-      return `Here are our most frequently asked questions:
-
-📍 **Booking & Payments**
-• How do I book a trip? - Visit our destinations page and click "Book Now"
-• What payment methods do you accept? - We accept all major credit cards and PayPal
-• Can I modify my booking? - Yes, modifications can be made up to 7 days before departure
-
-🌍 **Travel Information**
-• What's included in packages? - Accommodation, meals, activities, and local transportation
-• Do I need travel insurance? - We recommend travel insurance for all international trips
-• What about visa requirements? - We provide visa guidance, but obtaining visas is your responsibility
-
-💰 **Pricing & Refunds**
-• What are your prices? - Packages range from $1,599 to $3,299 depending on destination
-• What's your refund policy? - Full refunds available up to 48 hours before departure
-• Are there group discounts? - Yes, 10% discount for groups of 6+ people
-
-📞 **Contact & Support**
-• How can I contact support? - Phone: 0491906089 or email: contact@travelex.com
-• What are your business hours? - Mon-Fri 9AM-6PM, Sat 10AM-4PM, Emergency support 24/7
-
-Need specific help with any of these topics?`;
+  const getBotResponse = async (input: string): Promise<string> => {
+    try {
+      const response = await apiRequest("POST", "/api/chatbot/query", {
+        message: input,
+        context: {
+          currentPage: location,
+          timestamp: new Date().toISOString()
+        }
+      });
+      
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      console.error("Chatbot API error:", error);
+      // Fallback response if API fails
+      return "I'm having trouble accessing real-time data right now. You can reach our support team at 0491906089 or contact@travelex.com for immediate assistance.";
     }
-
-    if (lowerInput.includes("price") || lowerInput.includes("cost") || lowerInput.includes("budget")) {
-      return "I can help you find destinations within your budget! Our packages range from $1,599 (Bali Cultural Experience) to $3,299 (Maldives Luxury Resort). What's your preferred price range?";
-    }
-    
-    if (lowerInput.includes("destination") || lowerInput.includes("where")) {
-      return "We have amazing destinations including Maldives, Swiss Alps, Bali, Santorini, Iceland, Parisian Culture Tour, and New Zealand. Each offers unique experiences. What type of adventure interests you?";
-    }
-
-    if (lowerInput.includes("book") || lowerInput.includes("reservation")) {
-      return "Great! You can book directly through our destinations page. Each package includes accommodations, meals, and activities. Would you like me to guide you to a specific destination?";
-    }
-
-    if (lowerInput.includes("refund") || lowerInput.includes("cancel")) {
-      return "Our refund policy allows full refunds up to 48 hours before departure. For cancellations, please visit your 'My Trips' section or contact our support team at 0491906089.";
-    }
-
-    if (lowerInput.includes("contact") || lowerInput.includes("phone") || lowerInput.includes("address")) {
-      return "You can reach us at:\n📞 Phone: 0491906089\n📧 Email: contact@travelex.com\n📍 Address: 419A Windsor Rd, Baulkham Hills NSW 2153, Australia\n\nBusiness Hours: Mon-Fri 9AM-6PM, Sat 10AM-4PM, Emergency support available 24/7";
-    }
-
-    if (lowerInput.includes("help") || lowerInput.includes("support")) {
-      return "I'm here to help! I can assist with destination recommendations, pricing information, booking process, and travel policies. You can also type 'FAQ' to see frequently asked questions. What specific information do you need?";
-    }
-
-    return "That's a great question! I can help you with destination recommendations, pricing, booking assistance, and travel information. Type 'FAQ' for common questions or ask me anything specific about our travel packages!";
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -226,7 +211,15 @@ Need specific help with any of these topics?`;
                           <Bot className="w-3 h-3 text-primary-foreground" />
                         </div>
                         <div className="bg-slate-panel rounded-lg p-3 max-w-48">
-                          <p className="text-sm text-foreground">{message.text}</p>
+                          {message.isLoading ? (
+                            <div className="flex items-center space-x-1">
+                              <div className="w-2 h-2 bg-gold-accent rounded-full animate-bounce"></div>
+                              <div className="w-2 h-2 bg-gold-accent rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                              <div className="w-2 h-2 bg-gold-accent rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-foreground whitespace-pre-wrap">{message.text}</p>
+                          )}
                         </div>
                       </div>
                     ) : (
@@ -251,8 +244,9 @@ Need specific help with any of these topics?`;
                 />
                 <Button
                   onClick={handleSendMessage}
+                  disabled={isLoading}
                   size="icon"
-                  className="bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground"
+                  className="bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
