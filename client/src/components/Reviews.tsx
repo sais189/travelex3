@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Star, Calendar, User, ThumbsUp, MessageCircle } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -38,6 +38,8 @@ interface ReviewsProps {
 
 export default function Reviews({ destinationId, destinationName }: ReviewsProps) {
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [helpfulVotes, setHelpfulVotes] = useState<Record<number, number>>({});
+  const [userVotes, setUserVotes] = useState<number[]>([]);
 
   const { data: reviews = [], isLoading: reviewsLoading } = useQuery<Review[]>({
     queryKey: [`/api/destinations/${destinationId}/reviews`],
@@ -54,6 +56,51 @@ export default function Reviews({ destinationId, destinationName }: ReviewsProps
       return response.json();
     },
   });
+
+  // Load helpful votes from localStorage on component mount
+  useEffect(() => {
+    const savedVotes = localStorage.getItem(`helpful-votes-${destinationId}`);
+    const savedUserVotes = localStorage.getItem(`user-votes-${destinationId}`);
+    
+    if (savedVotes) {
+      setHelpfulVotes(JSON.parse(savedVotes));
+    }
+    
+    if (savedUserVotes) {
+      setUserVotes(JSON.parse(savedUserVotes));
+    }
+  }, [destinationId]);
+
+  // Handle helpful button click
+  const handleHelpfulClick = (reviewId: number) => {
+    if (userVotes.has(reviewId)) {
+      // User already voted, remove vote
+      const newVotes = { ...helpfulVotes };
+      newVotes[reviewId] = Math.max(0, (newVotes[reviewId] || 0) - 1);
+      setHelpfulVotes(newVotes);
+      
+      const newUserVotes = new Set(userVotes);
+      newUserVotes.delete(reviewId);
+      setUserVotes(newUserVotes);
+      
+      // Save to localStorage
+      localStorage.setItem(`helpful-votes-${destinationId}`, JSON.stringify(newVotes));
+      localStorage.setItem(`user-votes-${destinationId}`, JSON.stringify(Array.from(newUserVotes)));
+    } else {
+      // Add new vote
+      const newVotes = { ...helpfulVotes };
+      newVotes[reviewId] = (newVotes[reviewId] || 0) + 1;
+      setHelpfulVotes(newVotes);
+      
+      const newUserVotes = new Set(userVotes);
+      newUserVotes.add(reviewId);
+      setUserVotes(newUserVotes);
+      
+      // Save to localStorage
+      localStorage.setItem(`helpful-votes-${destinationId}`, JSON.stringify(newVotes));
+      localStorage.setItem(`user-votes-${destinationId}`, JSON.stringify(Array.from(newUserVotes)));
+    }
+  };
 
   const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 3);
 
@@ -209,9 +256,21 @@ export default function Reviews({ destinationId, destinationName }: ReviewsProps
                     </span>
                     
                     <div className="flex items-center gap-3">
-                      <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors">
-                        <ThumbsUp className="w-3 h-3" />
-                        <span>Helpful</span>
+                      <button 
+                        onClick={() => handleHelpfulClick(review.id)}
+                        className={`flex items-center gap-1 text-xs transition-colors ${
+                          userVotes.has(review.id) 
+                            ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-full' 
+                            : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 px-2 py-1 rounded-full'
+                        }`}
+                      >
+                        <ThumbsUp className={`w-3 h-3 ${userVotes.has(review.id) ? 'fill-current' : ''}`} />
+                        <span>
+                          {userVotes.has(review.id) ? 'Helpful!' : 'Helpful'}
+                          {helpfulVotes[review.id] > 0 && (
+                            <span className="ml-1 font-medium">({helpfulVotes[review.id]})</span>
+                          )}
+                        </span>
                       </button>
                     </div>
                   </div>
