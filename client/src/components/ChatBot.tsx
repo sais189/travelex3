@@ -113,20 +113,58 @@ export default function ChatBot() {
 
   const getBotResponse = async (input: string): Promise<string> => {
     try {
+      // Enhanced context based on current page
+      const pageContext = {
+        currentPage: location,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        referrer: document.referrer,
+        pageTitle: document.title
+      };
+
       const response = await apiRequest("POST", "/api/chatbot/query", {
         message: input,
-        context: {
-          currentPage: location,
-          timestamp: new Date().toISOString()
-        }
+        context: pageContext
       });
       
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
       const data = await response.json();
+      
+      if (!data.response) {
+        throw new Error("No response received from server");
+      }
+      
       return data.response;
     } catch (error) {
       console.error("Chatbot API error:", error);
-      // Fallback response if API fails
-      return "I'm having trouble accessing real-time data right now. You can reach our support team at 0491906089 or contact@travelex.com for immediate assistance.";
+      
+      // Enhanced fallback response based on current page
+      const pageSpecificFallback = getPageSpecificFallback(location);
+      return `I'm experiencing technical difficulties right now, but I can still help you. ${pageSpecificFallback}
+
+For immediate assistance:
+📞 Phone: 0491906089
+📧 Email: contact@travelex.com
+🕒 Available: 24/7`;
+    }
+  };
+
+  const getPageSpecificFallback = (currentLocation: string): string => {
+    if (currentLocation.includes('/destinations')) {
+      return "You're browsing our destinations. Each package includes luxury accommodations, meals, and guided activities.";
+    } else if (currentLocation.includes('/booking')) {
+      return "You're in the booking process. All our packages include flexible cancellation up to 48 hours before departure.";
+    } else if (currentLocation.includes('/my-trips')) {
+      return "You're viewing your trips. You can modify or cancel bookings through this section.";
+    } else if (currentLocation.includes('/contact')) {
+      return "You're on our contact page. Our support team is available to help with any questions.";
+    } else if (currentLocation.includes('/about')) {
+      return "You're learning about TravelEx. We specialize in luxury travel experiences with over 1000 satisfied customers.";
+    } else {
+      return "Browse our premium destinations or contact our support team for personalized assistance.";
     }
   };
 
@@ -180,7 +218,9 @@ export default function ChatBot() {
                   </div>
                   <div>
                     <div className="font-semibold text-foreground">Travel Assistant</div>
-                    <div className="text-xs text-mint-accent">Online</div>
+                    <div className="text-xs text-mint-accent">
+                      {isLoading ? "Analyzing..." : "Ready to help"}
+                    </div>
                   </div>
                 </div>
                 <Button
@@ -218,7 +258,9 @@ export default function ChatBot() {
                               <div className="w-2 h-2 bg-gold-accent rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                             </div>
                           ) : (
-                            <p className="text-sm text-foreground whitespace-pre-wrap">{message.text}</p>
+                            <div className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                              {message.text}
+                            </div>
                           )}
                         </div>
                       </div>
