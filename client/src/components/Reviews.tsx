@@ -73,32 +73,30 @@ export default function Reviews({ destinationId, destinationName }: ReviewsProps
 
   // Handle helpful button click
   const handleHelpfulClick = (reviewId: number) => {
-    if (userVotes.has(reviewId)) {
+    if (userVotes.includes(reviewId)) {
       // User already voted, remove vote
       const newVotes = { ...helpfulVotes };
       newVotes[reviewId] = Math.max(0, (newVotes[reviewId] || 0) - 1);
       setHelpfulVotes(newVotes);
       
-      const newUserVotes = new Set(userVotes);
-      newUserVotes.delete(reviewId);
+      const newUserVotes = userVotes.filter(id => id !== reviewId);
       setUserVotes(newUserVotes);
       
       // Save to localStorage
       localStorage.setItem(`helpful-votes-${destinationId}`, JSON.stringify(newVotes));
-      localStorage.setItem(`user-votes-${destinationId}`, JSON.stringify(Array.from(newUserVotes)));
+      localStorage.setItem(`user-votes-${destinationId}`, JSON.stringify(newUserVotes));
     } else {
       // Add new vote
       const newVotes = { ...helpfulVotes };
       newVotes[reviewId] = (newVotes[reviewId] || 0) + 1;
       setHelpfulVotes(newVotes);
       
-      const newUserVotes = new Set(userVotes);
-      newUserVotes.add(reviewId);
+      const newUserVotes = [...userVotes, reviewId];
       setUserVotes(newUserVotes);
       
       // Save to localStorage
       localStorage.setItem(`helpful-votes-${destinationId}`, JSON.stringify(newVotes));
-      localStorage.setItem(`user-votes-${destinationId}`, JSON.stringify(Array.from(newUserVotes)));
+      localStorage.setItem(`user-votes-${destinationId}`, JSON.stringify(newUserVotes));
     }
   };
 
@@ -259,14 +257,14 @@ export default function Reviews({ destinationId, destinationName }: ReviewsProps
                       <button 
                         onClick={() => handleHelpfulClick(review.id)}
                         className={`flex items-center gap-1 text-xs transition-colors ${
-                          userVotes.has(review.id) 
+                          userVotes.includes(review.id) 
                             ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-full' 
                             : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 px-2 py-1 rounded-full'
                         }`}
                       >
-                        <ThumbsUp className={`w-3 h-3 ${userVotes.has(review.id) ? 'fill-current' : ''}`} />
+                        <ThumbsUp className={`w-3 h-3 ${userVotes.includes(review.id) ? 'fill-current' : ''}`} />
                         <span>
-                          {userVotes.has(review.id) ? 'Helpful!' : 'Helpful'}
+                          {userVotes.includes(review.id) ? 'Helpful!' : 'Helpful'}
                           {helpfulVotes[review.id] > 0 && (
                             <span className="ml-1 font-medium">({helpfulVotes[review.id]})</span>
                           )}
