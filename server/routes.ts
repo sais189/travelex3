@@ -40,8 +40,40 @@ async function generateChatbotResponse(message: string, data: any): Promise<stri
       ).join('\n')}`
     : '';
 
-  // Destination-related queries
-  if (lowerMessage.includes("destination") || lowerMessage.includes("where") || lowerMessage.includes("place") || lowerMessage.includes("travel") || lowerMessage.includes("trip")) {
+  // Booking and reservation queries (check first to avoid conflicts)
+  if (lowerMessage.includes("book") || lowerMessage.includes("reservation") || lowerMessage.includes("reserve") || lowerMessage.includes("availability") || lowerMessage.includes("how do i") || lowerMessage.includes("how to")) {
+    return `**Booking with TravelEx - Trusted by ${userStats.total} Travelers**
+
+**Our Success Record:**
+• ${bookingStats.total} successful bookings completed
+• $${parseInt(revenue.total).toLocaleString()} in travel experiences delivered
+• ${avgRating.toFixed(1)}/5 average customer satisfaction rating
+• ${bookingStats.growth}% booking growth this year
+
+**Simple Booking Process:**
+1. **Browse & Select:** Choose your destination and dates
+2. **Customize:** Tailor your experience with optional activities
+3. **Secure Payment:** Complete booking with our encrypted payment system
+4. **Confirmation:** Receive instant booking confirmation and travel documents
+
+**Flexible Cancellation Policy:**
+• Full refund: Up to 48 hours before departure
+• 80% refund: 7-48 hours before departure
+• Emergency situations: Case-by-case review for medical/family emergencies
+• Refund processing: 5-7 business days
+
+**Current Availability Highlights:**
+${destinations.slice(0, 3).map((d: any) => 
+  `• ${d.name}: Available for ${d.duration}-day packages from ${d.price}`).join('\n')}
+
+**Ready to Book?**
+📞 Phone: 0491906089 | 📧 Email: contact@travelex.com
+🕒 Available: Monday-Friday 9AM-6PM, Saturday 10AM-4PM, Emergency 24/7`;
+  }
+
+  // Destination-related queries (but not booking-related)
+  if ((lowerMessage.includes("destination") || lowerMessage.includes("where") || lowerMessage.includes("place") || lowerMessage.includes("travel") || lowerMessage.includes("trip")) && 
+      !lowerMessage.includes("book") && !lowerMessage.includes("how do") && !lowerMessage.includes("how to")) {
     const types = getDestinationsByType();
     
     if (lowerMessage.includes("luxury") || lowerMessage.includes("premium")) {
@@ -124,36 +156,7 @@ ${destinations.filter((d: any) => d.couponCode || d.promoTag || d.flashSale)
 All prices include accommodations, meals, activities, and support. Contact 0491906089 for personalized quotes.`;
   }
 
-  // Booking and reservation queries
-  if (lowerMessage.includes("book") || lowerMessage.includes("reservation") || lowerMessage.includes("reserve") || lowerMessage.includes("availability")) {
-    return `**Booking with TravelEx - Trusted by ${userStats.total} Travelers**
 
-**Our Success Record:**
-• ${bookingStats.total} successful bookings completed
-• $${parseInt(revenue.total).toLocaleString()} in travel experiences delivered
-• ${avgRating.toFixed(1)}/5 average customer satisfaction rating
-• ${bookingStats.growth}% booking growth this year
-
-**Simple Booking Process:**
-1. **Browse & Select:** Choose your destination and dates
-2. **Customize:** Tailor your experience with optional activities
-3. **Secure Payment:** Complete booking with our encrypted payment system
-4. **Confirmation:** Receive instant booking confirmation and travel documents
-
-**Flexible Cancellation Policy:**
-• Full refund: Up to 48 hours before departure
-• 80% refund: 7-48 hours before departure
-• Emergency situations: Case-by-case review for medical/family emergencies
-• Refund processing: 5-7 business days
-
-**Current Availability Highlights:**
-${destinations.slice(0, 3).map((d: any) => 
-  `• ${d.name}: Available for ${d.duration}-day packages from ${d.price}`).join('\n')}
-
-**Ready to Book?**
-📞 Phone: 0491906089 | 📧 Email: contact@travelex.com
-🕒 Available: Monday-Friday 9AM-6PM, Saturday 10AM-4PM, Emergency 24/7`;
-  }
 
   // Reviews and ratings queries
   if (lowerMessage.includes("review") || lowerMessage.includes("rating") || lowerMessage.includes("feedback") || lowerMessage.includes("testimonial")) {
