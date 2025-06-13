@@ -20,7 +20,7 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hi! I'm your travel assistant with access to real-time information about our destinations. How can I help you plan your next adventure?",
+      text: "Welcome to TravelEx! I'm your professional travel assistant with access to comprehensive information about our luxury destinations, pricing, bookings, and services. I can help you with destination recommendations, booking assistance, travel planning, and answer any questions about our packages. How may I assist you today?",
       isBot: true,
       timestamp: new Date(),
     },

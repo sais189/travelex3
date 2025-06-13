@@ -5,171 +5,166 @@ import { storage } from "./storage";
 import { insertDestinationSchema, insertBookingSchema } from "@shared/schema";
 import { z } from "zod";
 import Stripe from "stripe";
+import OpenAI from "openai";
 
-// Intelligent chatbot response generator
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// Intelligent chatbot response generator using OpenAI
 async function generateChatbotResponse(message: string, data: any): Promise<string> {
-  const lowerMessage = message.toLowerCase();
-  const { destinations, bookingStats, userStats, revenue } = data;
-
-  // Handle destination-specific queries
-  if (lowerMessage.includes("destination") || lowerMessage.includes("where") || lowerMessage.includes("place")) {
-    const popularDestinations = destinations
-      .sort((a: any, b: any) => (b.bookingCount || 0) - (a.bookingCount || 0))
-      .slice(0, 5);
+  try {
+    const { destinations, bookingStats, userStats, revenue, recentReviews, context } = data;
     
-    return `We offer ${destinations.length} amazing destinations! Our most popular ones are:
+    // Prepare comprehensive website context for AI
+    const websiteContext = {
+      companyName: "TravelEx",
+      totalDestinations: destinations.length,
+      destinations: destinations.map((dest: any) => ({
+        name: dest.name,
+        country: dest.country,
+        price: dest.price,
+        duration: dest.duration,
+        description: dest.description,
+        rating: dest.rating,
+        reviewCount: dest.reviewCount,
+        itinerary: dest.itinerary,
+        couponCode: dest.couponCode,
+        discountPercentage: dest.discountPercentage,
+        promoTag: dest.promoTag,
+        seasonalTag: dest.seasonalTag,
+        flashSale: dest.flashSale
+      })),
+      statistics: {
+        totalUsers: userStats.total,
+        activeUsers: userStats.active,
+        userGrowth: userStats.growth,
+        totalBookings: bookingStats.total,
+        monthlyBookings: bookingStats.thisMonth,
+        bookingGrowth: bookingStats.growth,
+        totalRevenue: revenue.total,
+        revenuePeriod: revenue.period
+      },
+      contactInfo: {
+        phone: "0491906089",
+        email: "contact@travelex.com",
+        address: "419A Windsor Rd, Baulkham Hills NSW 2153, Australia",
+        supportHours: "24/7"
+      },
+      services: [
+        "Luxury travel packages",
+        "All-inclusive accommodations",
+        "Curated cultural experiences",
+        "Local transportation",
+        "Professional tour guides",
+        "24/7 customer support",
+        "Flexible booking options",
+        "Group discounts",
+        "Seasonal promotions"
+      ],
+      policies: {
+        cancellation: "Full refund up to 48 hours before departure, partial refund 7-48 hours before",
+        refundProcessing: "5-7 business days",
+        businessHours: "Monday-Friday: 9AM-6PM, Saturday: 10AM-4PM, Emergency support: 24/7"
+      }
+    };
 
-${popularDestinations.map((dest: any, idx: number) => 
-  `${idx + 1}. **${dest.name}** in ${dest.country} - ${dest.price} (${dest.duration} days)`
+    // Create comprehensive system prompt
+    const systemPrompt = `You are a professional travel assistant for TravelEx, a premium travel booking platform. You have access to comprehensive, real-time information about the company's destinations, bookings, and services.
+
+COMPANY INFORMATION:
+- TravelEx specializes in luxury, immersive travel experiences
+- ${websiteContext.totalDestinations} premium destinations worldwide
+- ${websiteContext.statistics.totalUsers} registered users
+- ${websiteContext.statistics.totalBookings} successful bookings
+- $${websiteContext.statistics.totalRevenue} in total revenue
+
+AVAILABLE DESTINATIONS:
+${websiteContext.destinations.map((dest: any) => 
+  `• ${dest.name}, ${dest.country} - ${dest.price} (${dest.duration} days)
+    Description: ${dest.description}
+    Rating: ${dest.rating}/5 (${dest.reviewCount} reviews)
+    ${dest.couponCode ? `Coupon Available: ${dest.couponCode} (${dest.discountPercentage}% off)` : ''}
+    ${dest.promoTag ? `Promotion: ${dest.promoTag}` : ''}
+    ${dest.flashSale ? 'FLASH SALE ACTIVE' : ''}`
 ).join('\n')}
 
-Each package includes accommodation, meals, activities, and local transportation. What type of experience interests you most?`;
-  }
+CONTACT INFORMATION:
+Phone: ${websiteContext.contactInfo.phone}
+Email: ${websiteContext.contactInfo.email}
+Address: ${websiteContext.contactInfo.address}
+Support Hours: ${websiteContext.policies.businessHours}
 
-  // Handle pricing queries
-  if (lowerMessage.includes("price") || lowerMessage.includes("cost") || lowerMessage.includes("budget")) {
-    const prices = destinations.map((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')));
-    const minPrice = Math.min(...prices);
-    const maxPrice = Math.max(...prices);
+POLICIES:
+- Cancellation: ${websiteContext.policies.cancellation}
+- Refund Processing: ${websiteContext.policies.refundProcessing}
+
+RESPONSE GUIDELINES:
+1. Always respond professionally and formally
+2. Use specific data from the website context
+3. Provide detailed, helpful information
+4. Include relevant destination recommendations
+5. Mention pricing, availability, and special offers when relevant
+6. Always offer to help with booking or provide additional information
+7. Use proper formatting with bullet points and clear structure
+8. Never make up information - only use the provided data
+9. Include contact information when appropriate
+10. Address user questions comprehensively using all available website data
+
+Current context: ${context?.currentPage || 'General inquiry'}`;
+
+    // Generate AI response
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        {
+          role: "system",
+          content: systemPrompt
+        },
+        {
+          role: "user",
+          content: message
+        }
+      ],
+      max_tokens: 800,
+      temperature: 0.7,
+    });
+
+    const response = completion.choices[0]?.message?.content;
     
-    return `Our travel packages range from $${minPrice.toLocaleString()} to $${maxPrice.toLocaleString()}. Here are some options by budget:
+    if (!response) {
+      throw new Error("No response generated from OpenAI");
+    }
 
-**Budget-Friendly ($${minPrice.toLocaleString()}-$2,000):**
-${destinations.filter((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')) <= 2000)
-  .slice(0, 3).map((d: any) => `• ${d.name} - ${d.price}`).join('\n')}
+    return response;
 
-**Premium ($2,000+):**
-${destinations.filter((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')) > 2000)
-  .slice(0, 3).map((d: any) => `• ${d.name} - ${d.price}`).join('\n')}
-
-All packages include accommodations, meals, and activities. What's your preferred budget range?`;
-  }
-
-  // Handle booking-related queries
-  if (lowerMessage.includes("book") || lowerMessage.includes("reservation") || lowerMessage.includes("reserve")) {
-    return `Booking with us is simple! We've processed ${bookingStats.total} bookings and have ${userStats.total} happy travelers.
-
-**How to book:**
-1. Browse our destinations page
-2. Select your preferred package
-3. Choose your travel dates
-4. Complete secure payment
-5. Receive instant confirmation
-
-**What's included:**
-• Accommodation at selected hotels/resorts
-• Daily meals and local cuisine
-• Guided activities and excursions
-• Local transportation
-• 24/7 customer support
-
-Our refund policy allows full refunds up to 48 hours before departure. Ready to start your adventure?`;
-  }
-
-  // Handle review/rating queries
-  if (lowerMessage.includes("review") || lowerMessage.includes("rating") || lowerMessage.includes("feedback")) {
-    const avgRating = destinations.reduce((sum: number, d: any) => sum + (d.rating || 0), 0) / destinations.length;
-    return `Our travelers love their experiences! We maintain an average rating of ${avgRating.toFixed(1)}/5 stars across all destinations.
-
-**Recent highlights:**
-${destinations.slice(0, 3).map((d: any) => 
-  `• ${d.name}: ${d.rating}/5 stars (${d.reviewCount} reviews)`
-).join('\n')}
-
-Our travelers particularly appreciate our attention to detail, local expertise, and seamless travel experience. You can read detailed reviews on each destination's page.`;
-  }
-
-  // Handle duration/time queries
-  if (lowerMessage.includes("duration") || lowerMessage.includes("how long") || lowerMessage.includes("days")) {
-    const durations = destinations.map((d: any) => d.duration).filter(Boolean);
-    const avgDuration = durations.reduce((sum: number, d: number) => sum + d, 0) / durations.length;
+  } catch (error) {
+    console.error("OpenAI API error:", error);
     
-    return `Our travel packages range from ${Math.min(...durations)} to ${Math.max(...durations)} days, with an average of ${Math.round(avgDuration)} days.
+    // Enhanced fallback response with website data
+    const { destinations, bookingStats, userStats, revenue } = data;
+    
+    return `Thank you for your inquiry. While I'm experiencing technical difficulties with my advanced features, I can still provide you with key information:
 
-**By duration:**
-${destinations.slice(0, 5).map((d: any) => 
-  `• ${d.name}: ${d.duration} days - ${d.price}`
-).join('\n')}
-
-Each itinerary is carefully crafted to give you the perfect balance of activities, relaxation, and cultural immersion.`;
-  }
-
-  // Handle support/contact queries
-  if (lowerMessage.includes("contact") || lowerMessage.includes("support") || lowerMessage.includes("help")) {
-    return `I'm here to help! You can also reach our support team:
-
-📞 **Phone:** 0491906089
-📧 **Email:** contact@travelex.com  
-📍 **Address:** 419A Windsor Rd, Baulkham Hills NSW 2153, Australia
-
-**Business Hours:**
-• Monday-Friday: 9AM-6PM
-• Saturday: 10AM-4PM  
-• Emergency support: 24/7
-
-**Current stats:**
-• ${userStats.total} travelers served
-• ${bookingStats.total} successful bookings
+**TravelEx Overview:**
+• ${destinations.length} premium destinations worldwide
+• ${userStats.total} satisfied customers
+• ${bookingStats.total} successful bookings completed
 • $${parseInt(revenue.total).toLocaleString()} in travel experiences delivered
 
-What specific help do you need today?`;
+**Popular Destinations:**
+${destinations.slice(0, 3).map((dest: any, idx: number) => 
+  `${idx + 1}. ${dest.name}, ${dest.country} - ${dest.price} (${dest.duration} days)`
+).join('\n')}
+
+**Contact Information:**
+Phone: 0491906089
+Email: contact@travelex.com
+Address: 419A Windsor Rd, Baulkham Hills NSW 2153, Australia
+
+For immediate assistance with bookings or detailed destination information, please contact our support team directly.`;
   }
-
-  // Handle cancellation/refund queries
-  if (lowerMessage.includes("cancel") || lowerMessage.includes("refund") || lowerMessage.includes("policy")) {
-    return `Our flexible cancellation policy protects your investment:
-
-**Full Refund:** Up to 48 hours before departure
-**Partial Refund:** 7-48 hours before departure (80% refund)
-**Emergency Situations:** Case-by-case review for medical/family emergencies
-
-**To cancel or modify:**
-1. Visit your "My Trips" section
-2. Select the booking to modify
-3. Follow the cancellation process
-4. Refunds processed within 5-7 business days
-
-We've processed refunds for ${Math.round(bookingStats.total * 0.05)} travelers without hassle. Your satisfaction is our priority!`;
-  }
-
-  // Handle general travel advice
-  if (lowerMessage.includes("recommend") || lowerMessage.includes("suggest") || lowerMessage.includes("best")) {
-    const topDestination = destinations.find((d: any) => d.name.includes("Maldives")) || destinations[0];
-    return `Based on our travelers' experiences, I'd recommend considering:
-
-**${topDestination.name}** - Our most popular choice
-• ${topDestination.duration} days of luxury
-• ${topDestination.price} per person
-• Perfect for: ${topDestination.description?.substring(0, 100)}...
-
-**Why travelers choose us:**
-• ${userStats.total}+ satisfied customers
-• Expert local guides
-• All-inclusive packages
-• 24/7 support
-
-To get a personalized recommendation, tell me:
-• What's your budget range?
-• Preferred travel dates?
-• Type of experience (adventure, relaxation, culture)?`;
-  }
-
-  // Default response with current stats
-  return `I'm your travel assistant with access to real-time information about our ${destinations.length} destinations!
-
-**Live stats:**
-• ${userStats.total} travelers served
-• ${bookingStats.total} bookings completed  
-• $${parseInt(revenue.total).toLocaleString()} in amazing experiences delivered
-
-I can help you with:
-🗺️ Destination recommendations
-💰 Pricing and budget planning  
-📅 Booking assistance
-⭐ Reviews and ratings
-📞 Support and policies
-
-What would you like to know about our travel packages?`;
 }
 
 // Initialize Stripe
@@ -1052,11 +1047,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Message is required" });
       }
 
-      // Get website data for context
+      // Get comprehensive website data for context
       const destinations = await storage.getAllDestinations();
       const bookingStats = await storage.getBookingStats();
       const userStats = await storage.getUserStats();
       const revenue = await storage.getRevenue();
+      
+      // Get recent reviews for additional context
+      const allReviews = [];
+      for (const dest of destinations.slice(0, 5)) { // Get reviews for top 5 destinations
+        try {
+          const reviews = await storage.getDestinationReviews(dest.id);
+          allReviews.push(...reviews.slice(0, 2)); // Get 2 recent reviews per destination
+        } catch (reviewError) {
+          console.log(`Could not fetch reviews for destination ${dest.id}`);
+        }
+      }
 
       // Generate intelligent response based on website data
       const response = await generateChatbotResponse(message, {
@@ -1064,6 +1070,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         bookingStats,
         userStats,
         revenue,
+        recentReviews: allReviews,
         context
       });
 
