@@ -5,183 +5,283 @@ import { storage } from "./storage";
 import { insertDestinationSchema, insertBookingSchema } from "@shared/schema";
 import { z } from "zod";
 import Stripe from "stripe";
-import OpenAI from "openai";
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Intelligent chatbot response generator using OpenAI
+// Intelligent chatbot response generator using rule-based approach
 async function generateChatbotResponse(message: string, data: any): Promise<string> {
-  try {
-    const { destinations, bookingStats, userStats, revenue, recentReviews, context } = data;
+  const { destinations, bookingStats, userStats, revenue, recentReviews, context } = data;
+  const lowerMessage = message.toLowerCase();
+  
+  // Enhanced destination analysis
+  const getDestinationsByType = () => {
+    const luxury = destinations.filter((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')) >= 4000);
+    const budget = destinations.filter((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')) < 2500);
+    const adventure = destinations.filter((d: any) => 
+      d.name.toLowerCase().includes('safari') || 
+      d.name.toLowerCase().includes('mountain') || 
+      d.description.toLowerCase().includes('adventure')
+    );
+    const beach = destinations.filter((d: any) => 
+      d.name.toLowerCase().includes('beach') || 
+      d.name.toLowerCase().includes('maldives') || 
+      d.name.toLowerCase().includes('coast')
+    );
+    return { luxury, budget, adventure, beach };
+  };
+
+  // Calculate average ratings and popular destinations
+  const avgRating = destinations.reduce((sum: number, d: any) => sum + (d.rating || 0), 0) / destinations.length;
+  const topRated = destinations.filter((d: any) => d.rating >= 4.5).slice(0, 5);
+  const mostReviewed = destinations.sort((a: any, b: any) => (b.reviewCount || 0) - (a.reviewCount || 0)).slice(0, 5);
+  
+  // Get reviews context
+  const recentReviewsText = recentReviews && recentReviews.length > 0 
+    ? `\n\n**Recent Customer Feedback:**\n${recentReviews.slice(0, 3).map((review: any) => 
+        `• "${review.comment}" - ${review.rating}/5 stars (${review.user.firstName || review.user.username})`
+      ).join('\n')}`
+    : '';
+
+  // Destination-related queries
+  if (lowerMessage.includes("destination") || lowerMessage.includes("where") || lowerMessage.includes("place") || lowerMessage.includes("travel") || lowerMessage.includes("trip")) {
+    const types = getDestinationsByType();
     
-    // Prepare comprehensive website context for AI
-    const websiteContext = {
-      companyName: "TravelEx",
-      totalDestinations: destinations.length,
-      destinations: destinations.map((dest: any) => ({
-        name: dest.name,
-        country: dest.country,
-        price: dest.price,
-        duration: dest.duration,
-        description: dest.description,
-        rating: dest.rating,
-        reviewCount: dest.reviewCount,
-        itinerary: dest.itinerary,
-        couponCode: dest.couponCode,
-        discountPercentage: dest.discountPercentage,
-        promoTag: dest.promoTag,
-        seasonalTag: dest.seasonalTag,
-        flashSale: dest.flashSale
-      })),
-      statistics: {
-        totalUsers: userStats.total,
-        activeUsers: userStats.active,
-        userGrowth: userStats.growth,
-        totalBookings: bookingStats.total,
-        monthlyBookings: bookingStats.thisMonth,
-        bookingGrowth: bookingStats.growth,
-        totalRevenue: revenue.total,
-        revenuePeriod: revenue.period
-      },
-      contactInfo: {
-        phone: "0491906089",
-        email: "contact@travelex.com",
-        address: "419A Windsor Rd, Baulkham Hills NSW 2153, Australia",
-        supportHours: "24/7"
-      },
-      services: [
-        "Luxury travel packages",
-        "All-inclusive accommodations",
-        "Curated cultural experiences",
-        "Local transportation",
-        "Professional tour guides",
-        "24/7 customer support",
-        "Flexible booking options",
-        "Group discounts",
-        "Seasonal promotions"
-      ],
-      policies: {
-        cancellation: "Full refund up to 48 hours before departure, partial refund 7-48 hours before",
-        refundProcessing: "5-7 business days",
-        businessHours: "Monday-Friday: 9AM-6PM, Saturday: 10AM-4PM, Emergency support: 24/7"
-      }
-    };
+    if (lowerMessage.includes("luxury") || lowerMessage.includes("premium")) {
+      return `Our luxury travel collection features ${types.luxury.length} premium destinations:
 
-    // Create comprehensive system prompt with reviews data
-    const recentReviewsText = recentReviews && recentReviews.length > 0 
-      ? `\n\nRECENT CUSTOMER REVIEWS:\n${recentReviews.map((review: any) => 
-          `• ${review.title} (${review.rating}/5 stars) by ${review.user.firstName || review.user.username}: "${review.comment}"`
-        ).join('\n')}`
-      : '';
+${types.luxury.slice(0, 4).map((dest: any, idx: number) => 
+  `**${idx + 1}. ${dest.name}, ${dest.country}**
+• Duration: ${dest.duration} days - ${dest.price}
+• Rating: ${dest.rating}/5 stars (${dest.reviewCount} reviews)
+• Highlights: ${dest.description.substring(0, 100)}...
+${dest.couponCode ? `• Special Offer: Use code ${dest.couponCode} for ${dest.discountPercentage}% off` : ''}`
+).join('\n\n')}
 
-    const systemPrompt = `You are a professional travel assistant for TravelEx, a premium travel booking platform. You have access to comprehensive, real-time information about the company's destinations, bookings, services, and customer feedback.
+Each luxury package includes premium accommodations, private transfers, gourmet dining, and personalized service.
 
-COMPANY INFORMATION:
-- TravelEx specializes in luxury, immersive travel experiences
-- ${websiteContext.totalDestinations} premium destinations worldwide
-- ${websiteContext.statistics.totalUsers} registered users
-- ${websiteContext.statistics.totalBookings} successful bookings
-- $${websiteContext.statistics.totalRevenue} in total revenue
-- ${websiteContext.statistics.userGrowth}% user growth
-- ${websiteContext.statistics.bookingGrowth}% booking growth
-
-AVAILABLE DESTINATIONS:
-${websiteContext.destinations.map((dest: any) => 
-  `• ${dest.name}, ${dest.country} - ${dest.price} (${dest.duration} days)
-    Description: ${dest.description}
-    Rating: ${dest.rating}/5 (${dest.reviewCount} reviews)
-    ${dest.itinerary ? `Itinerary highlights available` : ''}
-    ${dest.couponCode ? `Coupon Available: ${dest.couponCode} (${dest.discountPercentage}% off)` : ''}
-    ${dest.promoTag ? `Promotion: ${dest.promoTag}` : ''}
-    ${dest.seasonalTag ? `Seasonal: ${dest.seasonalTag}` : ''}
-    ${dest.flashSale ? 'FLASH SALE ACTIVE' : ''}`
-).join('\n')}${recentReviewsText}
-
-SERVICES OFFERED:
-${websiteContext.services.map(service => `• ${service}`).join('\n')}
-
-CONTACT INFORMATION:
-Phone: ${websiteContext.contactInfo.phone}
-Email: ${websiteContext.contactInfo.email}
-Address: ${websiteContext.contactInfo.address}
-Support Hours: ${websiteContext.policies.businessHours}
-
-POLICIES:
-- Cancellation: ${websiteContext.policies.cancellation}
-- Refund Processing: ${websiteContext.policies.refundProcessing}
-
-RESPONSE GUIDELINES:
-1. Always respond professionally and formally
-2. Use specific data from the website context provided above
-3. Provide detailed, helpful information with exact pricing and statistics
-4. Include relevant destination recommendations based on user needs
-5. Mention pricing, availability, special offers, and promotions when relevant
-6. Reference customer reviews and ratings when discussing destinations
-7. Always offer to help with booking or provide additional information
-8. Use proper formatting with bullet points and clear structure
-9. Never make up information - only use the provided authentic data
-10. Include contact information when appropriate
-11. Address user questions comprehensively using all available website data
-12. When discussing destinations, mention their unique features and itinerary highlights
-13. Highlight any active promotions, coupons, or flash sales
-14. Reference company growth and statistics to build confidence
-
-Current context: ${context?.currentPage || 'General inquiry'}`;
-
-    // Generate AI response
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt
-        },
-        {
-          role: "user",
-          content: message
-        }
-      ],
-      max_tokens: 800,
-      temperature: 0.7,
-    });
-
-    const response = completion.choices[0]?.message?.content;
-    
-    if (!response) {
-      throw new Error("No response generated from OpenAI");
+**Contact our luxury travel specialists:**
+📞 Phone: 0491906089 | 📧 Email: contact@travelex.com`;
     }
-
-    return response;
-
-  } catch (error) {
-    console.error("OpenAI API error:", error);
     
-    // Enhanced fallback response with website data
-    const { destinations, bookingStats, userStats, revenue } = data;
+    if (lowerMessage.includes("adventure") || lowerMessage.includes("safari") || lowerMessage.includes("hiking")) {
+      return `Experience our adventure destinations featuring wildlife safaris and outdoor expeditions:
+
+${types.adventure.slice(0, 3).map((dest: any, idx: number) => 
+  `**${idx + 1}. ${dest.name}, ${dest.country}**
+• ${dest.duration} days - ${dest.price}
+• Adventure Level: ${dest.rating}/5 stars
+• Experience: ${dest.description.substring(0, 120)}...`
+).join('\n\n')}
+
+All adventure packages include expert guides, safety equipment, and comprehensive insurance coverage.${recentReviewsText}
+
+Ready for adventure? Contact us at 0491906089`;
+    }
     
-    return `Thank you for your inquiry. While I'm experiencing technical difficulties with my advanced features, I can still provide you with key information:
+    return `TravelEx offers ${destinations.length} carefully curated destinations across ${new Set(destinations.map((d: any) => d.country)).size} countries:
 
-**TravelEx Overview:**
-• ${destinations.length} premium destinations worldwide
-• ${userStats.total} satisfied customers
-• ${bookingStats.total} successful bookings completed
-• $${parseInt(revenue.total).toLocaleString()} in travel experiences delivered
+**Our Most Popular Destinations:**
+${mostReviewed.slice(0, 5).map((dest: any, idx: number) => 
+  `${idx + 1}. **${dest.name}, ${dest.country}** - ${dest.price}
+   • ${dest.duration} days | ${dest.rating}/5 stars (${dest.reviewCount} reviews)
+   • ${dest.description.substring(0, 80)}...
+   ${dest.promoTag ? `• ${dest.promoTag}` : ''}${dest.flashSale ? ' • FLASH SALE ACTIVE' : ''}`
+).join('\n\n')}
 
-**Popular Destinations:**
-${destinations.slice(0, 3).map((dest: any, idx: number) => 
-  `${idx + 1}. ${dest.name}, ${dest.country} - ${dest.price} (${dest.duration} days)`
-).join('\n')}
+**What's Included:**
+• Luxury accommodations with premium amenities
+• All meals featuring local and international cuisine
+• Professional guided tours and cultural experiences
+• Airport transfers and local transportation
+• 24/7 concierge support
 
 **Contact Information:**
-Phone: 0491906089
-Email: contact@travelex.com
-Address: 419A Windsor Rd, Baulkham Hills NSW 2153, Australia
-
-For immediate assistance with bookings or detailed destination information, please contact our support team directly.`;
+📞 0491906089 | 📧 contact@travelex.com | 🏢 419A Windsor Rd, Baulkham Hills NSW 2153`;
   }
+
+  // Pricing and budget queries
+  if (lowerMessage.includes("price") || lowerMessage.includes("cost") || lowerMessage.includes("budget") || lowerMessage.includes("cheap") || lowerMessage.includes("expensive")) {
+    const prices = destinations.map((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')));
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    const avgPrice = Math.round(prices.reduce((sum: number, price: number) => sum + price, 0) / prices.length);
+    
+    return `**TravelEx Pricing Overview:**
+Our packages range from $${minPrice.toLocaleString()} to $${maxPrice.toLocaleString()} with an average of $${avgPrice.toLocaleString()}
+
+**Budget-Friendly Options (Under $3,000):**
+${destinations.filter((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')) < 3000)
+  .slice(0, 4).map((d: any) => `• ${d.name} - ${d.price} (${d.duration} days) | ${d.rating}/5 stars`).join('\n')}
+
+**Premium Experiences ($3,000+):**
+${destinations.filter((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')) >= 3000)
+  .slice(0, 4).map((d: any) => `• ${d.name} - ${d.price} (${d.duration} days) | ${d.rating}/5 stars`).join('\n')}
+
+**Active Promotions:**
+${destinations.filter((d: any) => d.couponCode || d.promoTag || d.flashSale)
+  .slice(0, 3).map((d: any) => 
+    `• ${d.name}: ${d.couponCode ? `Code ${d.couponCode} (${d.discountPercentage}% off)` : d.promoTag || 'Flash Sale'}`
+  ).join('\n')}
+
+All prices include accommodations, meals, activities, and support. Contact 0491906089 for personalized quotes.`;
+  }
+
+  // Booking and reservation queries
+  if (lowerMessage.includes("book") || lowerMessage.includes("reservation") || lowerMessage.includes("reserve") || lowerMessage.includes("availability")) {
+    return `**Booking with TravelEx - Trusted by ${userStats.total} Travelers**
+
+**Our Success Record:**
+• ${bookingStats.total} successful bookings completed
+• $${parseInt(revenue.total).toLocaleString()} in travel experiences delivered
+• ${avgRating.toFixed(1)}/5 average customer satisfaction rating
+• ${bookingStats.growth}% booking growth this year
+
+**Simple Booking Process:**
+1. **Browse & Select:** Choose your destination and dates
+2. **Customize:** Tailor your experience with optional activities
+3. **Secure Payment:** Complete booking with our encrypted payment system
+4. **Confirmation:** Receive instant booking confirmation and travel documents
+
+**Flexible Cancellation Policy:**
+• Full refund: Up to 48 hours before departure
+• 80% refund: 7-48 hours before departure
+• Emergency situations: Case-by-case review for medical/family emergencies
+• Refund processing: 5-7 business days
+
+**Current Availability Highlights:**
+${destinations.slice(0, 3).map((d: any) => 
+  `• ${d.name}: Available for ${d.duration}-day packages from ${d.price}`).join('\n')}
+
+**Ready to Book?**
+📞 Phone: 0491906089 | 📧 Email: contact@travelex.com
+🕒 Available: Monday-Friday 9AM-6PM, Saturday 10AM-4PM, Emergency 24/7`;
+  }
+
+  // Reviews and ratings queries
+  if (lowerMessage.includes("review") || lowerMessage.includes("rating") || lowerMessage.includes("feedback") || lowerMessage.includes("testimonial")) {
+    return `**Customer Reviews & Ratings**
+
+**Overall Performance:**
+• Average rating: ${avgRating.toFixed(1)}/5 stars across all destinations
+• Total reviews: ${destinations.reduce((sum: number, d: any) => sum + (d.reviewCount || 0), 0)} customer reviews
+• Customer satisfaction: ${userStats.total} happy travelers served
+
+**Top-Rated Destinations:**
+${topRated.map((dest: any, idx: number) => 
+  `${idx + 1}. **${dest.name}** - ${dest.rating}/5 stars (${dest.reviewCount} reviews)
+   • ${dest.duration} days from ${dest.price}
+   • "${dest.description.substring(0, 100)}..."`
+).join('\n\n')}${recentReviewsText}
+
+**What Customers Love Most:**
+• Exceptional attention to detail and personalized service
+• High-quality accommodations and authentic local experiences
+• Professional, knowledgeable guides and seamless logistics
+• Responsive customer support throughout the journey
+
+View detailed reviews for specific destinations on our website or contact us at 0491906089 for references.`;
+  }
+
+  // Company and about queries
+  if (lowerMessage.includes("about") || lowerMessage.includes("company") || lowerMessage.includes("who") || lowerMessage.includes("travelex")) {
+    return `**About TravelEx - Your Premium Travel Partner**
+
+**Company Overview:**
+TravelEx specializes in luxury, immersive travel experiences designed for discerning travelers seeking authentic cultural connections and exceptional service.
+
+**Our Achievements:**
+• ${destinations.length} carefully curated destinations worldwide
+• ${userStats.total} satisfied customers and growing
+• ${bookingStats.total} successful bookings completed
+• $${parseInt(revenue.total).toLocaleString()} in memorable travel experiences delivered
+• ${userStats.growth}% customer base growth year-over-year
+
+**What Sets Us Apart:**
+• Handpicked destinations with authentic cultural experiences
+• All-inclusive luxury packages with no hidden fees
+• Expert local guides and 24/7 concierge support
+• Sustainable tourism practices and community partnerships
+• Flexible booking with comprehensive travel insurance
+
+**Our Services:**
+• Luxury accommodations and premium transportation
+• Curated cultural experiences and exclusive access tours
+• Professional photography services and travel documentation
+• Group discounts and corporate travel planning
+• Emergency support and travel assistance worldwide
+
+**Contact Our Team:**
+📍 Address: 419A Windsor Rd, Baulkham Hills NSW 2153, Australia
+📞 Phone: 0491906089 | 📧 Email: contact@travelex.com
+🕒 Hours: Monday-Friday 9AM-6PM, Saturday 10AM-4PM, Emergency 24/7`;
+  }
+
+  // Support and contact queries
+  if (lowerMessage.includes("contact") || lowerMessage.includes("support") || lowerMessage.includes("help") || lowerMessage.includes("phone") || lowerMessage.includes("email")) {
+    return `**TravelEx Customer Support - Here to Help 24/7**
+
+**Contact Information:**
+📞 **Phone:** 0491906089
+📧 **Email:** contact@travelex.com
+📍 **Address:** 419A Windsor Rd, Baulkham Hills NSW 2153, Australia
+
+**Business Hours:**
+• Monday-Friday: 9:00 AM - 6:00 PM
+• Saturday: 10:00 AM - 4:00 PM
+• Sunday: Emergency support only
+• Emergency assistance: Available 24/7
+
+**Current Performance:**
+• ${userStats.total} customers served with excellence
+• ${bookingStats.total} bookings processed successfully
+• Average response time: Under 2 hours during business hours
+
+**How We Can Assist:**
+• Destination recommendations and travel planning
+• Booking assistance and payment processing
+• Travel document guidance and visa requirements
+• Itinerary modifications and special requests
+• Emergency support during your travels
+• Post-travel feedback and future planning
+
+**Quick Actions:**
+• For immediate booking: Call 0491906089
+• For general inquiries: Email contact@travelex.com
+• For emergencies: Use our 24/7 hotline
+
+Our experienced travel specialists are ready to help you plan your perfect journey.`;
+  }
+
+  // Default comprehensive welcome response
+  return `**Welcome to TravelEx - Premium Travel Experiences**
+
+**Your Gateway to Luxury Travel:**
+Discover ${destinations.length} exceptional destinations across ${new Set(destinations.map((d: any) => d.country)).size} countries, trusted by ${userStats.total} travelers worldwide.
+
+**Current Highlights:**
+${destinations.slice(0, 3).map((dest: any, idx: number) => 
+  `${idx + 1}. **${dest.name}, ${dest.country}**
+   • ${dest.duration} days from ${dest.price}
+   • ${dest.rating}/5 stars (${dest.reviewCount} reviews)
+   • ${dest.description.substring(0, 80)}...`
+).join('\n\n')}
+
+**Why Choose TravelEx:**
+• All-inclusive luxury packages with authentic experiences
+• Expert local guides and premium accommodations
+• 24/7 customer support and emergency assistance
+• Flexible cancellation policy up to 48 hours before departure
+• ${avgRating.toFixed(1)}/5 average customer satisfaction rating
+
+**Services Available:**
+• Destination planning and personalized itineraries
+• Group bookings and corporate travel arrangements
+• Travel insurance and documentation assistance
+• Cultural experiences and exclusive access tours
+
+**Get Started:**
+📞 Phone: 0491906089 | 📧 Email: contact@travelex.com
+🕒 Available: Monday-Friday 9AM-6PM, Saturday 10AM-4PM, Emergency 24/7
+
+How may I assist you with planning your next extraordinary journey?`;
 }
 
 // Initialize Stripe
