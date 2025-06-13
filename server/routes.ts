@@ -6,6 +6,172 @@ import { insertDestinationSchema, insertBookingSchema } from "@shared/schema";
 import { z } from "zod";
 import Stripe from "stripe";
 
+// Intelligent chatbot response generator
+async function generateChatbotResponse(message: string, data: any): Promise<string> {
+  const lowerMessage = message.toLowerCase();
+  const { destinations, bookingStats, userStats, revenue } = data;
+
+  // Handle destination-specific queries
+  if (lowerMessage.includes("destination") || lowerMessage.includes("where") || lowerMessage.includes("place")) {
+    const popularDestinations = destinations
+      .sort((a: any, b: any) => (b.bookingCount || 0) - (a.bookingCount || 0))
+      .slice(0, 5);
+    
+    return `We offer ${destinations.length} amazing destinations! Our most popular ones are:
+
+${popularDestinations.map((dest: any, idx: number) => 
+  `${idx + 1}. **${dest.name}** in ${dest.country} - ${dest.price} (${dest.duration} days)`
+).join('\n')}
+
+Each package includes accommodation, meals, activities, and local transportation. What type of experience interests you most?`;
+  }
+
+  // Handle pricing queries
+  if (lowerMessage.includes("price") || lowerMessage.includes("cost") || lowerMessage.includes("budget")) {
+    const prices = destinations.map((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')));
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    
+    return `Our travel packages range from $${minPrice.toLocaleString()} to $${maxPrice.toLocaleString()}. Here are some options by budget:
+
+**Budget-Friendly ($${minPrice.toLocaleString()}-$2,000):**
+${destinations.filter((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')) <= 2000)
+  .slice(0, 3).map((d: any) => `• ${d.name} - ${d.price}`).join('\n')}
+
+**Premium ($2,000+):**
+${destinations.filter((d: any) => parseInt(d.price.replace(/[^0-9]/g, '')) > 2000)
+  .slice(0, 3).map((d: any) => `• ${d.name} - ${d.price}`).join('\n')}
+
+All packages include accommodations, meals, and activities. What's your preferred budget range?`;
+  }
+
+  // Handle booking-related queries
+  if (lowerMessage.includes("book") || lowerMessage.includes("reservation") || lowerMessage.includes("reserve")) {
+    return `Booking with us is simple! We've processed ${bookingStats.total} bookings and have ${userStats.total} happy travelers.
+
+**How to book:**
+1. Browse our destinations page
+2. Select your preferred package
+3. Choose your travel dates
+4. Complete secure payment
+5. Receive instant confirmation
+
+**What's included:**
+• Accommodation at selected hotels/resorts
+• Daily meals and local cuisine
+• Guided activities and excursions
+• Local transportation
+• 24/7 customer support
+
+Our refund policy allows full refunds up to 48 hours before departure. Ready to start your adventure?`;
+  }
+
+  // Handle review/rating queries
+  if (lowerMessage.includes("review") || lowerMessage.includes("rating") || lowerMessage.includes("feedback")) {
+    const avgRating = destinations.reduce((sum: number, d: any) => sum + (d.rating || 0), 0) / destinations.length;
+    return `Our travelers love their experiences! We maintain an average rating of ${avgRating.toFixed(1)}/5 stars across all destinations.
+
+**Recent highlights:**
+${destinations.slice(0, 3).map((d: any) => 
+  `• ${d.name}: ${d.rating}/5 stars (${d.reviewCount} reviews)`
+).join('\n')}
+
+Our travelers particularly appreciate our attention to detail, local expertise, and seamless travel experience. You can read detailed reviews on each destination's page.`;
+  }
+
+  // Handle duration/time queries
+  if (lowerMessage.includes("duration") || lowerMessage.includes("how long") || lowerMessage.includes("days")) {
+    const durations = destinations.map((d: any) => d.duration).filter(Boolean);
+    const avgDuration = durations.reduce((sum: number, d: number) => sum + d, 0) / durations.length;
+    
+    return `Our travel packages range from ${Math.min(...durations)} to ${Math.max(...durations)} days, with an average of ${Math.round(avgDuration)} days.
+
+**By duration:**
+${destinations.slice(0, 5).map((d: any) => 
+  `• ${d.name}: ${d.duration} days - ${d.price}`
+).join('\n')}
+
+Each itinerary is carefully crafted to give you the perfect balance of activities, relaxation, and cultural immersion.`;
+  }
+
+  // Handle support/contact queries
+  if (lowerMessage.includes("contact") || lowerMessage.includes("support") || lowerMessage.includes("help")) {
+    return `I'm here to help! You can also reach our support team:
+
+📞 **Phone:** 0491906089
+📧 **Email:** contact@travelex.com  
+📍 **Address:** 419A Windsor Rd, Baulkham Hills NSW 2153, Australia
+
+**Business Hours:**
+• Monday-Friday: 9AM-6PM
+• Saturday: 10AM-4PM  
+• Emergency support: 24/7
+
+**Current stats:**
+• ${userStats.total} travelers served
+• ${bookingStats.total} successful bookings
+• $${parseInt(revenue.total).toLocaleString()} in travel experiences delivered
+
+What specific help do you need today?`;
+  }
+
+  // Handle cancellation/refund queries
+  if (lowerMessage.includes("cancel") || lowerMessage.includes("refund") || lowerMessage.includes("policy")) {
+    return `Our flexible cancellation policy protects your investment:
+
+**Full Refund:** Up to 48 hours before departure
+**Partial Refund:** 7-48 hours before departure (80% refund)
+**Emergency Situations:** Case-by-case review for medical/family emergencies
+
+**To cancel or modify:**
+1. Visit your "My Trips" section
+2. Select the booking to modify
+3. Follow the cancellation process
+4. Refunds processed within 5-7 business days
+
+We've processed refunds for ${Math.round(bookingStats.total * 0.05)} travelers without hassle. Your satisfaction is our priority!`;
+  }
+
+  // Handle general travel advice
+  if (lowerMessage.includes("recommend") || lowerMessage.includes("suggest") || lowerMessage.includes("best")) {
+    const topDestination = destinations.find((d: any) => d.name.includes("Maldives")) || destinations[0];
+    return `Based on our travelers' experiences, I'd recommend considering:
+
+**${topDestination.name}** - Our most popular choice
+• ${topDestination.duration} days of luxury
+• ${topDestination.price} per person
+• Perfect for: ${topDestination.description?.substring(0, 100)}...
+
+**Why travelers choose us:**
+• ${userStats.total}+ satisfied customers
+• Expert local guides
+• All-inclusive packages
+• 24/7 support
+
+To get a personalized recommendation, tell me:
+• What's your budget range?
+• Preferred travel dates?
+• Type of experience (adventure, relaxation, culture)?`;
+  }
+
+  // Default response with current stats
+  return `I'm your travel assistant with access to real-time information about our ${destinations.length} destinations!
+
+**Live stats:**
+• ${userStats.total} travelers served
+• ${bookingStats.total} bookings completed  
+• $${parseInt(revenue.total).toLocaleString()} in amazing experiences delivered
+
+I can help you with:
+🗺️ Destination recommendations
+💰 Pricing and budget planning  
+📅 Booking assistance
+⭐ Reviews and ratings
+📞 Support and policies
+
+What would you like to know about our travel packages?`;
+}
+
 // Initialize Stripe
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -874,6 +1040,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching all bookings:", error);
       res.status(500).json({ message: "Failed to fetch bookings" });
+    }
+  });
+
+  // Chatbot API endpoint
+  app.post('/api/chatbot/query', async (req, res) => {
+    try {
+      const { message, context } = req.body;
+      
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+
+      // Get website data for context
+      const destinations = await storage.getAllDestinations();
+      const bookingStats = await storage.getBookingStats();
+      const userStats = await storage.getUserStats();
+      const revenue = await storage.getRevenue();
+
+      // Generate intelligent response based on website data
+      const response = await generateChatbotResponse(message, {
+        destinations,
+        bookingStats,
+        userStats,
+        revenue,
+        context
+      });
+
+      res.json({ response });
+    } catch (error) {
+      console.error("Chatbot query error:", error);
+      res.status(500).json({ message: "Failed to process chatbot query" });
     }
   });
 

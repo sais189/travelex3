@@ -4,12 +4,14 @@ import { MessageCircle, X, Send, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
 
 interface Message {
   id: string;
   text: string;
   isBot: boolean;
   timestamp: Date;
+  isLoading?: boolean;
 }
 
 export default function ChatBot() {
@@ -18,12 +20,13 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hi! I'm your travel assistant. How can I help you plan your next adventure?",
+      text: "Hi! I'm your travel assistant with access to real-time information about our destinations. How can I help you plan your next adventure?",
       isBot: true,
       timestamp: new Date(),
     },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const handleOpenChatBot = (event: CustomEvent) => {
@@ -41,8 +44,8 @@ export default function ChatBot() {
         setMessages(prev => [...prev, userMessage]);
         
         // Get bot response
-        setTimeout(() => {
-          const botResponse = getBotResponse(event.detail.message);
+        setTimeout(async () => {
+          const botResponse = await getBotResponse(event.detail.message);
           const botMessage: Message = {
             id: (Date.now() + 1).toString(),
             text: botResponse,
@@ -50,7 +53,7 @@ export default function ChatBot() {
             timestamp: new Date(),
           };
           setMessages(prev => [...prev, botMessage]);
-        }, 1000);
+        }, 500);
       }
     };
 
