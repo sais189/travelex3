@@ -132,13 +132,13 @@ const DESTINATION_LANDMARK_IMAGES = {
   // Serengeti Migration (ID: 21)
   "serengeti_migration": {
     day1: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Serengeti entry gates
-    day2: "https://images.unsplash.com/photo-1587736797152-6b4c287ea916?w=800&h=600&fit=crop&auto=format&q=80", // Wildebeest migration herds
+    day2: "https://images.unsplash.com/photo-1566555110834-0af5e5cf38c5?w=800&h=600&fit=crop&auto=format&q=80", // Wildebeest migration herds
     day3: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=600&fit=crop&auto=format&q=80", // Lions hunting
-    day4: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=800&h=600&fit=crop&auto=format&q=80", // Mara river crossing
+    day4: "https://images.unsplash.com/photo-1574870111867-089730e5a72b?w=800&h=600&fit=crop&auto=format&q=80", // Mara river crossing
     day5: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800&h=600&fit=crop&auto=format&q=80", // Maasai cultural village
     day6: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Ngorongoro crater with wildlife
-    day7: "https://images.unsplash.com/photo-1586863475649-a62432b6a9d4?w=800&h=600&fit=crop&auto=format&q=80", // Conservation research station
-    day8: "https://images.unsplash.com/photo-1549318441-e6324cbb769e?w=800&h=600&fit=crop&auto=format&q=80", // Final migration sunset
+    day7: "https://images.unsplash.com/photo-1564149504063-338de52293c6?w=800&h=600&fit=crop&auto=format&q=80", // Conservation research station
+    day8: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Final migration sunset
     fallback: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
