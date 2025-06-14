@@ -280,15 +280,32 @@ For immediate assistance:
             transition={{ duration: 0.3 }}
           >
             {/* Chat Header */}
-            <div className="p-4 border-b border-border">
+            <div 
+              className="border-b border-border"
+              style={{
+                padding: dimensions.width < 350 ? '12px' : '16px'
+              }}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gold-accent rounded-full flex items-center justify-center">
                     <Bot className="w-4 h-4 text-primary-foreground" />
                   </div>
                   <div>
-                    <div className="font-semibold text-foreground">Travel Assistant</div>
-                    <div className="text-xs text-mint-accent">
+                    <div 
+                      className="font-semibold text-foreground"
+                      style={{
+                        fontSize: dimensions.width < 350 ? '14px' : dimensions.width < 450 ? '15px' : '16px'
+                      }}
+                    >
+                      Travel Assistant
+                    </div>
+                    <div 
+                      className="text-mint-accent"
+                      style={{
+                        fontSize: dimensions.width < 350 ? '10px' : '12px'
+                      }}
+                    >
                       {isLoading ? "Analyzing..." : "Ready to help"}
                     </div>
                   </div>
@@ -307,8 +324,19 @@ For immediate assistance:
             </div>
 
             {/* Chat Messages */}
-            <div className="p-4 flex-1 overflow-y-auto" style={{ height: 'calc(100% - 140px)' }}>
-              <div className="space-y-4">
+            <div 
+              className="flex-1 overflow-y-auto" 
+              style={{ 
+                height: 'calc(100% - 140px)',
+                padding: dimensions.width < 350 ? '12px' : '16px'
+              }}
+            >
+              <div 
+                style={{
+                  gap: dimensions.width < 350 ? '12px' : '16px'
+                }}
+                className="flex flex-col"
+              >
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
@@ -322,7 +350,12 @@ For immediate assistance:
                         <div className="w-6 h-6 bg-gold-accent rounded-full flex items-center justify-center flex-shrink-0">
                           <Bot className="w-3 h-3 text-primary-foreground" />
                         </div>
-                        <div className="bg-slate-panel rounded-lg p-3 max-w-48">
+                        <div 
+                          className="bg-slate-panel rounded-lg p-3"
+                          style={{ 
+                            maxWidth: `${Math.max(150, dimensions.width * 0.7)}px`
+                          }}
+                        >
                           {message.isLoading ? (
                             <div className="flex items-center space-x-1">
                               <div className="w-2 h-2 bg-gold-accent rounded-full animate-bounce"></div>
@@ -330,15 +363,31 @@ For immediate assistance:
                               <div className="w-2 h-2 bg-gold-accent rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                             </div>
                           ) : (
-                            <div className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                            <div 
+                              className="text-foreground whitespace-pre-wrap leading-relaxed"
+                              style={{
+                                fontSize: dimensions.width < 350 ? '12px' : dimensions.width < 450 ? '13px' : '14px'
+                              }}
+                            >
                               {message.text}
                             </div>
                           )}
                         </div>
                       </div>
                     ) : (
-                      <div className="bg-gold-accent text-primary-foreground rounded-lg p-3 max-w-48">
-                        <p className="text-sm">{message.text}</p>
+                      <div 
+                        className="bg-gold-accent text-primary-foreground rounded-lg p-3"
+                        style={{ 
+                          maxWidth: `${Math.max(150, dimensions.width * 0.7)}px`
+                        }}
+                      >
+                        <p 
+                          style={{
+                            fontSize: dimensions.width < 350 ? '12px' : dimensions.width < 450 ? '13px' : '14px'
+                          }}
+                        >
+                          {message.text}
+                        </p>
                       </div>
                     )}
                   </motion.div>
@@ -347,14 +396,27 @@ For immediate assistance:
             </div>
 
             {/* Chat Input */}
-            <div className="p-4 border-t border-border flex-shrink-0">
-              <div className="flex items-center space-x-2">
+            <div 
+              className="border-t border-border flex-shrink-0"
+              style={{
+                padding: dimensions.width < 350 ? '12px' : '16px'
+              }}
+            >
+              <div 
+                className="flex items-center"
+                style={{
+                  gap: dimensions.width < 350 ? '8px' : '12px'
+                }}
+              >
                 <Input
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
-                  className="flex-1 bg-slate-panel border-border focus:border-gold-accent text-foreground text-sm"
+                  placeholder={dimensions.width < 350 ? "Message..." : "Type your message..."}
+                  className="flex-1 bg-slate-panel border-border focus:border-gold-accent text-foreground"
+                  style={{
+                    fontSize: dimensions.width < 350 ? '12px' : dimensions.width < 450 ? '13px' : '14px'
+                  }}
                 />
                 <Button
                   onClick={handleSendMessage}
