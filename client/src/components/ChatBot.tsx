@@ -252,27 +252,41 @@ For immediate assistance:
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[70] sm:bottom-6 sm:right-6">
-      {/* Chat Button */}
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <Button
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-16 h-16 bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground rounded-full shadow-lg glow-hover"
-          size="icon"
+    <div className={`fixed z-[70] ${isExpanded ? '' : 'bottom-4 right-4 sm:bottom-6 sm:right-6'}`}>
+      {/* Chat Button - only show when not expanded */}
+      {!isExpanded && (
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
-          {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
-        </Button>
-      </motion.div>
+          <Button
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-16 h-16 bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground rounded-full shadow-lg glow-hover"
+            size="icon"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+          </Button>
+        </motion.div>
+      )}
 
       {/* Chat Modal */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute bottom-20 right-0 w-80 max-h-[calc(100vh-140px)] glass-morphism rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-            style={{ 
+            ref={chatRef}
+            className={`glass-morphism rounded-2xl shadow-2xl overflow-hidden flex flex-col ${
+              isExpanded 
+                ? 'fixed' 
+                : 'absolute bottom-20 right-0'
+            }`}
+            style={isExpanded ? {
+              left: position.x,
+              top: position.y,
+              width: dimensions.width,
+              height: dimensions.height,
+              cursor: isDragging ? 'grabbing' : 'default'
+            } : { 
+              width: '320px',
               maxHeight: 'min(400px, calc(100vh - 140px))',
               height: 'min(400px, calc(100vh - 140px))'
             }}
@@ -282,7 +296,11 @@ For immediate assistance:
             transition={{ duration: 0.3 }}
           >
             {/* Chat Header */}
-            <div className="p-4 border-b border-border">
+            <div 
+              ref={dragRef}
+              className={`p-4 border-b border-border ${isExpanded ? 'cursor-grab active:cursor-grabbing' : ''}`}
+              onMouseDown={handleDragStart}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gold-accent rounded-full flex items-center justify-center">
@@ -295,19 +313,30 @@ For immediate assistance:
                     </div>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(false)}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleExpanded}
+                    className="text-muted-foreground hover:text-foreground"
+                    title={isExpanded ? "Minimize" : "Expand"}
+                  >
+                    {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsOpen(false)}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </div>
 
             {/* Chat Messages */}
-            <div className="p-4 flex-1 overflow-y-auto" style={{ height: 'calc(100% - 140px)' }}>
+            <div className="p-4 flex-1 overflow-y-auto" style={{ height: isExpanded ? 'calc(100% - 140px)' : 'calc(100% - 140px)' }}>
               <div className="space-y-4">
                 {messages.map((message) => (
                   <motion.div
@@ -322,7 +351,7 @@ For immediate assistance:
                         <div className="w-6 h-6 bg-gold-accent rounded-full flex items-center justify-center flex-shrink-0">
                           <Bot className="w-3 h-3 text-primary-foreground" />
                         </div>
-                        <div className="bg-slate-panel rounded-lg p-3 max-w-48">
+                        <div className={`bg-slate-panel rounded-lg p-3 ${isExpanded ? 'max-w-none' : 'max-w-48'}`}>
                           {message.isLoading ? (
                             <div className="flex items-center space-x-1">
                               <div className="w-2 h-2 bg-gold-accent rounded-full animate-bounce"></div>
@@ -337,7 +366,7 @@ For immediate assistance:
                         </div>
                       </div>
                     ) : (
-                      <div className="bg-gold-accent text-primary-foreground rounded-lg p-3 max-w-48">
+                      <div className={`bg-gold-accent text-primary-foreground rounded-lg p-3 ${isExpanded ? 'max-w-none' : 'max-w-48'}`}>
                         <p className="text-sm">{message.text}</p>
                       </div>
                     )}
@@ -366,6 +395,17 @@ For immediate assistance:
                 </Button>
               </div>
             </div>
+
+            {/* Resize Handle - only show when expanded */}
+            {isExpanded && (
+              <div
+                className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
+                onMouseDown={handleResize}
+                style={{
+                  background: 'linear-gradient(135deg, transparent 0%, transparent 30%, rgba(255,255,255,0.3) 30%, rgba(255,255,255,0.3) 70%, transparent 70%, transparent 100%)',
+                }}
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>
