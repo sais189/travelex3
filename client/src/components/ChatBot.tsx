@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,9 @@ export default function ChatBot() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 320, height: 400 });
+  const [isResizing, setIsResizing] = useState(false);
+  const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleOpenChatBot = (event: CustomEvent) => {
@@ -174,6 +177,69 @@ For immediate assistance:
     }
   };
 
+  // Resize functionality
+  const handleResize = (direction: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsResizing(true);
+    
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = dimensions.width;
+    const startHeight = dimensions.height;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      let newWidth = startWidth;
+      let newHeight = startHeight;
+
+      switch (direction) {
+        case 'se': // southeast
+          newWidth = Math.max(280, startWidth + (e.clientX - startX));
+          newHeight = Math.max(300, startHeight + (e.clientY - startY));
+          break;
+        case 'sw': // southwest
+          newWidth = Math.max(280, startWidth - (e.clientX - startX));
+          newHeight = Math.max(300, startHeight + (e.clientY - startY));
+          break;
+        case 'ne': // northeast
+          newWidth = Math.max(280, startWidth + (e.clientX - startX));
+          newHeight = Math.max(300, startHeight - (e.clientY - startY));
+          break;
+        case 'nw': // northwest
+          newWidth = Math.max(280, startWidth - (e.clientX - startX));
+          newHeight = Math.max(300, startHeight - (e.clientY - startY));
+          break;
+        case 'n': // north
+          newHeight = Math.max(300, startHeight - (e.clientY - startY));
+          break;
+        case 's': // south
+          newHeight = Math.max(300, startHeight + (e.clientY - startY));
+          break;
+        case 'e': // east
+          newWidth = Math.max(280, startWidth + (e.clientX - startX));
+          break;
+        case 'w': // west
+          newWidth = Math.max(280, startWidth - (e.clientX - startX));
+          break;
+      }
+
+      // Constrain to viewport
+      newWidth = Math.min(newWidth, window.innerWidth - 100);
+      newHeight = Math.min(newHeight, window.innerHeight - 100);
+
+      setDimensions({ width: newWidth, height: newHeight });
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
   // Don't show chatbot on admin pages or 404
   if (location.startsWith("/admin") || location === "/404") {
     return null;
@@ -199,11 +265,14 @@ For immediate assistance:
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="glass-morphism rounded-2xl shadow-2xl overflow-hidden flex flex-col absolute bottom-20 right-0"
+            ref={chatRef}
+            className={`glass-morphism rounded-2xl shadow-2xl overflow-hidden flex flex-col absolute bottom-20 right-0 ${
+              isResizing ? 'select-none' : ''
+            }`}
             style={{ 
-              width: '320px',
-              maxHeight: 'min(400px, calc(100vh - 140px))',
-              height: 'min(400px, calc(100vh - 140px))'
+              width: `${dimensions.width}px`,
+              height: `${dimensions.height}px`,
+              cursor: isResizing ? 'resizing' : 'default'
             }}
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -297,6 +366,43 @@ For immediate assistance:
                 </Button>
               </div>
             </div>
+
+            {/* Resize Handles */}
+            {/* Corner handles */}
+            <div
+              className="absolute top-0 left-0 w-3 h-3 cursor-nw-resize hover:bg-gold-accent/20 rounded-tl-2xl"
+              onMouseDown={handleResize('nw')}
+            />
+            <div
+              className="absolute top-0 right-0 w-3 h-3 cursor-ne-resize hover:bg-gold-accent/20 rounded-tr-2xl"
+              onMouseDown={handleResize('ne')}
+            />
+            <div
+              className="absolute bottom-0 left-0 w-3 h-3 cursor-sw-resize hover:bg-gold-accent/20 rounded-bl-2xl"
+              onMouseDown={handleResize('sw')}
+            />
+            <div
+              className="absolute bottom-0 right-0 w-3 h-3 cursor-se-resize hover:bg-gold-accent/20 rounded-br-2xl"
+              onMouseDown={handleResize('se')}
+            />
+            
+            {/* Edge handles */}
+            <div
+              className="absolute top-0 left-3 right-3 h-1 cursor-n-resize hover:bg-gold-accent/20"
+              onMouseDown={handleResize('n')}
+            />
+            <div
+              className="absolute bottom-0 left-3 right-3 h-1 cursor-s-resize hover:bg-gold-accent/20"
+              onMouseDown={handleResize('s')}
+            />
+            <div
+              className="absolute left-0 top-3 bottom-3 w-1 cursor-w-resize hover:bg-gold-accent/20"
+              onMouseDown={handleResize('w')}
+            />
+            <div
+              className="absolute right-0 top-3 bottom-3 w-1 cursor-e-resize hover:bg-gold-accent/20"
+              onMouseDown={handleResize('e')}
+            />
           </motion.div>
         )}
       </AnimatePresence>
