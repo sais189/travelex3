@@ -97,12 +97,7 @@ export default function FAQPopup({ isOpen, onClose }: FAQPopupProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[80vh] p-0 overflow-hidden">
         <DialogHeader className="p-6 pb-4 border-b border-border">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl font-bold">Frequently Asked Questions</DialogTitle>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
+          <DialogTitle className="text-2xl font-bold">Frequently Asked Questions</DialogTitle>
           <p className="text-muted-foreground mt-2">
             Find answers to common questions about our travel packages and services.
           </p>

@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, Maximize2, Minimize2 } from "lucide-react";
+import { MessageCircle, X, Send, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
@@ -17,7 +17,6 @@ interface Message {
 export default function ChatBot() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -28,11 +27,6 @@ export default function ChatBot() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 320, height: 400 });
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const chatRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleOpenChatBot = (event: CustomEvent) => {
@@ -180,112 +174,33 @@ For immediate assistance:
     }
   };
 
-  // Handle resize functionality
-  const handleResize = (e: React.MouseEvent) => {
-    if (!isExpanded) return;
-    
-    e.preventDefault();
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const startWidth = dimensions.width;
-    const startHeight = dimensions.height;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const newWidth = Math.max(300, Math.min(800, startWidth + (e.clientX - startX)));
-      const newHeight = Math.max(300, Math.min(600, startHeight + (e.clientY - startY)));
-      setDimensions({ width: newWidth, height: newHeight });
-    };
-
-    const handleMouseUp = () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  // Handle drag functionality
-  const handleDragStart = (e: React.MouseEvent) => {
-    if (!isExpanded) return;
-    
-    e.preventDefault();
-    setIsDragging(true);
-    const startX = e.clientX - position.x;
-    const startY = e.clientY - position.y;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const newX = e.clientX - startX;
-      const newY = e.clientY - startY;
-      
-      // Constrain to viewport
-      const maxX = window.innerWidth - dimensions.width;
-      const maxY = window.innerHeight - dimensions.height;
-      
-      setPosition({
-        x: Math.max(0, Math.min(maxX, newX)),
-        y: Math.max(0, Math.min(maxY, newY))
-      });
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-    if (!isExpanded) {
-      // Reset position when expanding
-      setPosition({ x: 50, y: 50 });
-    }
-  };
-
   // Don't show chatbot on admin pages or 404
   if (location.startsWith("/admin") || location === "/404") {
     return null;
   }
 
   return (
-    <div className={`fixed z-[70] ${isExpanded ? '' : 'bottom-4 right-4 sm:bottom-6 sm:right-6'}`}>
-      {/* Chat Button - only show when not expanded */}
-      {!isExpanded && (
-        <motion.div
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+    <div className="fixed z-[70] bottom-4 right-4 sm:bottom-6 sm:right-6">
+      {/* Chat Button */}
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+      >
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-16 h-16 bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground rounded-full shadow-lg glow-hover"
+          size="icon"
         >
-          <Button
-            onClick={() => setIsOpen(!isOpen)}
-            className="w-16 h-16 bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground rounded-full shadow-lg glow-hover"
-            size="icon"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
-          </Button>
-        </motion.div>
-      )}
+          {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+        </Button>
+      </motion.div>
 
       {/* Chat Modal */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            ref={chatRef}
-            className={`glass-morphism rounded-2xl shadow-2xl overflow-hidden flex flex-col ${
-              isExpanded 
-                ? 'fixed' 
-                : 'absolute bottom-20 right-0'
-            }`}
-            style={isExpanded ? {
-              left: position.x,
-              top: position.y,
-              width: dimensions.width,
-              height: dimensions.height,
-              cursor: isDragging ? 'grabbing' : 'default'
-            } : { 
+            className="glass-morphism rounded-2xl shadow-2xl overflow-hidden flex flex-col absolute bottom-20 right-0"
+            style={{ 
               width: '320px',
               maxHeight: 'min(400px, calc(100vh - 140px))',
               height: 'min(400px, calc(100vh - 140px))'
@@ -296,11 +211,7 @@ For immediate assistance:
             transition={{ duration: 0.3 }}
           >
             {/* Chat Header */}
-            <div 
-              ref={dragRef}
-              className={`p-4 border-b border-border ${isExpanded ? 'cursor-grab active:cursor-grabbing' : ''}`}
-              onMouseDown={handleDragStart}
-            >
+            <div className="p-4 border-b border-border">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gold-accent rounded-full flex items-center justify-center">
@@ -317,15 +228,6 @@ For immediate assistance:
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={toggleExpanded}
-                    className="text-muted-foreground hover:text-foreground"
-                    title={isExpanded ? "Minimize" : "Expand"}
-                  >
-                    {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
                     onClick={() => setIsOpen(false)}
                     className="text-muted-foreground hover:text-foreground"
                   >
@@ -336,7 +238,7 @@ For immediate assistance:
             </div>
 
             {/* Chat Messages */}
-            <div className="p-4 flex-1 overflow-y-auto" style={{ height: isExpanded ? 'calc(100% - 140px)' : 'calc(100% - 140px)' }}>
+            <div className="p-4 flex-1 overflow-y-auto" style={{ height: 'calc(100% - 140px)' }}>
               <div className="space-y-4">
                 {messages.map((message) => (
                   <motion.div
@@ -351,7 +253,7 @@ For immediate assistance:
                         <div className="w-6 h-6 bg-gold-accent rounded-full flex items-center justify-center flex-shrink-0">
                           <Bot className="w-3 h-3 text-primary-foreground" />
                         </div>
-                        <div className={`bg-slate-panel rounded-lg p-3 ${isExpanded ? 'max-w-none' : 'max-w-48'}`}>
+                        <div className="bg-slate-panel rounded-lg p-3 max-w-48">
                           {message.isLoading ? (
                             <div className="flex items-center space-x-1">
                               <div className="w-2 h-2 bg-gold-accent rounded-full animate-bounce"></div>
@@ -366,7 +268,7 @@ For immediate assistance:
                         </div>
                       </div>
                     ) : (
-                      <div className={`bg-gold-accent text-primary-foreground rounded-lg p-3 ${isExpanded ? 'max-w-none' : 'max-w-48'}`}>
+                      <div className="bg-gold-accent text-primary-foreground rounded-lg p-3 max-w-48">
                         <p className="text-sm">{message.text}</p>
                       </div>
                     )}
@@ -395,17 +297,6 @@ For immediate assistance:
                 </Button>
               </div>
             </div>
-
-            {/* Resize Handle - only show when expanded */}
-            {isExpanded && (
-              <div
-                className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
-                onMouseDown={handleResize}
-                style={{
-                  background: 'linear-gradient(135deg, transparent 0%, transparent 30%, rgba(255,255,255,0.3) 30%, rgba(255,255,255,0.3) 70%, transparent 70%, transparent 100%)',
-                }}
-              />
-            )}
           </motion.div>
         )}
       </AnimatePresence>
