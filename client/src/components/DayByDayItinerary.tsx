@@ -159,17 +159,17 @@ const DESTINATION_LANDMARK_IMAGES = {
 
   // Ecuadorian Amazon & Galápagos (ID: 34)
   "ecuadorian_amazon_galapagos": {
-    day1: "https://images.unsplash.com/photo-1601302708657-53fcc2d4ad04?w=800&h=600&fit=crop&auto=format&q=80", // Quito colonial architecture with Andes backdrop
-    day2: "https://images.unsplash.com/photo-1584302388543-c67dd0a54ab5?w=800&h=600&fit=crop&auto=format&q=80", // Amazon canopy walkway suspension bridge
-    day3: "https://images.unsplash.com/photo-1631118956108-32b79c6a3ecf?w=800&h=600&fit=crop&auto=format&q=80", // Amazon river with pink dolphins jumping
+    day1: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&auto=format&q=80", // Amazon river tributary entrance
+    day2: "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?w=800&h=600&fit=crop&auto=format&q=80", // Amazon rainforest canopy from above
+    day3: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&h=600&fit=crop&auto=format&q=80", // Amazon jaguar in natural habitat
     day4: "https://images.unsplash.com/photo-1574870111867-089730e5a72b?w=800&h=600&fit=crop&auto=format&q=80", // Indigenous Amazonian community traditional huts
     day5: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos archipelago aerial view
-    day6: "https://images.unsplash.com/photo-1647123135582-cd97671f31da?w=800&h=600&fit=crop&auto=format&q=80", // Giant Galápagos tortoise in natural habitat
-    day7: "https://images.unsplash.com/photo-1633439932734-5edfbb7a5f7b?w=800&h=600&fit=crop&auto=format&q=80", // Snorkeling with sea lions underwater view
+    day6: "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos giant tortoise close-up
+    day7: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos sea lions on rocky shore
     day8: "https://images.unsplash.com/photo-1632165093188-00a07b0b88b8?w=800&h=600&fit=crop&auto=format&q=80", // Darwin finches on Galápagos cactus
-    day9: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop&auto=format&q=80", // Pinnacle Rock Bartolomé Island iconic volcanic formation
+    day9: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos volcanic landscape with lava formations
     day10: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos sunset with marine life silhouettes
-    fallback: "https://images.unsplash.com/photo-1601302708657-53fcc2d4ad04?w=800&h=600&fit=crop&auto=format&q=80"
+    fallback: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
   // Generic fallback for unknown destinations
