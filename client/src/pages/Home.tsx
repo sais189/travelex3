@@ -11,7 +11,7 @@ import { OptimizedImage } from "@/components/ui/optimized-image";
 import EarthGlobe from "@/components/EarthGlobe";
 import PricingBadge from "@/components/PricingBadge";
 import type { Destination } from "@shared/schema";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 
 export default function Home() {
   const [, navigate] = useLocation();
@@ -30,7 +30,7 @@ export default function Home() {
   const featuredDestinations = useMemo(() => destinations.slice(0, 4), [destinations]);
 
   // Enhanced search function that identifies keywords
-  const searchDestinations = (query: string) => {
+  const searchDestinations = useCallback((query: string) => {
     if (!query.trim()) {
       setFilteredDestinations(destinations);
       return;
@@ -82,15 +82,11 @@ export default function Home() {
     });
 
     setFilteredDestinations(filtered);
-  };
+  }, [destinations]);
 
   useEffect(() => {
     searchDestinations(searchQuery);
-  }, [searchQuery, destinations]);
-
-  useEffect(() => {
-    setFilteredDestinations(destinations);
-  }, [destinations]);
+  }, [searchQuery, searchDestinations]);
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -210,9 +206,6 @@ export default function Home() {
                                   <div className="flex-1 min-w-0">
                                     <div className="font-medium truncate">{destination.name}</div>
                                     <div className="text-sm text-muted-foreground truncate">{destination.country}</div>
-                                  </div>
-                                  <div className="text-xs text-gold-accent font-medium flex-shrink-0">
-                                    ${parseFloat(destination.price).toLocaleString()}
                                   </div>
                                 </div>
                               </button>

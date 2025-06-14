@@ -17,12 +17,77 @@ export default function Destinations() {
   const [budgetFilter, setBudgetFilter] = useState("all");
   const [durationFilter, setDurationFilter] = useState("all");
   const [dealsFilter, setDealsFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: destinations = [], isLoading } = useQuery<Destination[]>({
     queryKey: ["/api/destinations"],
   });
 
-  const filteredDestinations = destinations.filter((destination) => {
+  // Handle URL search parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    if (searchParam) {
+      setSearchQuery(decodeURIComponent(searchParam));
+    }
+  }, []);
+
+  // Enhanced search function similar to Home page
+  const searchDestinations = (query: string, destinations: Destination[]) => {
+    if (!query.trim()) {
+      return destinations;
+    }
+
+    const searchTerms = query.toLowerCase().split(/[\s,]+/).filter(term => term.length > 0);
+    
+    const filtered = destinations.filter((destination) => {
+      const searchableText = [
+        destination.name,
+        destination.country,
+        destination.description,
+        ...destination.name.split(/[\s-]+/),
+        // Common location keywords
+        ...(destination.name.includes("Island") ? ["island"] : []),
+        ...(destination.name.includes("Beach") ? ["beach", "coastal"] : []),
+        ...(destination.name.includes("Mountain") ? ["mountain", "alpine"] : []),
+        ...(destination.name.includes("City") ? ["city", "urban"] : []),
+        ...(destination.name.includes("Desert") ? ["desert"] : []),
+        ...(destination.name.includes("Forest") ? ["forest", "jungle"] : []),
+      ].join(" ").toLowerCase();
+
+      return searchTerms.some(term => 
+        searchableText.includes(term) ||
+        destination.country.toLowerCase().includes(term) ||
+        destination.name.toLowerCase().includes(term)
+      );
+    });
+
+    // Sort by relevance
+    filtered.sort((a, b) => {
+      const aScore = searchTerms.reduce((score, term) => {
+        if (a.name.toLowerCase().includes(term)) score += 10;
+        if (a.country.toLowerCase().includes(term)) score += 8;
+        if (a.description.toLowerCase().includes(term)) score += 2;
+        return score;
+      }, 0);
+
+      const bScore = searchTerms.reduce((score, term) => {
+        if (b.name.toLowerCase().includes(term)) score += 10;
+        if (b.country.toLowerCase().includes(term)) score += 8;
+        if (b.description.toLowerCase().includes(term)) score += 2;
+        return score;
+      }, 0);
+
+      return bScore - aScore;
+    });
+
+    return filtered;
+  };
+
+  // Apply search filter first, then other filters
+  const searchFilteredDestinations = searchDestinations(searchQuery, destinations);
+  
+  const filteredDestinations = searchFilteredDestinations.filter((destination) => {
     let matches = true;
 
     // Region filter
@@ -200,14 +265,44 @@ export default function Destinations() {
           </p>
         </motion.div>
 
-        {/* Filters */}
+        {/* Search and Filters */}
         <motion.div
           className="glass-morphism rounded-2xl p-6 mb-12"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {/* Search Bar */}
+          <div className="mb-6">
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+              <Input
+                type="text"
+                placeholder="Search destinations, countries, cities..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-10 bg-slate-panel border-border focus:border-gold-accent text-foreground"
+              />
+              {searchQuery && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-transparent"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            {searchQuery && (
+              <p className="text-sm text-muted-foreground mt-2">
+                {searchFilteredDestinations.length} result{searchFilteredDestinations.length !== 1 ? 's' : ''} found for "{searchQuery}"
+              </p>
+            )}
+          </div>
+
+          {/* Filter Controls */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Select value={regionFilter} onValueChange={setRegionFilter}>
               <SelectTrigger className="bg-slate-panel border-border focus:border-gold-accent">
                 <SelectValue placeholder="All Regions" />
@@ -259,13 +354,6 @@ export default function Destinations() {
                 <SelectItem value="group-discounts">Group Discounts</SelectItem>
               </SelectContent>
             </Select>
-
-            <Button
-              className="bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground glow-hover"
-            >
-              <Filter className="w-4 h-4 mr-2" />
-              Apply Filters
-            </Button>
           </div>
         </motion.div>
 
