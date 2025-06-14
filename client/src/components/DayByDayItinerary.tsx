@@ -156,6 +156,21 @@ const DESTINATION_LANDMARK_IMAGES = {
     day10: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800&h=600&fit=crop&auto=format&q=80", // Traditional market
     fallback: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop&auto=format&q=80"
   },
+
+  // Ecuadorian Amazon & Galápagos (ID: 34)
+  "ecuadorian_amazon_galapagos": {
+    day1: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80", // Amazon rainforest arrival
+    day2: "https://images.unsplash.com/photo-1571844307880-751c6d86f3f3?w=800&h=600&fit=crop&auto=format&q=80", // Canopy walkway exploration
+    day3: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Pink river dolphins
+    day4: "https://images.unsplash.com/photo-1625501715616-d19dfe10dd0d?w=800&h=600&fit=crop&auto=format&q=80", // Indigenous community
+    day5: "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos arrival with giant tortoises
+    day6: "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop&auto=format&q=80", // Giant tortoise sanctuary
+    day7: "https://images.unsplash.com/photo-1522633374897-e13b2395a4b6?w=800&h=600&fit=crop&auto=format&q=80", // Marine iguanas snorkeling
+    day8: "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&h=600&fit=crop&auto=format&q=80", // Blue-footed boobies
+    day9: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80", // Volcanic landscape Bartolomé
+    day10: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&h=600&fit=crop&auto=format&q=80", // Sea lions farewell
+    fallback: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80"
+  },
   
   // Generic fallback for unknown destinations
   generic: {
@@ -248,6 +263,31 @@ export default function DayByDayItinerary({
         ["Helicopter rescue scenic flight", "Mountain rescue demonstration", "Kathmandu valley sightseeing", "Traditional farewell dinner"]
       ];
       return himalayanHighlights[Math.min(index, himalayanHighlights.length - 1)] || himalayanHighlights[0];
+      
+    } else if (destinationName.includes('ecuadorian') || destinationName.includes('amazon') || destinationName.includes('galápagos')) {
+      const amazonGalapagosHighlights = [
+        // Day 1: Amazon Arrival
+        ["Arrival in Quito with Andes views", "Flight to Amazon basin", "Canoe journey into rainforest", "First night sounds of jungle"],
+        // Day 2: Rainforest Exploration
+        ["Dawn bird watching expedition", "Medicinal plant discovery walk", "Indigenous guide nature tour", "Canopy walkway adventure"],
+        // Day 3: River Journey
+        ["Navigate winding Amazon tributaries", "Pink river dolphin spotting", "Jaguar tracking expedition", "Traditional fishing techniques"],
+        // Day 4: Cultural Immersion
+        ["Visit indigenous communities", "Learn traditional crafts", "Sustainable living practices", "Shaman healing ceremony"],
+        // Day 5: Galápagos Transfer
+        ["Flight to Galápagos Islands", "Research station orientation", "First giant tortoise encounter", "Island ecosystem introduction"],
+        // Day 6: Giant Tortoise Encounter
+        ["Walk among ancient tortoises", "Conservation efforts education", "Tortoise behavior observation", "Breeding program visit"],
+        // Day 7: Marine Life Discovery
+        ["Snorkel with sea lions", "Marine iguana observation", "Tropical fish identification", "Underwater photography"],
+        // Day 8: Evolution Studies
+        ["Follow Darwin's footsteps", "Finch species study", "Blue-footed booby colonies", "Evolution theory exploration"],
+        // Day 9: Volcanic Landscapes
+        ["Explore volcanic formations", "Lava tube cave exploration", "Geological history tour", "Dramatic landscape photography"],
+        // Day 10: Departure
+        ["Final wildlife observations", "Conservation project visit", "Traditional goodbye ceremony", "Return journey to mainland"]
+      ];
+      return amazonGalapagosHighlights[Math.min(index, amazonGalapagosHighlights.length - 1)] || amazonGalapagosHighlights[0];
     }
 
     // Default generic highlights
@@ -290,6 +330,8 @@ export default function DayByDayItinerary({
       destinationKey = 'norwegian_fjords';
     } else if (destinationName.includes('rajasthan') || destinationName.includes('palace')) {
       destinationKey = 'rajasthan_palace_tour';
+    } else if (destinationName.includes('ecuadorian') || destinationName.includes('amazon') || destinationName.includes('galápagos')) {
+      destinationKey = 'ecuadorian_amazon_galapagos';
     }
     
     // Fallback based on ID if name matching fails
@@ -306,6 +348,7 @@ export default function DayByDayItinerary({
         case 10: destinationKey = 'norwegian_fjords'; break;
         case 19: destinationKey = 'rajasthan_palace_tour'; break;
         case 21: destinationKey = 'serengeti_migration'; break;
+        case 34: destinationKey = 'ecuadorian_amazon_galapagos'; break;
         default: destinationKey = 'generic';
       }
     }
