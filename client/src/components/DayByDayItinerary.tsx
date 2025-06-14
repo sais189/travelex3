@@ -142,6 +142,21 @@ const DESTINATION_LANDMARK_IMAGES = {
     fallback: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
+  // Rajasthan Palace Tour (ID: 19)
+  "rajasthan_palace_tour": {
+    day1: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop&auto=format&q=80", // Jaipur Pink City
+    day2: "https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=800&h=600&fit=crop&auto=format&q=80", // Amber Fort
+    day3: "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=800&h=600&fit=crop&auto=format&q=80", // Pushkar sacred lake
+    day4: "https://images.unsplash.com/photo-1629367494173-c78a56567877?w=800&h=600&fit=crop&auto=format&q=80", // Jodhpur Blue City
+    day5: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&h=600&fit=crop&auto=format&q=80", // Jaisalmer Golden City
+    day6: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&h=600&fit=crop&auto=format&q=80", // Desert safari camels
+    day7: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Udaipur Lake Palace
+    day8: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&h=600&fit=crop&auto=format&q=80", // Royal gardens
+    day9: "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&h=600&fit=crop&auto=format&q=80", // Chittorgarh Fort
+    day10: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800&h=600&fit=crop&auto=format&q=80", // Traditional market
+    fallback: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+  
   // Generic fallback for unknown destinations
   generic: {
     day1: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80", // Travel wanderlust
@@ -273,6 +288,8 @@ export default function DayByDayItinerary({
       destinationKey = 'australian_outback';
     } else if (destinationName.includes('norwegian') || destinationName.includes('fjords')) {
       destinationKey = 'norwegian_fjords';
+    } else if (destinationName.includes('rajasthan') || destinationName.includes('palace')) {
+      destinationKey = 'rajasthan_palace_tour';
     }
     
     // Fallback based on ID if name matching fails
@@ -287,6 +304,7 @@ export default function DayByDayItinerary({
         case 8: destinationKey = 'great_barrier_reef'; break;
         case 9: destinationKey = 'australian_outback'; break;
         case 10: destinationKey = 'norwegian_fjords'; break;
+        case 19: destinationKey = 'rajasthan_palace_tour'; break;
         case 21: destinationKey = 'serengeti_migration'; break;
         default: destinationKey = 'generic';
       }
