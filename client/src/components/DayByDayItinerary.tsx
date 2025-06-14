@@ -164,8 +164,8 @@ const DESTINATION_LANDMARK_IMAGES = {
     day3: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Amazon pink river dolphins
     day4: "https://images.unsplash.com/photo-1574870111867-089730e5a72b?w=800&h=600&fit=crop&auto=format&q=80", // Indigenous Amazonian community traditional huts
     day5: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos archipelago aerial view
-    day6: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos giant tortoise in sanctuary
-    day7: "https://images.unsplash.com/photo-1633439932734-5edfbb7a5f7b?w=800&h=600&fit=crop&auto=format&q=80", // Snorkeling with marine life
+    day6: "https://images.unsplash.com/photo-1621295686942-b89c25ed57a8?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos marine iguanas on volcanic rocks
+    day7: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos sea lions swimming in turquoise waters
     day8: "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&h=600&fit=crop&auto=format&q=80", // Blue-footed boobies nesting colony
     day9: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos volcanic landscape with lava formations
     day10: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos sunset with marine life silhouettes
