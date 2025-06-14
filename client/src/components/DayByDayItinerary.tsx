@@ -159,17 +159,17 @@ const DESTINATION_LANDMARK_IMAGES = {
 
   // Ecuadorian Amazon & Galápagos (ID: 34)
   "ecuadorian_amazon_galapagos": {
-    day1: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&auto=format&q=80", // Amazon river tributary entrance
-    day2: "https://images.unsplash.com/photo-1566309460650-4e0ff0c75ba4?w=800&h=600&fit=crop&auto=format&q=80", // Amazon rainforest canopy from above
-    day3: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&h=600&fit=crop&auto=format&q=80", // Amazon jaguar in natural habitat
+    day1: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80", // Amazon rainforest dense canopy arrival
+    day2: "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop&auto=format&q=80", // Amazon macaw parrots in rainforest
+    day3: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80", // Amazon pink river dolphins
     day4: "https://images.unsplash.com/photo-1574870111867-089730e5a72b?w=800&h=600&fit=crop&auto=format&q=80", // Indigenous Amazonian community traditional huts
     day5: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos archipelago aerial view
-    day6: "https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos giant tortoise close-up
-    day7: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos sea lions on rocky shore
-    day8: "https://images.unsplash.com/photo-1632165093188-00a07b0b88b8?w=800&h=600&fit=crop&auto=format&q=80", // Darwin finches on Galápagos cactus
+    day6: "https://images.unsplash.com/photo-1647123135582-cd97671f31da?w=800&h=600&fit=crop&auto=format&q=80", // Giant Galápagos tortoise conservation center
+    day7: "https://images.unsplash.com/photo-1522633374897-e13b2395a4b6?w=800&h=600&fit=crop&auto=format&q=80", // Marine iguanas swimming underwater
+    day8: "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&h=600&fit=crop&auto=format&q=80", // Blue-footed boobies nesting colony
     day9: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos volcanic landscape with lava formations
     day10: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos sunset with marine life silhouettes
-    fallback: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&auto=format&q=80"
+    fallback: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80"
   },
   
   // Generic fallback for unknown destinations
