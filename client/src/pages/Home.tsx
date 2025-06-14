@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Search, Calendar, MapPin, Star, Plane, ChevronDown } from "lucide-react";
+import { ArrowRight, Search, Calendar, MapPin, Star, Plane, ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,13 +11,16 @@ import { OptimizedImage } from "@/components/ui/optimized-image";
 import EarthGlobe from "@/components/EarthGlobe";
 import PricingBadge from "@/components/PricingBadge";
 import type { Destination } from "@shared/schema";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
 export default function Home() {
   const [, navigate] = useLocation();
   const [open, setOpen] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [searchDate, setSearchDate] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredDestinations, setFilteredDestinations] = useState<Destination[]>([]);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const { data: destinations = [] } = useQuery<Destination[]>({
     queryKey: ["/api/destinations"],
@@ -26,9 +29,89 @@ export default function Home() {
 
   const featuredDestinations = useMemo(() => destinations.slice(0, 4), [destinations]);
 
+  // Enhanced search function that identifies keywords
+  const searchDestinations = (query: string) => {
+    if (!query.trim()) {
+      setFilteredDestinations(destinations);
+      return;
+    }
+
+    const searchTerms = query.toLowerCase().split(/[\s,]+/).filter(term => term.length > 0);
+    
+    const filtered = destinations.filter((destination) => {
+      const searchableText = [
+        destination.name,
+        destination.country,
+        destination.description,
+        // Extract city/region from name (e.g., "Maldives Luxury Resort" -> "Maldives")
+        ...destination.name.split(/[\s-]+/),
+        // Common location keywords
+        ...(destination.name.includes("Island") ? ["island"] : []),
+        ...(destination.name.includes("Beach") ? ["beach", "coastal"] : []),
+        ...(destination.name.includes("Mountain") ? ["mountain", "alpine"] : []),
+        ...(destination.name.includes("City") ? ["city", "urban"] : []),
+        ...(destination.name.includes("Desert") ? ["desert"] : []),
+        ...(destination.name.includes("Forest") ? ["forest", "jungle"] : []),
+      ].join(" ").toLowerCase();
+
+      return searchTerms.some(term => 
+        searchableText.includes(term) ||
+        // Fuzzy matching for common misspellings
+        destination.country.toLowerCase().includes(term) ||
+        destination.name.toLowerCase().includes(term)
+      );
+    });
+
+    // Sort by relevance - exact matches first, then partial matches
+    filtered.sort((a, b) => {
+      const aScore = searchTerms.reduce((score, term) => {
+        if (a.name.toLowerCase().includes(term)) score += 10;
+        if (a.country.toLowerCase().includes(term)) score += 8;
+        if (a.description.toLowerCase().includes(term)) score += 2;
+        return score;
+      }, 0);
+
+      const bScore = searchTerms.reduce((score, term) => {
+        if (b.name.toLowerCase().includes(term)) score += 10;
+        if (b.country.toLowerCase().includes(term)) score += 8;
+        if (b.description.toLowerCase().includes(term)) score += 2;
+        return score;
+      }, 0);
+
+      return bScore - aScore;
+    });
+
+    setFilteredDestinations(filtered);
+  };
+
+  useEffect(() => {
+    searchDestinations(searchQuery);
+  }, [searchQuery, destinations]);
+
+  useEffect(() => {
+    setFilteredDestinations(destinations);
+  }, [destinations]);
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleSearch = () => {
     if (selectedDestination) {
       navigate(`/booking/${selectedDestination.id}`);
+    } else if (searchQuery.trim() && filteredDestinations.length > 0) {
+      // Navigate to destinations page with search query
+      navigate(`/destinations?search=${encodeURIComponent(searchQuery)}`);
     } else {
       navigate("/destinations");
     }
@@ -36,7 +119,14 @@ export default function Home() {
 
   const handleDestinationSelect = (destination: Destination) => {
     setSelectedDestination(destination);
+    setSearchQuery(destination.name);
     setOpen(false);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setSelectedDestination(null);
+    setFilteredDestinations(destinations);
   };
 
   const handleBookNow = (destinationId: number) => {
@@ -72,55 +162,70 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="relative">
+                  <div className="relative" ref={searchRef}>
                     <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5 z-10" />
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        placeholder="Search destinations, countries, cities..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => setOpen(true)}
+                        className="pl-10 pr-10 bg-slate-panel border-border focus:border-gold-accent text-foreground"
+                      />
+                      {searchQuery && (
                         <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={open}
-                          className="w-full justify-between pl-10 bg-slate-panel border-border hover:border-gold-accent text-left font-normal"
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleClearSearch}
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-transparent"
                         >
-                          {selectedDestination
-                            ? selectedDestination.name
-                            : "Where to?"}
-                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          <X className="h-4 w-4" />
                         </Button>
-                      </PopoverTrigger>
-                      <PopoverContent 
-                        className="w-full p-0 bg-slate-panel border-border"
-                        side="bottom"
-                        sideOffset={8}
-                        align="start"
-                        avoidCollisions={false}
-                      >
-                        <Command>
-                          <CommandInput placeholder="Search destinations..." className="h-9" />
-                          <CommandList>
-                            <CommandEmpty>No destinations found.</CommandEmpty>
-                            <CommandGroup>
-                              {destinations.map((destination) => (
-                                <CommandItem
-                                  key={destination.id}
-                                  value={destination.name}
-                                  onSelect={() => handleDestinationSelect(destination)}
-                                  className="cursor-pointer hover:bg-gold-accent/10"
-                                >
-                                  <div className="flex items-center space-x-3">
-                                    <MapPin className="w-4 h-4 text-gold-accent" />
-                                    <div>
-                                      <div className="font-medium">{destination.name}</div>
-                                      <div className="text-sm text-muted-foreground">{destination.country}</div>
-                                    </div>
+                      )}
+                    </div>
+                    
+                    {/* Search Results Dropdown */}
+                    {open && (searchQuery.length > 0 || filteredDestinations.length > 0) && (
+                      <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-slate-panel border border-border rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                        {filteredDestinations.length === 0 ? (
+                          <div className="p-4 text-muted-foreground text-center">
+                            {searchQuery ? `No destinations found for "${searchQuery}"` : "Start typing to search destinations..."}
+                          </div>
+                        ) : (
+                          <div className="p-2">
+                            {searchQuery && (
+                              <div className="px-3 py-2 text-xs text-muted-foreground border-b border-border mb-2">
+                                {filteredDestinations.length} result{filteredDestinations.length !== 1 ? 's' : ''} found
+                              </div>
+                            )}
+                            {filteredDestinations.slice(0, 8).map((destination) => (
+                              <button
+                                key={destination.id}
+                                onClick={() => handleDestinationSelect(destination)}
+                                className="w-full text-left p-3 hover:bg-gold-accent/10 rounded-md transition-colors duration-200 border-0 bg-transparent"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <MapPin className="w-4 h-4 text-gold-accent flex-shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-medium truncate">{destination.name}</div>
+                                    <div className="text-sm text-muted-foreground truncate">{destination.country}</div>
                                   </div>
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                                  <div className="text-xs text-gold-accent font-medium flex-shrink-0">
+                                    ${parseFloat(destination.price).toLocaleString()}
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                            {filteredDestinations.length > 8 && (
+                              <div className="px-3 py-2 text-xs text-muted-foreground text-center border-t border-border mt-2">
+                                +{filteredDestinations.length - 8} more destinations
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
