@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot } from "lucide-react";
+import { MessageCircle, X, Send, Bot, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
@@ -17,6 +17,7 @@ interface Message {
 export default function ChatBot() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -27,6 +28,11 @@ export default function ChatBot() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 320, height: 400 });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const chatRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleOpenChatBot = (event: CustomEvent) => {
@@ -171,6 +177,72 @@ For immediate assistance:
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSendMessage();
+    }
+  };
+
+  // Handle resize functionality
+  const handleResize = (e: React.MouseEvent) => {
+    if (!isExpanded) return;
+    
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = dimensions.width;
+    const startHeight = dimensions.height;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newWidth = Math.max(300, Math.min(800, startWidth + (e.clientX - startX)));
+      const newHeight = Math.max(300, Math.min(600, startHeight + (e.clientY - startY)));
+      setDimensions({ width: newWidth, height: newHeight });
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  // Handle drag functionality
+  const handleDragStart = (e: React.MouseEvent) => {
+    if (!isExpanded) return;
+    
+    e.preventDefault();
+    setIsDragging(true);
+    const startX = e.clientX - position.x;
+    const startY = e.clientY - position.y;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newX = e.clientX - startX;
+      const newY = e.clientY - startY;
+      
+      // Constrain to viewport
+      const maxX = window.innerWidth - dimensions.width;
+      const maxY = window.innerHeight - dimensions.height;
+      
+      setPosition({
+        x: Math.max(0, Math.min(maxX, newX)),
+        y: Math.max(0, Math.min(maxY, newY))
+      });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+    if (!isExpanded) {
+      // Reset position when expanding
+      setPosition({ x: 50, y: 50 });
     }
   };
 

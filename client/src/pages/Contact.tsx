@@ -20,11 +20,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import FAQPopup from "@/components/FAQPopup";
 
 export default function Contact() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showFAQ, setShowFAQ] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -40,10 +42,7 @@ export default function Contact() {
   };
 
   const handleFAQClick = () => {
-    // Dispatch a custom event to open chatbot with FAQ message
-    window.dispatchEvent(new CustomEvent('openChatBot', { 
-      detail: { message: 'Can you show me the frequently asked questions?' }
-    }));
+    setShowFAQ(true);
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -411,6 +410,9 @@ export default function Contact() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* FAQ Popup */}
+      <FAQPopup isOpen={showFAQ} onClose={() => setShowFAQ(false)} />
     </div>
   );
 }
