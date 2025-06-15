@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from "@shared/schema";
 
 // Use the external database connection string
-const DATABASE_URL = "postgresql://database_hdlg_user:LzOKtr2z1Csa1Unr9WcafXyPbQ7QokBR@dpg-d17eed0dl3ps73acek2g-a.singapore-postgres.render.com/database_hdlg";
+const DATABASE_URL = "postgresql://travelex1_user:hC62HuqVKRb4hH3Bkuz5kgDfGtDehMwO@dpg-d17g0oumcj7s73d61u00-a.singapore-postgres.render.com/travelex1";
 
 export const pool = new Pool({ 
   connectionString: DATABASE_URL,
