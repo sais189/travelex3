@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { Pool } from 'pg';
+import pkg from 'pg';
+const { Pool } = pkg;
 import fs from 'fs';
 import { execSync } from 'child_process';
 
