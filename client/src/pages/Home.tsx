@@ -19,7 +19,6 @@ export default function Home() {
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [searchDate, setSearchDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredDestinations, setFilteredDestinations] = useState<Destination[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
 
   const { data: destinations = [] } = useQuery<Destination[]>({
@@ -29,56 +28,59 @@ export default function Home() {
 
   const featuredDestinations = useMemo(() => destinations.slice(0, 4), [destinations]);
 
-
-
-  useEffect(() => {
+  // Compute filtered destinations instead of using state
+  const filteredDestinations = useMemo(() => {
     if (!searchQuery.trim()) {
-      setFilteredDestinations(destinations);
-    } else {
-      const searchTerms = searchQuery.toLowerCase().split(/[\s,]+/).filter(term => term.length > 0);
-      
-      const filtered = destinations.filter((destination) => {
-        const searchableText = [
-          destination.name,
-          destination.country,
-          destination.description,
-          ...destination.name.split(/[\s-]+/),
-          ...(destination.name.includes("Island") ? ["island"] : []),
-          ...(destination.name.includes("Beach") ? ["beach", "coastal"] : []),
-          ...(destination.name.includes("Mountain") ? ["mountain", "alpine"] : []),
-          ...(destination.name.includes("City") ? ["city", "urban"] : []),
-          ...(destination.name.includes("Desert") ? ["desert"] : []),
-          ...(destination.name.includes("Forest") ? ["forest", "jungle"] : []),
-        ].join(" ").toLowerCase();
-
-        return searchTerms.some(term => 
-          searchableText.includes(term) ||
-          destination.country.toLowerCase().includes(term) ||
-          destination.name.toLowerCase().includes(term)
-        );
-      });
-
-      filtered.sort((a, b) => {
-        const aScore = searchTerms.reduce((score, term) => {
-          if (a.name.toLowerCase().includes(term)) score += 10;
-          if (a.country.toLowerCase().includes(term)) score += 8;
-          if (a.description.toLowerCase().includes(term)) score += 2;
-          return score;
-        }, 0);
-
-        const bScore = searchTerms.reduce((score, term) => {
-          if (b.name.toLowerCase().includes(term)) score += 10;
-          if (b.country.toLowerCase().includes(term)) score += 8;
-          if (b.description.toLowerCase().includes(term)) score += 2;
-          return score;
-        }, 0);
-
-        return bScore - aScore;
-      });
-
-      setFilteredDestinations(filtered);
+      return destinations;
     }
+    
+    const searchTerms = searchQuery.toLowerCase().split(/[\s,]+/).filter(term => term.length > 0);
+    
+    const filtered = destinations.filter((destination) => {
+      const searchableText = [
+        destination.name,
+        destination.country,
+        destination.description,
+        ...destination.name.split(/[\s-]+/),
+        ...(destination.name.includes("Island") ? ["island"] : []),
+        ...(destination.name.includes("Beach") ? ["beach", "coastal"] : []),
+        ...(destination.name.includes("Mountain") ? ["mountain", "alpine"] : []),
+        ...(destination.name.includes("City") ? ["city", "urban"] : []),
+        ...(destination.name.includes("Desert") ? ["desert"] : []),
+        ...(destination.name.includes("Forest") ? ["forest", "jungle"] : []),
+      ].join(" ").toLowerCase();
+
+      return searchTerms.some(term => 
+        searchableText.includes(term) ||
+        destination.country.toLowerCase().includes(term) ||
+        destination.name.toLowerCase().includes(term)
+      );
+    });
+
+    filtered.sort((a, b) => {
+      const aScore = searchTerms.reduce((score, term) => {
+        if (a.name.toLowerCase().includes(term)) score += 10;
+        if (a.country.toLowerCase().includes(term)) score += 8;
+        if (a.description.toLowerCase().includes(term)) score += 2;
+        return score;
+      }, 0);
+
+      const bScore = searchTerms.reduce((score, term) => {
+        if (b.name.toLowerCase().includes(term)) score += 10;
+        if (b.country.toLowerCase().includes(term)) score += 8;
+        if (b.description.toLowerCase().includes(term)) score += 2;
+        return score;
+      }, 0);
+
+      return bScore - aScore;
+    });
+
+    return filtered;
   }, [searchQuery, destinations]);
+
+
+
+
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -114,7 +116,6 @@ export default function Home() {
   const handleClearSearch = () => {
     setSearchQuery("");
     setSelectedDestination(null);
-    setFilteredDestinations(destinations);
   };
 
   const handleBookNow = (destinationId: number) => {
