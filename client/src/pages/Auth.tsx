@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { LogIn, Globe, Sparkles, Shield, Users } from "lucide-react";
@@ -9,6 +9,46 @@ import { useAuth } from "@/hooks/useAuth";
 export default function Auth() {
   const [, navigate] = useLocation();
   const { isAuthenticated, isLoading } = useAuth();
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: ''
+  });
+  const [error, setError] = useState('');
+  const [formLoading, setFormLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setFormLoading(true);
+
+    try {
+      const endpoint = isRegisterMode ? '/api/register' : '/api/login';
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Force a page reload to refresh auth state
+        window.location.href = '/';
+      } else {
+        setError(data.message || 'Authentication failed');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setFormLoading(false);
+    }
+  };
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -84,18 +124,88 @@ export default function Auth() {
                 </div>
               </motion.div>
 
-              {/* Login Button */}
+              {/* Login/Register Form */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
+                className="space-y-4"
               >
-                <a href="/api/login" className="block">
-                  <Button className="w-full bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground font-bold py-4 glow-hover">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      value={formData.username}
+                      onChange={(e) => setFormData({...formData, username: e.target.value})}
+                      className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-accent text-foreground"
+                      required
+                    />
+                  </div>
+                  {isRegisterMode && (
+                    <>
+                      <div>
+                        <input
+                          type="email"
+                          placeholder="Email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({...formData, email: e.target.value})}
+                          className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-accent text-foreground"
+                          required
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <input
+                          type="text"
+                          placeholder="First Name"
+                          value={formData.firstName}
+                          onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                          className="px-4 py-3 bg-background/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-accent text-foreground"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Last Name"
+                          value={formData.lastName}
+                          onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                          className="px-4 py-3 bg-background/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-accent text-foreground"
+                        />
+                      </div>
+                    </>
+                  )}
+                  <div>
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({...formData, password: e.target.value})}
+                      className="w-full px-4 py-3 bg-background/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-accent text-foreground"
+                      required
+                    />
+                  </div>
+                  
+                  {error && (
+                    <div className="text-red-500 text-sm text-center">{error}</div>
+                  )}
+                  
+                  <Button 
+                    type="submit" 
+                    disabled={formLoading}
+                    className="w-full bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground font-bold py-4 glow-hover"
+                  >
                     <LogIn className="w-5 h-5 mr-2" />
-                    Continue with Replit
+                    {formLoading ? 'Please wait...' : (isRegisterMode ? 'Create Account' : 'Sign In')}
                   </Button>
-                </a>
+                </form>
+                
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsRegisterMode(!isRegisterMode)}
+                    className="text-gold-accent hover:text-gold-accent/80 text-sm underline"
+                  >
+                    {isRegisterMode ? 'Already have an account? Sign in' : 'Need an account? Register'}
+                  </button>
+                </div>
               </motion.div>
 
               {/* Footer */}

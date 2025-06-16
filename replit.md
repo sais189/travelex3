@@ -32,8 +32,7 @@ This is a comprehensive travel booking platform built as a full-stack web applic
   - `sessions` - Session management for authentication
 
 ### Authentication and Authorization Mechanisms
-- **Primary Auth**: OpenID Connect integration with Replit's authentication system
-- **Fallback Auth**: Username/password authentication with bcrypt hashing
+- **Primary Auth**: Local username/password authentication with bcrypt hashing
 - **Session Management**: Secure HTTP-only cookies with PostgreSQL session storage
 - **Role-Based Access**: User roles (user, admin, travel_agent, support) with appropriate permissions
 - **Route Protection**: Authentication middleware protecting sensitive endpoints
@@ -70,7 +69,7 @@ This is a comprehensive travel booking platform built as a full-stack web applic
 ## External Dependencies
 
 ### Core Dependencies
-- **@neondatabase/serverless**: Serverless PostgreSQL client for Neon Database
+- **@neondatabase/serverless**: Serverless PostgreSQL client for Neon Database (or local PostgreSQL)
 - **drizzle-orm**: Type-safe ORM for database operations
 - **@stripe/stripe-js**: Payment processing integration
 - **three**: 3D graphics library for globe visualization
@@ -84,23 +83,103 @@ This is a comprehensive travel booking platform built as a full-stack web applic
 - **ESBuild**: Fast JavaScript bundler for production builds
 
 ### Authentication & Security
-- **openid-client**: OpenID Connect authentication
-- **bcryptjs**: Password hashing for fallback authentication
+- **bcryptjs**: Password hashing for local authentication
 - **express-session**: Session management middleware
+- **connect-pg-simple**: PostgreSQL session store
 
 ## Deployment Strategy
 
-### Development Environment
-- **Platform**: Replit with integrated development environment
-- **Database**: Neon Database (serverless PostgreSQL)
+### Local Development Environment
+- **Platform**: Any system with Node.js 18+ support
+- **Database**: PostgreSQL (local installation or Docker container)
 - **Hot Reloading**: Vite development server with live updates
-- **Environment Variables**: Secure storage of API keys and database credentials
+- **Environment Variables**: Local .env file for API keys and database credentials
 
 ### Production Build
 - **Frontend**: Static assets built with Vite and served via Express
 - **Backend**: Node.js application with optimized bundles
 - **Database Migrations**: Drizzle migrations for schema management
-- **Deployment Target**: Replit's autoscale deployment infrastructure
+- **Deployment Target**: Any Node.js hosting platform (Vercel, Netlify, AWS, DigitalOcean, etc.)
+
+### Local Setup Instructions
+
+#### Prerequisites
+- Node.js 18 or higher
+- PostgreSQL 12 or higher (local installation or Docker)
+- Git
+
+#### Installation Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd globetrotter-travel
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up PostgreSQL database**
+   
+   Option A - Local PostgreSQL:
+   ```bash
+   # Create database
+   createdb globetrotter_travel
+   ```
+   
+   Option B - Docker:
+   ```bash
+   docker run --name postgres-travel \
+     -e POSTGRES_PASSWORD=your_password \
+     -e POSTGRES_DB=globetrotter_travel \
+     -p 5432:5432 -d postgres:15
+   ```
+
+4. **Configure environment variables**
+   Create a `.env` file in the root directory:
+   ```env
+   DATABASE_URL=postgresql://username:password@localhost:5432/globetrotter_travel
+   SESSION_SECRET=your-super-secret-session-key
+   STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+   STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key
+   OPENAI_API_KEY=your_openai_api_key_for_chatbot
+   NODE_ENV=development
+   ```
+
+5. **Initialize database schema**
+   ```bash
+   npm run db:push
+   ```
+
+6. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+7. **Access the application**
+   Open your browser to `http://localhost:5000`
+
+#### Production Deployment
+
+1. **Build the application**
+   ```bash
+   npm run build
+   ```
+
+2. **Start production server**
+   ```bash
+   npm start
+   ```
+
+#### Database Configuration
+
+For production deployments, you can use:
+- **Neon Database**: Serverless PostgreSQL (recommended for cloud deployments)
+- **AWS RDS**: Managed PostgreSQL service
+- **DigitalOcean Managed Databases**: Simple PostgreSQL hosting
+- **Local PostgreSQL**: For on-premise deployments
 
 ### Performance Considerations
 - **Code Splitting**: Lazy loading of route components
