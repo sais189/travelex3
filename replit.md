@@ -189,6 +189,7 @@ For production deployments, you can use:
 
 ## Changelog
 - June 14, 2025. Initial setup
+- June 16, 2025. Removed all Replit-specific dependencies and domains, implemented local authentication system, enabled local hosting
 
 ## User Preferences
 
