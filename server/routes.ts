@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./auth";
 import { storage } from "./storage";
 import { insertDestinationSchema, insertBookingSchema } from "@shared/schema";
 import { z } from "zod";
@@ -942,15 +942,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Bookings routes
   app.post('/api/bookings', async (req: any, res) => {
     try {
-      // Check both session-based and Replit auth
+      // Check session-based authentication
       const sessionUser = req.session?.user;
-      const replitUser = req.user?.claims?.sub;
-      const userId = sessionUser?.id || replitUser;
+      const userId = sessionUser?.id;
       
       if (!userId) {
-        console.log("Auth debug - sessionUser:", sessionUser);
-        console.log("Auth debug - replitUser:", replitUser);
-        console.log("Auth debug - req.user:", req.user);
         return res.status(401).json({ message: "Unauthorized" });
       }
       
@@ -1029,7 +1025,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/bookings/:id', async (req: any, res) => {
     try {
-      // Check both session-based and Replit auth
+      // Check session-based authentication
       const sessionUser = req.session?.user;
       const replitUser = req.user?.claims?.sub;
       const userId = sessionUser?.id || replitUser;
@@ -1060,7 +1056,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/bookings/:id/cancel', async (req: any, res) => {
     try {
-      // Check both session-based and Replit auth
+      // Check session-based authentication
       const sessionUser = req.session?.user;
       const replitUser = req.user?.claims?.sub;
       const userId = sessionUser?.id || replitUser;
