@@ -342,6 +342,13 @@ export default function AdminDashboard() {
       refetchUsers();
       queryClient.invalidateQueries({ queryKey: ['/api/admin/activity-logs'] });
     },
+    onError: (error: any) => {
+      toast({
+        title: "Error updating user status",
+        description: error.message || "Failed to update user status",
+        variant: "destructive",
+      });
+    },
   });
 
   const deleteUser = useMutation({
@@ -353,6 +360,13 @@ export default function AdminDashboard() {
       });
       refetchUsers();
       queryClient.invalidateQueries({ queryKey: ['/api/admin/activity-logs'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error deleting user",
+        description: error.message || "Failed to delete user",
+        variant: "destructive",
+      });
     },
   });
 
@@ -367,6 +381,13 @@ export default function AdminDashboard() {
       setShowEditUserDialog(false);
       refetchUsers();
       queryClient.invalidateQueries({ queryKey: ['/api/admin/activity-logs'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error updating user",
+        description: error.message || "Failed to update user",
+        variant: "destructive",
+      });
     },
   });
 

@@ -579,8 +579,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const updatedUser = await storage.upsertUser({
-        ...user,
+      const updatedUser = await storage.updateUser(id, {
         isActive: !user.isActive
       });
 
