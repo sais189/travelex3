@@ -109,7 +109,6 @@ export default function Navbar() {
                 </Link>
               ) : (
                 <div className="hidden lg:flex items-center space-x-3">
-                  {console.log('User data in navbar:', user)}
                   {user?.role === 'admin' && (
                     <Link href="/admin">
                       <Button className="bg-gold-accent hover:bg-gold-accent/80 text-primary-foreground glow-hover">
@@ -200,7 +199,6 @@ export default function Navbar() {
                       </Link>
                     ) : (
                       <>
-                        {console.log('Mobile User data:', user, 'Role:', user?.role)}
                         {user?.role === 'admin' && (
                           <Link href="/admin">
                             <motion.div
