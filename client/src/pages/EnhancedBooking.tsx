@@ -1400,11 +1400,14 @@ export default function EnhancedBooking() {
 
                   {/* Detailed Pricing Breakdown */}
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-base mb-4">Price Breakdown</h4>
+                    <h4 className="font-semibold text-base mb-4 flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-gold-accent" />
+                      Price Breakdown
+                    </h4>
                     
                     {/* Base Price */}
                     <div className="flex justify-between text-sm">
-                      <span>Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
+                      <span className="no-icon">Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
                       <span>{formatPrice(parseFloat(destination?.price || "0") * guests)}</span>
                     </div>
                     
