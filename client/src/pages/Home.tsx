@@ -228,7 +228,7 @@ export default function Home() {
                             !searchDate && "text-muted-foreground"
                           )}
                         >
-                          <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
+                          <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent dark:text-white w-5 h-5" />
                           {searchDate ? format(searchDate, "PPP") : "Pick a date"}
                           <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
