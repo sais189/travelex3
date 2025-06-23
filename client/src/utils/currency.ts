@@ -59,7 +59,10 @@ export function getCurrencyName(currencyCode: string): string {
 export function getUserPreferredCurrency(): string {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem('preferred-currency');
-    if (saved && SUPPORTED_CURRENCIES.find(c => c.code === saved)) {
+    // Force reset to new default if currently USD (old default)
+    if (saved === 'USD') {
+      localStorage.removeItem('preferred-currency');
+    } else if (saved && SUPPORTED_CURRENCIES.find(c => c.code === saved)) {
       return saved;
     }
     
