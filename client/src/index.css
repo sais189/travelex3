@@ -219,18 +219,28 @@
     opacity: 0 !important;
   }
   
-  /* Hide calendar icons specifically from base price text */
-  .no-icon *,
-  .no-icon *::before,
-  .no-icon *::after {
-    background-image: none !important;
-    list-style: none !important;
+  /* Make unwanted calendar icons black to blend with dark background */
+  .space-y-3 .flex.justify-between div:first-child::before,
+  .space-y-3 .flex.justify-between span:first-child::before,
+  .space-y-3 div:nth-child(2)::before,
+  .space-y-3 div:nth-child(2) *::before,
+  .space-y-3 div:nth-child(2) span::before,
+  .space-y-3 div:nth-child(2) div::before {
+    color: #000000 !important;
+    fill: #000000 !important;
+    background: #000000 !important;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+    opacity: 0 !important;
+    filter: brightness(0) !important;
   }
   
-  .no-icon::before {
-    background-image: none !important;
-    background: none !important;
-    font-family: inherit !important;
+  /* Target calendar icons in dark mode specifically */
+  .dark .space-y-3 *::before {
+    color: #000000 !important;
+    fill: #000000 !important;
+    background: #000000 !important;
+    opacity: 0 !important;
   }
 
   .bg-gold-accent {
