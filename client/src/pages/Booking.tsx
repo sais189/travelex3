@@ -460,7 +460,7 @@ export default function Booking() {
                                 !checkIn && "text-muted-foreground"
                               )}
                             >
-                              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent dark:!text-white w-5 h-5" />
+                              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent calendar-icon w-5 h-5" />
                               {checkIn ? format(checkIn, "PPP") : "Pick a date"}
                               <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
@@ -503,7 +503,7 @@ export default function Booking() {
                                 !checkIn && "opacity-50 cursor-not-allowed"
                               )}
                             >
-                              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent dark:!text-white w-5 h-5" />
+                              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent calendar-icon w-5 h-5" />
                               {checkOut ? format(checkOut, "PPP") : "Pick a date"}
                               <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                             </Button>

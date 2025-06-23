@@ -188,6 +188,11 @@
     color: #F16C6C;
   }
 
+  /* Force calendar icons to be white in dark mode */
+  .dark .calendar-icon {
+    color: white !important;
+  }
+
   .bg-gold-accent {
     background-color: #D4AF37;
   }
