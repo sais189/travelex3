@@ -153,13 +153,22 @@
     background-color: #FFFFFF;
   }
 
-  /* Light mode heading colors */
+  /* Light mode text colors */
   h1, h2, h3, h4, h5, h6 {
     color: hsl(var(--foreground));
   }
 
   .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
     color: hsl(var(--foreground));
+  }
+
+  /* Admin dashboard light mode overrides */
+  .text-white {
+    color: hsl(var(--foreground));
+  }
+
+  .dark .text-white {
+    color: white;
   }
 
   /* Color utilities that work in both modes */
