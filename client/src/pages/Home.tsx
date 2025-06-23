@@ -5,20 +5,23 @@ import { ArrowRight, Search, Calendar, MapPin, Star, Plane, ChevronDown, X } fro
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 import EarthGlobe from "@/components/EarthGlobe";
 import PricingBadge from "@/components/PricingBadge";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import type { Destination } from "@shared/schema";
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
 export default function Home() {
   const [, navigate] = useLocation();
   const [open, setOpen] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
-  const [searchDate, setSearchDate] = useState("");
+  const [searchDate, setSearchDate] = useState<Date | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState("");
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
   const { data: destinations = [] } = useQuery<Destination[]>({
@@ -97,13 +100,15 @@ export default function Home() {
   }, []);
 
   const handleSearch = () => {
+    const dateParam = searchDate ? `&date=${searchDate.toISOString().split('T')[0]}` : '';
+    
     if (selectedDestination) {
-      navigate(`/booking/${selectedDestination.id}`);
+      navigate(`/booking/${selectedDestination.id}${dateParam ? `?${dateParam.substring(1)}` : ''}`);
     } else if (searchQuery.trim() && filteredDestinations.length > 0) {
-      // Navigate to destinations page with search query
-      navigate(`/destinations?search=${encodeURIComponent(searchQuery)}`);
+      // Navigate to destinations page with search query and date
+      navigate(`/destinations?search=${encodeURIComponent(searchQuery)}${dateParam}`);
     } else {
-      navigate("/destinations");
+      navigate(`/destinations${dateParam ? `?${dateParam.substring(1)}` : ''}`);
     }
   };
 
@@ -214,13 +219,35 @@ export default function Home() {
                     )}
                   </div>
                   <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
-                    <Input
-                      type="date"
-                      value={searchDate}
-                      onChange={(e) => setSearchDate(e.target.value)}
-                      className="pl-10 bg-slate-panel border-border focus:border-lavender-accent text-foreground"
-                    />
+                    <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-lavender-accent",
+                            !searchDate && "text-muted-foreground"
+                          )}
+                        >
+                          <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
+                          {searchDate ? format(searchDate, "PPP") : "Pick a date"}
+                          <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarComponent
+                          mode="single"
+                          selected={searchDate}
+                          onSelect={(date) => {
+                            setSearchDate(date);
+                            setDatePickerOpen(false);
+                          }}
+                          disabled={(date) =>
+                            date < new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </div>
                   <Button
                     onClick={handleSearch}
