@@ -19,6 +19,21 @@
     <!-- Performance hints -->
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="/manifest.json">
+    
+    <!-- Immediately apply dark theme to prevent flash -->
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('ui-theme');
+        if (!savedTheme) {
+          localStorage.setItem('ui-theme', 'dark');
+          document.documentElement.classList.add('dark');
+        } else if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.add('light');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

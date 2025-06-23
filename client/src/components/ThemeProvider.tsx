@@ -26,7 +26,13 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+      const saved = localStorage.getItem(storageKey) as Theme;
+      if (saved) {
+        return saved;
+      }
+      // No saved preference, use dark as default
+      localStorage.setItem(storageKey, "dark");
+      return "dark";
     }
     return defaultTheme;
   });
@@ -38,13 +44,12 @@ export function ThemeProvider({
     root.classList.add(theme);
   }, [theme]);
 
-  // Set dark mode as default on first load
+  // Ensure initial theme is applied immediately
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem(storageKey);
-      if (!savedTheme) {
-        document.documentElement.classList.add("dark");
-      }
+      const root = document.documentElement;
+      root.classList.remove("light", "dark");
+      root.classList.add(theme);
     }
   }, []);
 
