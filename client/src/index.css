@@ -193,6 +193,12 @@
     color: white !important;
   }
 
+  /* Hide any icons that might appear before base price */
+  .no-icon::before {
+    display: none !important;
+    content: none !important;
+  }
+
   .bg-gold-accent {
     background-color: #D4AF37;
   }

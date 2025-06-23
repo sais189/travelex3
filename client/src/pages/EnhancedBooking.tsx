@@ -1404,7 +1404,7 @@ export default function EnhancedBooking() {
                     
                     {/* Base Price */}
                     <div className="flex justify-between text-sm">
-                      <span>Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
+                      <span className="no-icon">Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
                       <span>${(parseFloat(destination?.price || "0") * guests).toLocaleString()}</span>
                     </div>
                     
