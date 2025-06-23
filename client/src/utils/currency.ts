@@ -20,7 +20,7 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
   { code: 'SGD', symbol: 'S$', name: 'Singapore Dollar', exchangeRate: 1.35 },
 ];
 
-export const DEFAULT_CURRENCY = 'USD';
+export const DEFAULT_CURRENCY = 'AUD';
 
 export function convertCurrency(amount: number, fromCurrency: string, toCurrency: string): number {
   if (fromCurrency === toCurrency) return amount;
