@@ -19,7 +19,7 @@ export default function Destinations() {
   const [durationFilter, setDurationFilter] = useState("all");
   const [dealsFilter, setDealsFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("name"); // name, price-low, price-high, rating, duration, popularity
+  const [sortBy, setSortBy] = useState("popularity"); // name, price-low, price-high, rating, duration, popularity
   const { formatPrice } = useCurrency();
 
   const { data: destinations = [], isLoading } = useQuery<Destination[]>({
@@ -262,12 +262,18 @@ export default function Destinations() {
         });
       case "popularity":
         return sorted.sort((a, b) => {
-          // Sort by combination of rating and deals availability
+          // Sort by review count (most popular metric), then rating as secondary
+          const reviewCountA = a.reviewCount || 0;
+          const reviewCountB = b.reviewCount || 0;
+          
+          if (reviewCountA !== reviewCountB) {
+            return reviewCountB - reviewCountA;
+          }
+          
+          // If review counts are equal, sort by rating
           const ratingA = a.rating ? parseFloat(a.rating.toString()) : 0;
           const ratingB = b.rating ? parseFloat(b.rating.toString()) : 0;
-          const popularityA = ratingA + (a.flashSale ? 1 : 0) + (a.promoTag ? 0.5 : 0);
-          const popularityB = ratingB + (b.flashSale ? 1 : 0) + (b.promoTag ? 0.5 : 0);
-          return popularityB - popularityA;
+          return ratingB - ratingA;
         });
       case "name":
       default:
