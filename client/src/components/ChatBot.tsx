@@ -47,15 +47,27 @@ export default function ChatBot() {
         setMessages(prev => [...prev, userMessage]);
         
         // Get bot response
-        setTimeout(async () => {
-          const botResponse = await getBotResponse(event.detail.message);
-          const botMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            text: botResponse,
-            isBot: true,
-            timestamp: new Date(),
-          };
-          setMessages(prev => [...prev, botMessage]);
+        setTimeout(() => {
+          getBotResponse(event.detail.message)
+            .then(botResponse => {
+              const botMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                text: botResponse,
+                isBot: true,
+                timestamp: new Date(),
+              };
+              setMessages(prev => [...prev, botMessage]);
+            })
+            .catch(error => {
+              console.error("ChatBot auto-response error:", error);
+              const errorMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                text: "I'm having trouble connecting right now. Please try again in a moment.",
+                isBot: true,
+                timestamp: new Date(),
+              };
+              setMessages(prev => [...prev, errorMessage]);
+            });
         }, 500);
       }
     };

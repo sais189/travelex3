@@ -1214,29 +1214,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Message is required" });
       }
 
-      // Get comprehensive website data for context
-      const destinations = await storage.getAllDestinations();
-      const bookingStats = await storage.getBookingStats();
-      const userStats = await storage.getUserStats();
-      const revenue = await storage.getRevenue();
+      // Get comprehensive website data for context with proper error handling
+      const [destinations, bookingStats, userStats, revenue] = await Promise.allSettled([
+        storage.getAllDestinations(),
+        storage.getBookingStats(),
+        storage.getUserStats(),
+        storage.getRevenue()
+      ]).then(results => results.map(result => 
+        result.status === 'fulfilled' ? result.value : null
+      ));
       
-      // Get recent reviews for additional context
-      const allReviews = [];
-      for (const dest of destinations.slice(0, 5)) { // Get reviews for top 5 destinations
+      // Get recent reviews for additional context with improved error handling
+      let allReviews: any[] = [];
+      if (destinations && Array.isArray(destinations)) {
         try {
-          const reviews = await storage.getDestinationReviews(dest.id);
-          allReviews.push(...reviews.slice(0, 2)); // Get 2 recent reviews per destination
-        } catch (reviewError) {
-          console.log(`Could not fetch reviews for destination ${dest.id}`);
+          const reviewPromises = destinations.slice(0, 5).map(async (dest: any) => {
+            try {
+              const reviews = await storage.getDestinationReviews(dest.id);
+              return reviews.slice(0, 2);
+            } catch (reviewError) {
+              console.log(`Could not fetch reviews for destination ${dest.id}:`, (reviewError as Error)?.message || 'Unknown error');
+              return [];
+            }
+          });
+          
+          const reviewResults = await Promise.allSettled(reviewPromises);
+          allReviews = reviewResults.reduce((acc: any[], result) => {
+            if (result.status === 'fulfilled' && Array.isArray(result.value)) {
+              acc.push(...result.value);
+            }
+            return acc;
+          }, []);
+        } catch (error) {
+          console.log('Error fetching reviews:', (error as Error)?.message || 'Unknown error');
+          allReviews = [];
         }
       }
 
-      // Generate intelligent response based on website data
+      // Generate intelligent response based on website data with fallbacks
       const response = await generateChatbotResponse(message, {
-        destinations,
-        bookingStats,
-        userStats,
-        revenue,
+        destinations: destinations || [],
+        bookingStats: bookingStats || { total: 0, thisMonth: 0, growth: 0 },
+        userStats: userStats || { total: 0, active: 0, growth: 0 },
+        revenue: revenue || { total: "0", period: "N/A" },
         recentReviews: allReviews,
         context
       });

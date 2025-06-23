@@ -202,7 +202,7 @@ export default function Reviews({ destinationId, destinationName }: ReviewsProps
 
       {/* Reviews List */}
       <div className="space-y-4">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {displayedReviews.map((review, index) => (
             <motion.div
               key={review.id}
