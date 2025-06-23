@@ -1399,35 +1399,21 @@ export default function EnhancedBooking() {
                   <Separator />
 
                   {/* Detailed Pricing Breakdown */}
-                  <div className="space-y-3">
+                  <div className="pricing-breakdown-section">
                     <h4 className="font-semibold text-base mb-4 flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gold-accent" />
                       Price Breakdown
                     </h4>
                     
                     {/* Base Price */}
-                    <div className="flex justify-between text-sm base-price-row">
-                      <div className="relative flex items-center">
-                        <div 
-                          className="absolute z-50" 
-                          style={{
-                            left: '-24px',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            width: '20px',
-                            height: '20px',
-                            backgroundColor: '#1a1a1a',
-                            borderRadius: '2px'
-                          }}
-                        ></div>
-                        <span className="base-price-text relative z-20">Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
-                      </div>
+                    <div className="flex justify-between text-sm mb-3">
+                      <span>Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
                       <span>{formatPrice(parseFloat(destination?.price || "0") * guests)}</span>
                     </div>
                     
                     {/* Travel Class Premium */}
                     {travelClass === "business" && (
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-sm mb-3">
                         <span>Business class upgrade</span>
                         <span>+{formatPrice(travelClasses.find(tc => tc.value === travelClass)?.price || 0)}</span>
                       </div>
@@ -1437,7 +1423,7 @@ export default function EnhancedBooking() {
                     {selectedUpgrades.map((upgradeId) => {
                       const upgrade = upgrades.find(u => u.id === upgradeId);
                       return upgrade ? (
-                        <div key={upgradeId} className="flex justify-between text-sm">
+                        <div key={upgradeId} className="flex justify-between text-sm mb-3">
                           <span>{upgrade.name}</span>
                           <span>+{formatPrice(upgrade.price)}</span>
                         </div>
@@ -1447,19 +1433,19 @@ export default function EnhancedBooking() {
                     {/* Destination-specific inclusions and fees */}
                     {destination?.name.toLowerCase().includes('maldives') && (
                       <>
-                        <div className="flex justify-between text-sm text-muted-foreground">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
                           <span>Seaplane transfers</span>
                           <span>Included</span>
                         </div>
-                        <div className="flex justify-between text-sm text-muted-foreground">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
                           <span>Overwater villa access</span>
                           <span>Included</span>
                         </div>
-                        <div className="flex justify-between text-sm text-muted-foreground">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
                           <span>Marine conservation fee</span>
                           <span>{formatPrice(25)}</span>
                         </div>
-                        <div className="flex justify-between text-sm text-muted-foreground">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
                           <span>Diving equipment rental</span>
                           <span>Included</span>
                         </div>
@@ -1468,19 +1454,19 @@ export default function EnhancedBooking() {
                     
                     {destination?.name.toLowerCase().includes('tokyo') && (
                       <>
-                        <div className="flex justify-between text-sm text-muted-foreground">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
                           <span>JR Pass (7 days)</span>
                           <span>Included</span>
                         </div>
-                        <div className="flex justify-between text-sm text-muted-foreground">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
                           <span>Cultural experiences</span>
                           <span>Included</span>
                         </div>
-                        <div className="flex justify-between text-sm text-muted-foreground">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
                           <span>Tourist tax</span>
                           <span>{formatPrice(15)}</span>
                         </div>
-                        <div className="flex justify-between text-sm text-muted-foreground">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
                           <span>Temple entrance fees</span>
                           <span>Included</span>
                         </div>
@@ -1581,35 +1567,35 @@ export default function EnhancedBooking() {
                     )}
                     
                     {/* General inclusions for all destinations */}
-                    <div className="flex justify-between text-sm text-muted-foreground">
+                    <div className="flex justify-between text-sm text-muted-foreground mb-2">
                       <span>Airport transfers</span>
                       <span>Included</span>
                     </div>
                     
-                    <div className="flex justify-between text-sm text-muted-foreground">
+                    <div className="flex justify-between text-sm text-muted-foreground mb-2">
                       <span>24/7 customer support</span>
                       <span>Included</span>
                     </div>
                     
-                    <div className="flex justify-between text-sm text-muted-foreground">
+                    <div className="flex justify-between text-sm text-muted-foreground mb-2">
                       <span>Travel insurance</span>
                       <span>Included</span>
                     </div>
                     
-                    <div className="flex justify-between text-sm text-muted-foreground">
+                    <div className="flex justify-between text-sm text-muted-foreground mb-4">
                       <span>Taxes & service fees</span>
                       <span>Included</span>
                     </div>
                     
                     {/* Subtotal */}
-                    <div className="flex justify-between text-sm font-medium border-t pt-2">
+                    <div className="flex justify-between text-sm font-medium border-t pt-3 mb-3">
                       <span>Subtotal</span>
                       <span>{formatPrice(calculateSubtotal())}</span>
                     </div>
                     
                     {/* Coupon Discount */}
                     {appliedCoupon && (
-                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-medium">
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-medium mb-3">
                         <span>Coupon Discount ({appliedCoupon.code} - {appliedCoupon.discount}% off)</span>
                         <span>-{formatPrice(Math.round(calculateSubtotal() * (appliedCoupon.discount / 100)))}</span>
                       </div>
