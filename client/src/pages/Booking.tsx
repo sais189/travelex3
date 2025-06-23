@@ -39,6 +39,15 @@ export default function Booking() {
   const [checkInOpen, setCheckInOpen] = useState(false);
   const [checkOutOpen, setCheckOutOpen] = useState(false);
   
+  // Add mouse leave handlers to close calendars
+  const handleCheckInMouseLeave = () => {
+    setTimeout(() => setCheckInOpen(false), 300);
+  };
+  
+  const handleCheckOutMouseLeave = () => {
+    setTimeout(() => setCheckOutOpen(false), 300);
+  };
+  
   // Get today's date
   const today = new Date();
   
@@ -77,21 +86,44 @@ export default function Booking() {
     setCheckOutOpen(false);
   };
 
-  // Handle disabled date clicks with toast notifications
-  const handleDisabledDateClick = (date: Date, type: 'checkin' | 'checkout') => {
-    if (type === 'checkin' && date < today) {
+  // Enhanced date selection with validation
+  const handleCheckInWithValidation = (date: Date | undefined) => {
+    if (!date) return;
+    
+    if (date < today) {
       toast({
         title: "Date Not Available",
         description: "Past dates cannot be selected. Please choose today or a future date.",
         variant: "destructive",
       });
-    } else if (type === 'checkout' && checkIn && date <= checkIn) {
+      return;
+    }
+    
+    handleCheckInSelect(date);
+  };
+
+  const handleCheckOutWithValidation = (date: Date | undefined) => {
+    if (!date) return;
+    
+    if (!checkIn) {
+      toast({
+        title: "Select Check-in First", 
+        description: "Please select a check-in date before choosing check-out",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (date <= checkIn) {
       toast({
         title: "Invalid Check-out Date",
         description: "Check-out date must be after the check-in date. Please select a later date.",
         variant: "destructive",
       });
+      return;
     }
+    
+    handleCheckOutSelect(date);
   };
   const [guests, setGuests] = useState("2");
   const [travelClass, setTravelClass] = useState("business");
@@ -417,30 +449,34 @@ export default function Booking() {
                       </Label>
                       <Popover open={checkInOpen} onOpenChange={setCheckInOpen}>
                         <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
+                          <div
                             onMouseEnter={() => setCheckInOpen(true)}
-                            className={cn(
-                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
-                              !checkIn && "text-muted-foreground"
-                            )}
+                            onMouseLeave={handleCheckInMouseLeave}
                           >
-                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
-                            {checkIn ? format(checkIn, "PPP") : "Pick a date"}
-                            <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                                !checkIn && "text-muted-foreground"
+                              )}
+                            >
+                              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+                              {checkIn ? format(checkIn, "PPP") : "Pick a date"}
+                              <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </div>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
+                        <PopoverContent 
+                          className="w-auto p-0" 
+                          align="start"
+                          onMouseEnter={() => setCheckInOpen(true)}
+                          onMouseLeave={handleCheckInMouseLeave}
+                        >
                           <CalendarComponent
                             mode="single"
                             selected={checkIn}
-                            onSelect={handleCheckInSelect}
-                            disabled={(date) => date < today}
-                            onDayClick={(date) => {
-                              if (date < today) {
-                                handleDisabledDateClick(date, 'checkin');
-                              }
-                            }}
+                            onSelect={handleCheckInWithValidation}
+                            disabled={(date: Date) => date < today}
                             initialFocus
                           />
                         </PopoverContent>
@@ -452,36 +488,42 @@ export default function Booking() {
                       </Label>
                       <Popover open={checkOutOpen} onOpenChange={setCheckOutOpen}>
                         <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            disabled={!checkIn}
+                          <div
                             onMouseEnter={() => {
                               if (checkIn) setCheckOutOpen(true);
                             }}
-                            className={cn(
-                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
-                              !checkOut && "text-muted-foreground",
-                              !checkIn && "opacity-50 cursor-not-allowed"
-                            )}
+                            onMouseLeave={handleCheckOutMouseLeave}
                           >
-                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
-                            {checkOut ? format(checkOut, "PPP") : "Pick a date"}
-                            <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
+                            <Button
+                              variant="outline"
+                              disabled={!checkIn}
+                              className={cn(
+                                "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                                !checkOut && "text-muted-foreground",
+                                !checkIn && "opacity-50 cursor-not-allowed"
+                              )}
+                            >
+                              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
+                              {checkOut ? format(checkOut, "PPP") : "Pick a date"}
+                              <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </div>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
+                        <PopoverContent 
+                          className="w-auto p-0" 
+                          align="start"
+                          onMouseEnter={() => {
+                            if (checkIn) setCheckOutOpen(true);
+                          }}
+                          onMouseLeave={handleCheckOutMouseLeave}
+                        >
                           <CalendarComponent
                             mode="single"
                             selected={checkOut}
-                            onSelect={handleCheckOutSelect}
-                            disabled={(date) => {
+                            onSelect={handleCheckOutWithValidation}
+                            disabled={(date: Date) => {
                               if (!checkIn) return true;
                               return date <= checkIn;
-                            }}
-                            onDayClick={(date) => {
-                              if (checkIn && date <= checkIn) {
-                                handleDisabledDateClick(date, 'checkout');
-                              }
                             }}
                             initialFocus
                           />
