@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useParams } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Star, MapPin, Clock, Users, Calendar, CreditCard, Home, Utensils, Plane, Coffee, Tag, Check, X, ChevronDown } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Users, CreditCard, Home, Utensils, Plane, Coffee, Tag, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,8 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
@@ -23,7 +22,6 @@ import DayByDayItinerary from "@/components/DayByDayItinerary";
 import CouponCodeInput from "@/components/CouponCodeInput";
 import Reviews from "@/components/Reviews";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import type { Destination } from "@shared/schema";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
@@ -34,108 +32,9 @@ export default function Booking() {
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
   
-  const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
-  const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
-  const [checkInOpen, setCheckInOpen] = useState(false);
-  const [checkOutOpen, setCheckOutOpen] = useState(false);
-  
-  const checkInRef = useRef<HTMLDivElement>(null);
-  const checkOutRef = useRef<HTMLDivElement>(null);
-  
-  // Handle click outside to close dropdowns
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (checkInRef.current && !checkInRef.current.contains(event.target as Node)) {
-        setCheckInOpen(false);
-      }
-      if (checkOutRef.current && !checkOutRef.current.contains(event.target as Node)) {
-        setCheckOutOpen(false);
-      }
-    };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
   
-  // Get today's date
-  const today = new Date();
-  
-  // Handle checkin date selection with validation
-  const handleCheckInSelect = (date: Date | undefined) => {
-    if (!date) return;
-    
-    setCheckIn(date);
-    setCheckInOpen(false);
-    
-    // If checkout date is set and is before or same as new checkin, clear it
-    if (checkOut && date >= checkOut) {
-      setCheckOut(undefined);
-      toast({
-        title: "Check-out Updated",
-        description: "Check-out date has been cleared as it must be after check-in date.",
-        variant: "default",
-      });
-    }
-  };
 
-  // Handle checkout date selection with validation
-  const handleCheckOutSelect = (date: Date | undefined) => {
-    if (!date) return;
-    
-    if (!checkIn) {
-      toast({
-        title: "Select Check-in First",
-        description: "Please select a check-in date before choosing check-out",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setCheckOut(date);
-    setCheckOutOpen(false);
-  };
-
-  // Enhanced date selection with validation
-  const handleCheckInWithValidation = (date: Date | undefined) => {
-    if (!date) return;
-    
-    if (date < today) {
-      toast({
-        title: "Date Not Available",
-        description: "Past dates cannot be selected. Please choose today or a future date.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    handleCheckInSelect(date);
-  };
-
-  const handleCheckOutWithValidation = (date: Date | undefined) => {
-    if (!date) return;
-    
-    if (!checkIn) {
-      toast({
-        title: "Select Check-in First", 
-        description: "Please select a check-in date before choosing check-out",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (date <= checkIn) {
-      toast({
-        title: "Invalid Check-out Date",
-        description: "Check-out date must be after the check-in date. Please select a later date.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    handleCheckOutSelect(date);
-  };
   const [guests, setGuests] = useState("2");
   const [travelClass, setTravelClass] = useState("business");
   const [upgrades, setUpgrades] = useState<string[]>([]);
@@ -308,19 +207,8 @@ export default function Booking() {
   };
 
   const handleBookTrip = () => {
-    if (!checkIn || !checkOut) {
-      toast({
-        title: "Missing Information",
-        description: "Please select check-in and check-out dates",
-        variant: "destructive",
-      });
-      return;
-    }
-
     const bookingData = {
       destinationId: destination.id,
-      checkIn: checkIn.toISOString().split('T')[0],
-      checkOut: checkOut.toISOString().split('T')[0],
       guests: parseInt(guests),
       travelClass,
       upgrades,
@@ -450,83 +338,7 @@ export default function Booking() {
                   </p>
                 </div>
 
-                {/* Date Selection */}
-                <div className="mb-6">
-                  <Label className="text-sm font-semibold mb-2 block">Travel Dates</Label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-xs text-muted-foreground mb-1 block">
-                        Check-in
-                      </Label>
-                      <div className="relative" ref={checkInRef}>
-                        <Button
-                          variant="outline"
-                          onClick={() => setCheckInOpen(!checkInOpen)}
-                          className={cn(
-                            "w-full justify-start text-left font-normal pl-4 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent cursor-pointer",
-                            !checkIn && "text-muted-foreground"
-                          )}
-                        >
-                          {checkIn ? format(checkIn, "PPP") : "Pick a date"}
-                          <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", checkInOpen && "rotate-180")} />
-                        </Button>
-                        {checkInOpen && (
-                          <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background dark:bg-card border border-border rounded-md shadow-lg">
-                            <CalendarComponent
-                              mode="single"
-                              selected={checkIn}
-                              onSelect={(date) => {
-                                handleCheckInWithValidation(date);
-                                setCheckInOpen(false);
-                              }}
-                              disabled={(date: Date) => date < today}
-                              className="p-3 text-foreground"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground mb-1 block">
-                        Check-out
-                      </Label>
-                      <div className="relative" ref={checkOutRef}>
-                        <Button
-                          variant="outline"
-                          disabled={!checkIn}
-                          onClick={() => {
-                            if (checkIn) setCheckOutOpen(!checkOutOpen);
-                          }}
-                          className={cn(
-                            "w-full justify-start text-left font-normal pl-4 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent cursor-pointer",
-                            !checkOut && "text-muted-foreground",
-                            !checkIn && "opacity-50 cursor-not-allowed"
-                          )}
-                        >
-                          {checkOut ? format(checkOut, "PPP") : "Pick a date"}
-                          <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", checkOutOpen && "rotate-180")} />
-                        </Button>
-                        {checkOutOpen && checkIn && (
-                          <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background dark:bg-card border border-border rounded-md shadow-lg">
-                            <CalendarComponent
-                              mode="single"
-                              selected={checkOut}
-                              onSelect={(date) => {
-                                handleCheckOutWithValidation(date);
-                                setCheckOutOpen(false);
-                              }}
-                              disabled={(date: Date) => {
-                                if (!checkIn) return true;
-                                return date <= checkIn;
-                              }}
-                              className="p-3 text-foreground"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
 
                 {/* Guest Selection */}
                 <div className="mb-6">
