@@ -38,6 +38,16 @@ export function ThemeProvider({
     root.classList.add(theme);
   }, [theme]);
 
+  // Set dark mode as default on first load
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem(storageKey);
+      if (!savedTheme) {
+        document.documentElement.classList.add("dark");
+      }
+    }
+  }, []);
+
   const value = {
     theme,
     setTheme: (theme: Theme) => {
