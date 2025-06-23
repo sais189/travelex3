@@ -6,7 +6,6 @@ import {
   Users,
   MapPin,
   Star,
-  Clock,
   Plane,
   CreditCard,
   Check,
@@ -1222,12 +1221,11 @@ export default function EnhancedBooking() {
                           <Button
                             variant="outline"
                             className={cn(
-                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 hover:text-gold-accent focus:border-gold-accent",
                               !checkIn && "text-muted-foreground"
                             )}
                           >
-                            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
-                            {checkIn ? format(checkIn, "PPP") : "Pick check-in date"}
+                            {checkIn? format(checkIn, "PPP") : "Pick check-in date"}
                             <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </PopoverTrigger>
@@ -1260,11 +1258,11 @@ export default function EnhancedBooking() {
                           <Button
                             variant="outline"
                             className={cn(
-                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 hover:text-gold-accent focus:border-gold-accent",
                               !checkOut && "text-muted-foreground"
                             )}
                           >
-                            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+                            
                             {checkOut ? format(checkOut, "PPP") : "Pick check-out date"}
                             <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
