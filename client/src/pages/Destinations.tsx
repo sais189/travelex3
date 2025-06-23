@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { Filter, Star, Clock, Users, Search, X } from "lucide-react";
+import { Filter, Star, Clock, Users, Search, X, ArrowUpDown, TrendingUp, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import PricingBadge from "@/components/PricingBadge";
+import { useCurrency } from "@/components/CurrencyProvider";
 import type { Destination } from "@shared/schema";
 
 export default function Destinations() {
@@ -18,6 +19,8 @@ export default function Destinations() {
   const [durationFilter, setDurationFilter] = useState("all");
   const [dealsFilter, setDealsFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("name"); // name, price-low, price-high, rating, duration, popularity
+  const { formatPrice } = useCurrency();
 
   const { data: destinations = [], isLoading } = useQuery<Destination[]>({
     queryKey: ["/api/destinations"],
@@ -228,6 +231,52 @@ export default function Destinations() {
     return matches;
   });
 
+  // Sort destinations based on selected criteria
+  const sortDestinations = (destinations: Destination[], sortBy: string) => {
+    const sorted = [...destinations];
+    
+    switch (sortBy) {
+      case "price-low":
+        return sorted.sort((a, b) => {
+          const priceA = parseInt(a.price.replace(/[^0-9]/g, '')) || 0;
+          const priceB = parseInt(b.price.replace(/[^0-9]/g, '')) || 0;
+          return priceA - priceB;
+        });
+      case "price-high":
+        return sorted.sort((a, b) => {
+          const priceA = parseInt(a.price.replace(/[^0-9]/g, '')) || 0;
+          const priceB = parseInt(b.price.replace(/[^0-9]/g, '')) || 0;
+          return priceB - priceA;
+        });
+      case "rating":
+        return sorted.sort((a, b) => {
+          const ratingA = a.rating ? parseFloat(a.rating.toString()) : 0;
+          const ratingB = b.rating ? parseFloat(b.rating.toString()) : 0;
+          return ratingB - ratingA;
+        });
+      case "duration":
+        return sorted.sort((a, b) => {
+          const durationA = a.duration || 0;
+          const durationB = b.duration || 0;
+          return durationA - durationB;
+        });
+      case "popularity":
+        return sorted.sort((a, b) => {
+          // Sort by combination of rating and deals availability
+          const ratingA = a.rating ? parseFloat(a.rating.toString()) : 0;
+          const ratingB = b.rating ? parseFloat(b.rating.toString()) : 0;
+          const popularityA = ratingA + (a.flashSale ? 1 : 0) + (a.promoTag ? 0.5 : 0);
+          const popularityB = ratingB + (b.flashSale ? 1 : 0) + (b.promoTag ? 0.5 : 0);
+          return popularityB - popularityA;
+        });
+      case "name":
+      default:
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+    }
+  };
+
+  const sortedDestinations = sortDestinations(filteredDestinations, sortBy);
+
   const handleBookNow = (destinationId: number) => {
     navigate(`/booking/${destinationId}`);
   };
@@ -301,6 +350,27 @@ export default function Destinations() {
             )}
           </div>
 
+          {/* Sort and Filter Controls */}
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <ArrowUpDown className="w-4 h-4" />
+              <span>Sort by:</span>
+            </div>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full lg:w-48 bg-slate-panel border-border focus:border-gold-accent">
+                <SelectValue placeholder="Sort destinations" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="name">Name (A-Z)</SelectItem>
+                <SelectItem value="price-low">Price (Low to High)</SelectItem>
+                <SelectItem value="price-high">Price (High to Low)</SelectItem>
+                <SelectItem value="rating">Highest Rated</SelectItem>
+                <SelectItem value="duration">Duration (Short to Long)</SelectItem>
+                <SelectItem value="popularity">Most Popular</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Filter Controls */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Select value={regionFilter} onValueChange={setRegionFilter}>
@@ -364,7 +434,7 @@ export default function Destinations() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          {filteredDestinations.map((destination, index) => (
+          {sortedDestinations.map((destination, index) => (
             <motion.div
               key={destination.id}
               initial={{ opacity: 0, y: 50 }}
@@ -442,15 +512,15 @@ export default function Destinations() {
                         {destination.originalPrice && parseFloat(destination.originalPrice) > parseFloat(destination.price) ? (
                           <>
                             <span className="text-sm text-muted-foreground line-through">
-                              ${parseFloat(destination.originalPrice).toLocaleString()}
+                              {formatPrice(parseFloat(destination.originalPrice))}
                             </span>
                             <span className="text-2xl font-bold text-gold-accent">
-                              ${parseFloat(destination.price).toLocaleString()}
+                              {formatPrice(parseFloat(destination.price))}
                             </span>
                           </>
                         ) : (
                           <span className="text-2xl font-bold text-gold-accent">
-                            ${parseFloat(destination.price).toLocaleString()}
+                            {formatPrice(parseFloat(destination.price))}
                           </span>
                         )}
                       </div>

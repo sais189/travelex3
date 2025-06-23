@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 import DestinationDropdown from "@/components/DestinationDropdown";
 import { useTheme } from "@/components/ThemeProvider";
+import CurrencySelector from "@/components/CurrencySelector";
 
 export default function Navbar() {
   const [location] = useLocation();
@@ -100,8 +101,13 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Theme Toggle & Auth & Admin Buttons */}
+        {/* Currency, Theme Toggle & Auth & Admin Buttons */}
         <div className="flex items-center space-x-4">
+          {/* Currency Selector */}
+          <div className="hidden lg:block">
+            <CurrencySelector />
+          </div>
+          
           {/* Theme Toggle Button */}
           <Button
             variant="ghost"
@@ -201,6 +207,11 @@ export default function Navbar() {
               })}
 
               <div className="border-t border-border pt-3 mt-3">
+                {/* Mobile Currency Selector */}
+                <div className="px-4 py-3">
+                  <CurrencySelector />
+                </div>
+                
                 {/* Mobile Theme Toggle */}
                 <motion.div
                   className="flex items-center space-x-3 px-4 py-3 rounded-lg text-foreground hover:bg-accent hover:bg-opacity-10 transition-colors duration-300 cursor-pointer"

@@ -54,6 +54,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useCurrency } from "@/components/CurrencyProvider";
 import { format, addDays } from "date-fns";
 import { RobustImage } from "@/components/ui/robust-image";
 import DayByDayItinerary from "@/components/DayByDayItinerary";
@@ -91,6 +92,7 @@ export default function EnhancedBooking() {
   const [, navigate] = useLocation();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
+  const { formatPrice, convertPrice, currency } = useCurrency();
 
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -855,7 +857,7 @@ export default function EnhancedBooking() {
     },
   });
 
-  // Calculate total price
+  // Calculate total price in selected currency
   const calculateTotal = () => {
     const basePrice = parseFloat(destination?.price || "0");
     const classPrice = travelClasses.find(tc => tc.value === travelClass)?.price || 0;
@@ -866,11 +868,12 @@ export default function EnhancedBooking() {
     
     const subtotal = (basePrice * guests) + classPrice + upgradesTotal;
     const couponDiscount = appliedCoupon ? Math.round(subtotal * (appliedCoupon.discount / 100)) : 0;
+    const totalUSD = subtotal - couponDiscount;
     
-    return subtotal - couponDiscount;
+    return convertPrice(totalUSD);
   };
 
-  // Calculate subtotal (before coupon discount)
+  // Calculate subtotal (before coupon discount) in selected currency
   const calculateSubtotal = () => {
     const basePrice = parseFloat(destination?.price || "0");
     const classPrice = travelClasses.find(tc => tc.value === travelClass)?.price || 0;
@@ -879,7 +882,8 @@ export default function EnhancedBooking() {
       return total + (upgrade?.price || 0);
     }, 0);
     
-    return (basePrice * guests) + classPrice + upgradesTotal;
+    const subtotalUSD = (basePrice * guests) + classPrice + upgradesTotal;
+    return convertPrice(subtotalUSD);
   };
 
   const toggleUpgrade = (upgradeId: string) => {
@@ -944,6 +948,17 @@ export default function EnhancedBooking() {
   const handleBookNow = () => {
     if (!checkIn || !checkOut || !user) return;
 
+    // Calculate total in USD for database storage
+    const basePrice = parseFloat(destination?.price || "0");
+    const classPrice = travelClasses.find(tc => tc.value === travelClass)?.price || 0;
+    const upgradesTotal = selectedUpgrades.reduce((total, upgradeId) => {
+      const upgrade = upgrades.find(u => u.id === upgradeId);
+      return total + (upgrade?.price || 0);
+    }, 0);
+    const subtotal = (basePrice * guests) + classPrice + upgradesTotal;
+    const couponDiscount = appliedCoupon ? Math.round(subtotal * (appliedCoupon.discount / 100)) : 0;
+    const totalUSD = subtotal - couponDiscount;
+
     const bookingData = {
       destinationId,
       checkIn,
@@ -951,7 +966,8 @@ export default function EnhancedBooking() {
       guests,
       travelClass,
       upgrades: selectedUpgrades,
-      totalAmount: calculateTotal()
+      totalAmount: totalUSD, // Store in USD
+      currency: currency // Store selected currency
     };
 
     createBooking.mutate(bookingData);
@@ -1522,7 +1538,7 @@ export default function EnhancedBooking() {
                     <div className="flex justify-between items-center border-t pt-3 mt-4">
                       <span className="text-lg font-semibold">Total Amount</span>
                       <span className="text-2xl font-bold text-gold-accent">
-                        ${calculateTotal().toLocaleString()}
+{formatPrice(calculateTotal(), currency)}
                       </span>
                     </div>
                     
@@ -1530,7 +1546,7 @@ export default function EnhancedBooking() {
                     {guests > 1 && (
                       <div className="flex justify-between text-xs text-muted-foreground">
                         <span>Per person</span>
-                        <span>${Math.round(calculateTotal() / guests).toLocaleString()}</span>
+                        <span>{formatPrice(Math.round(calculateTotal() / guests), currency)}</span>
                       </div>
                     )}
                     
@@ -1546,11 +1562,11 @@ export default function EnhancedBooking() {
                       <div className="space-y-1 text-xs text-muted-foreground">
                         <div className="flex justify-between">
                           <span>Deposit required (20%)</span>
-                          <span>${Math.round(calculateTotal() * 0.2).toLocaleString()}</span>
+                          <span>{formatPrice(Math.round(calculateTotal() * 0.2), currency)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Balance due before departure</span>
-                          <span>${Math.round(calculateTotal() * 0.8).toLocaleString()}</span>
+                          <span>{formatPrice(Math.round(calculateTotal() * 0.8), currency)}</span>
                         </div>
                         <div className="text-xs text-muted-foreground mt-2">
                           Secure payment processing via Stripe

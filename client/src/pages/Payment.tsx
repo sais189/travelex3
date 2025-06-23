@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useCurrency } from "@/components/CurrencyProvider";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { format } from "date-fns";
 
@@ -41,6 +42,7 @@ function PaymentForm({ paymentData }: { paymentData: PaymentData }) {
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
+  const { currency, formatPrice } = useCurrency();
 
   // Create payment intent
   const { mutate: createPaymentIntent } = useMutation({
@@ -48,6 +50,7 @@ function PaymentForm({ paymentData }: { paymentData: PaymentData }) {
       const response = await apiRequest("POST", "/api/create-payment-intent", {
         amount: paymentData.totalAmount,
         bookingId: paymentData.bookingId,
+        currency: currency,
       });
       return response.json();
     },
@@ -256,7 +259,7 @@ function PaymentForm({ paymentData }: { paymentData: PaymentData }) {
                     ) : (
                       <>
                         <CreditCard className="w-5 h-5 mr-2" />
-                        Pay ${paymentData.totalAmount.toLocaleString()}
+                        Pay {formatPrice(paymentData.totalAmount)}
                       </>
                     )}
                   </Button>

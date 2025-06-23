@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { CurrencyProvider } from "@/components/CurrencyProvider";
 import { Suspense, lazy, useEffect } from "react";
 import { preloadCriticalResources } from "@/utils/performanceCache";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
@@ -80,12 +81,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark">
-        <TooltipProvider>
-          <div className="min-h-screen bg-background text-foreground">
-            <Toaster />
-            <Router />
-          </div>
-        </TooltipProvider>
+        <CurrencyProvider>
+          <TooltipProvider>
+            <div className="min-h-screen bg-background text-foreground">
+              <Toaster />
+              <Router />
+            </div>
+          </TooltipProvider>
+        </CurrencyProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

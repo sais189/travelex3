@@ -1112,18 +1112,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
       
-      const { amount, bookingId } = req.body;
+      const { amount, bookingId, currency = "usd" } = req.body;
       
       if (!amount || amount <= 0) {
         return res.status(400).json({ message: "Invalid amount" });
       }
 
+      // Validate supported currency
+      const supportedCurrencies = ['usd', 'eur', 'gbp', 'jpy', 'cad', 'aud', 'chf', 'cny', 'inr', 'sgd'];
+      const normalizedCurrency = currency.toLowerCase();
+      
+      if (!supportedCurrencies.includes(normalizedCurrency)) {
+        return res.status(400).json({ message: "Unsupported currency" });
+      }
+
+      // Adjust amount formatting for zero-decimal currencies (like JPY)
+      const zeroDecimalCurrencies = ['jpy', 'krw', 'vnd'];
+      const amountInSmallestUnit = zeroDecimalCurrencies.includes(normalizedCurrency) 
+        ? Math.round(amount) 
+        : Math.round(amount * 100);
+
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100), // Convert to cents
-        currency: "usd",
+        amount: amountInSmallestUnit,
+        currency: normalizedCurrency,
         metadata: {
           bookingId: bookingId?.toString() || "",
           userId,
+          originalCurrency: currency,
         },
       });
 
