@@ -55,37 +55,26 @@ export function getCurrencyName(currencyCode: string): string {
   return SUPPORTED_CURRENCIES.find(c => c.code === currencyCode)?.name || 'US Dollar';
 }
 
-// Get user's preferred currency from localStorage or browser locale
+// Get user's preferred currency from localStorage or use AUD as default
 export function getUserPreferredCurrency(): string {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem('preferred-currency');
-    // Force reset to new default if currently USD (old default)
-    if (saved === 'USD') {
+    console.log('Saved currency preference:', saved);
+    console.log('Default currency:', DEFAULT_CURRENCY);
+    
+    // Force reset to new default if currently USD or GBP (old defaults)
+    if (saved === 'USD' || saved === 'GBP') {
+      console.log('Clearing old currency preference:', saved);
       localStorage.removeItem('preferred-currency');
+      return DEFAULT_CURRENCY;
     } else if (saved && SUPPORTED_CURRENCIES.find(c => c.code === saved)) {
+      console.log('Using saved currency:', saved);
       return saved;
     }
     
-    // Try to detect from browser locale
-    const locale = navigator.language || 'en-US';
-    const localeMap: { [key: string]: string } = {
-      'en-US': 'USD',
-      'en-GB': 'GBP',
-      'de': 'EUR',
-      'fr': 'EUR',
-      'es': 'EUR',
-      'it': 'EUR',
-      'ja': 'JPY',
-      'zh': 'CNY',
-      'en-CA': 'CAD',
-      'en-AU': 'AUD',
-      'de-CH': 'CHF',
-      'fr-CH': 'CHF',
-      'hi': 'INR',
-      'en-SG': 'SGD',
-    };
-    
-    return localeMap[locale] || DEFAULT_CURRENCY;
+    // Always default to AUD instead of browser locale detection
+    console.log('Using default currency:', DEFAULT_CURRENCY);
+    return DEFAULT_CURRENCY;
   }
   
   return DEFAULT_CURRENCY;
