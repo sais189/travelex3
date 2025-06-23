@@ -243,20 +243,35 @@
     opacity: 0 !important;
   }
   
-  /* Specifically target base price row calendar icon */
-  .base-price-row::before,
-  .base-price-row *::before,
-  .base-price-text::before,
-  .base-price-text::after {
-    display: none !important;
-    content: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    color: transparent !important;
-    background: transparent !important;
-    font-size: 0 !important;
+  /* Nuclear approach - completely override all pseudo-elements */
+  .base-price-text {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  
+  .base-price-text::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -50px !important;
     width: 0 !important;
     height: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    display: none !important;
+    z-index: -1 !important;
+  }
+  
+  /* Cover the icon with a black overlay */
+  .base-price-text::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -25px !important;
+    width: 20px !important;
+    height: 20px !important;
+    background: #000000 !important;
+    z-index: 5 !important;
   }
 
   .bg-gold-accent {
