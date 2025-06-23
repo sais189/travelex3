@@ -46,16 +46,6 @@ export default function Booking() {
   const handleCheckInSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // Check if selected date is in the past
-    if (date < today) {
-      toast({
-        title: "Invalid Date",
-        description: "You cannot select a date in the past. Please choose today or a future date.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setCheckIn(date);
     setCheckInOpen(false);
     
@@ -83,18 +73,25 @@ export default function Booking() {
       return;
     }
     
-    // Check if selected date is before checkin
-    if (date <= checkIn) {
-      toast({
-        title: "Invalid Date Selection",
-        description: "Check-out date must be after check-in date",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setCheckOut(date);
     setCheckOutOpen(false);
+  };
+
+  // Handle disabled date clicks with toast notifications
+  const handleDisabledDateClick = (date: Date, type: 'checkin' | 'checkout') => {
+    if (type === 'checkin' && date < today) {
+      toast({
+        title: "Date Not Available",
+        description: "Past dates cannot be selected. Please choose today or a future date.",
+        variant: "destructive",
+      });
+    } else if (type === 'checkout' && checkIn && date <= checkIn) {
+      toast({
+        title: "Invalid Check-out Date",
+        description: "Check-out date must be after the check-in date. Please select a later date.",
+        variant: "destructive",
+      });
+    }
   };
   const [guests, setGuests] = useState("2");
   const [travelClass, setTravelClass] = useState("business");
@@ -424,12 +421,12 @@ export default function Booking() {
                             variant="outline"
                             onMouseEnter={() => setCheckInOpen(true)}
                             className={cn(
-                              "w-full justify-start text-left font-normal bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
                               !checkIn && "text-muted-foreground"
                             )}
                           >
-                            <Calendar className="mr-2 h-4 w-4" />
-                            {checkIn ? format(checkIn, "PPP") : "Select check-in date"}
+                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+                            {checkIn ? format(checkIn, "PPP") : "Pick a date"}
                             <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </PopoverTrigger>
@@ -438,19 +435,11 @@ export default function Booking() {
                             mode="single"
                             selected={checkIn}
                             onSelect={handleCheckInSelect}
-                            disabled={(date) => {
-                              const isBeforeToday = date < today;
-                              if (isBeforeToday) {
-                                // Show toast when user tries to click on disabled past date
-                                setTimeout(() => {
-                                  toast({
-                                    title: "Date Not Available",
-                                    description: "Past dates cannot be selected. Please choose today or a future date.",
-                                    variant: "destructive",
-                                  });
-                                }, 100);
+                            disabled={(date) => date < today}
+                            onDayClick={(date) => {
+                              if (date < today) {
+                                handleDisabledDateClick(date, 'checkin');
                               }
-                              return isBeforeToday;
                             }}
                             initialFocus
                           />
@@ -470,13 +459,13 @@ export default function Booking() {
                               if (checkIn) setCheckOutOpen(true);
                             }}
                             className={cn(
-                              "w-full justify-start text-left font-normal bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
                               !checkOut && "text-muted-foreground",
                               !checkIn && "opacity-50 cursor-not-allowed"
                             )}
                           >
-                            <Calendar className="mr-2 h-4 w-4" />
-                            {checkOut ? format(checkOut, "PPP") : "Select check-out date"}
+                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent w-5 h-5" />
+                            {checkOut ? format(checkOut, "PPP") : "Pick a date"}
                             <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </PopoverTrigger>
@@ -487,18 +476,12 @@ export default function Booking() {
                             onSelect={handleCheckOutSelect}
                             disabled={(date) => {
                               if (!checkIn) return true;
-                              const isInvalidDate = date <= checkIn;
-                              if (isInvalidDate) {
-                                // Show toast when user tries to click on invalid checkout date
-                                setTimeout(() => {
-                                  toast({
-                                    title: "Invalid Check-out Date",
-                                    description: "Check-out date must be after the check-in date. Please select a later date.",
-                                    variant: "destructive",
-                                  });
-                                }, 100);
+                              return date <= checkIn;
+                            }}
+                            onDayClick={(date) => {
+                              if (checkIn && date <= checkIn) {
+                                handleDisabledDateClick(date, 'checkout');
                               }
-                              return isInvalidDate;
                             }}
                             initialFocus
                           />
