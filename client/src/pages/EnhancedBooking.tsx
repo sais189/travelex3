@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useRoute } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
+  Calendar,
   Users,
   MapPin,
   Star,
@@ -50,10 +51,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useCurrency } from "@/components/CurrencyProvider";
+import { format, addDays } from "date-fns";
+import { cn } from "@/lib/utils";
 
 import { RobustImage } from "@/components/ui/robust-image";
 import DayByDayItinerary from "@/components/DayByDayItinerary";
@@ -93,7 +98,10 @@ export default function EnhancedBooking() {
   const { toast } = useToast();
   const { formatPrice, convertPrice, currency } = useCurrency();
 
-
+  const [checkIn, setCheckIn] = useState<Date | undefined>();
+  const [checkOut, setCheckOut] = useState<Date | undefined>();
+  const [checkInOpen, setCheckInOpen] = useState(false);
+  const [checkOutOpen, setCheckOutOpen] = useState(false);
   const [guests, setGuests] = useState(2);
   const [travelClass, setTravelClass] = useState("economy");
   const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([]);
@@ -138,6 +146,18 @@ export default function EnhancedBooking() {
       navigate("/auth");
     }
   }, [isAuthenticated, authLoading, navigate, toast]);
+
+  // Set default dates
+  useEffect(() => {
+    if (destination) {
+      const today = new Date();
+      const defaultCheckIn = addDays(today, 7);
+      const defaultCheckOut = addDays(defaultCheckIn, destination.duration || 7);
+      
+      setCheckIn(defaultCheckIn);
+      setCheckOut(defaultCheckOut);
+    }
+  }, [destination]);
 
 
 
@@ -936,7 +956,7 @@ export default function EnhancedBooking() {
   };
 
   const handleBookNow = () => {
-    if (!user) return;
+    if (!user || !checkIn || !checkOut) return;
 
     // Calculate total in USD for database storage
     const basePrice = parseFloat(destination?.price || "0");
@@ -949,15 +969,10 @@ export default function EnhancedBooking() {
     const couponDiscount = appliedCoupon ? Math.round(subtotal * (appliedCoupon.discount / 100)) : 0;
     const totalUSD = subtotal - couponDiscount;
 
-    // Set default dates for backend compatibility
-    const today = new Date();
-    const defaultCheckIn = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    const defaultCheckOut = new Date(today.getTime() + (7 + (destination?.duration || 7)) * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-
     const bookingData = {
       destinationId,
-      checkIn: defaultCheckIn,
-      checkOut: defaultCheckOut,
+      checkIn: format(checkIn, 'yyyy-MM-dd'),
+      checkOut: format(checkOut, 'yyyy-MM-dd'),
       guests,
       travelClass,
       upgrades: selectedUpgrades,
@@ -1200,6 +1215,80 @@ export default function EnhancedBooking() {
                   </div>
 
                   <div className="space-y-4">
+                    {/* Check-in Date */}
+                    <div>
+                      <Label className="text-sm font-semibold mb-2 block">Check In</Label>
+                      <Popover open={checkInOpen} onOpenChange={setCheckInOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                              !checkIn && "text-muted-foreground"
+                            )}
+                          >
+                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+                            {checkIn ? format(checkIn, "PPP") : "Pick check-in date"}
+                            <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={checkIn}
+                            onSelect={(date) => {
+                              setCheckIn(date);
+                              setCheckInOpen(false);
+                              // Auto-set checkout date if not already set
+                              if (date && !checkOut) {
+                                setCheckOut(addDays(date, destination?.duration || 7));
+                              }
+                            }}
+                            disabled={(date) =>
+                              date < new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+
+                    {/* Check-out Date */}
+                    <div>
+                      <Label className="text-sm font-semibold mb-2 block">Check Out</Label>
+                      <Popover open={checkOutOpen} onOpenChange={setCheckOutOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                              !checkOut && "text-muted-foreground"
+                            )}
+                          >
+                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+                            {checkOut ? format(checkOut, "PPP") : "Pick check-out date"}
+                            <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={checkOut}
+                            onSelect={(date) => {
+                              setCheckOut(date);
+                              setCheckOutOpen(false);
+                            }}
+                            disabled={(date) => 
+                              date < new Date() || 
+                              date < new Date("1900-01-01") ||
+                              Boolean(checkIn && date <= checkIn)
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+
                     <div>
                       <Label htmlFor="guests">Guests</Label>
                       <Select value={guests.toString()} onValueChange={(value) => setGuests(parseInt(value))}>
