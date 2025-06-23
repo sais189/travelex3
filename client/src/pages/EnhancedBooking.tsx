@@ -1404,15 +1404,15 @@ export default function EnhancedBooking() {
                     
                     {/* Base Price */}
                     <div className="flex justify-between text-sm">
-                      <span className="no-icon">Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
-                      <span>${(parseFloat(destination?.price || "0") * guests).toLocaleString()}</span>
+                      <span>Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
+                      <span>{formatPrice(parseFloat(destination?.price || "0") * guests)}</span>
                     </div>
                     
                     {/* Travel Class Premium */}
                     {travelClass === "business" && (
                       <div className="flex justify-between text-sm">
                         <span>Business class upgrade</span>
-                        <span>+${(travelClasses.find(tc => tc.value === travelClass)?.price || 0).toLocaleString()}</span>
+                        <span>+{formatPrice(travelClasses.find(tc => tc.value === travelClass)?.price || 0)}</span>
                       </div>
                     )}
                     
@@ -1422,7 +1422,7 @@ export default function EnhancedBooking() {
                       return upgrade ? (
                         <div key={upgradeId} className="flex justify-between text-sm">
                           <span>{upgrade.name}</span>
-                          <span>+${upgrade.price.toLocaleString()}</span>
+                          <span>+{formatPrice(upgrade.price)}</span>
                         </div>
                       ) : null;
                     })}
@@ -1440,7 +1440,7 @@ export default function EnhancedBooking() {
                         </div>
                         <div className="flex justify-between text-sm text-muted-foreground">
                           <span>Marine conservation fee</span>
-                          <span>$25</span>
+                          <span>{formatPrice(25)}</span>
                         </div>
                         <div className="flex justify-between text-sm text-muted-foreground">
                           <span>Diving equipment rental</span>
@@ -1461,7 +1461,7 @@ export default function EnhancedBooking() {
                         </div>
                         <div className="flex justify-between text-sm text-muted-foreground">
                           <span>Tourist tax</span>
-                          <span>$15</span>
+                          <span>{formatPrice(15)}</span>
                         </div>
                         <div className="flex justify-between text-sm text-muted-foreground">
                           <span>Temple entrance fees</span>
@@ -1486,7 +1486,7 @@ export default function EnhancedBooking() {
                         </div>
                         <div className="flex justify-between text-sm text-muted-foreground">
                           <span>Conservation levy</span>
-                          <span>$50</span>
+                          <span>{formatPrice(50)}</span>
                         </div>
                       </>
                     )}
@@ -1524,7 +1524,7 @@ export default function EnhancedBooking() {
                         </div>
                         <div className="flex justify-between text-sm text-muted-foreground">
                           <span>Tourism tax</span>
-                          <span>$20</span>
+                          <span>{formatPrice(20)}</span>
                         </div>
                       </>
                     )}
@@ -1541,7 +1541,7 @@ export default function EnhancedBooking() {
                         </div>
                         <div className="flex justify-between text-sm text-muted-foreground">
                           <span>Environmental tax</span>
-                          <span>$30</span>
+                          <span>{formatPrice(30)}</span>
                         </div>
                       </>
                     )}
@@ -1558,7 +1558,7 @@ export default function EnhancedBooking() {
                         </div>
                         <div className="flex justify-between text-sm text-muted-foreground">
                           <span>Conservation fee</span>
-                          <span>$35</span>
+                          <span>{formatPrice(35)}</span>
                         </div>
                       </>
                     )}
@@ -1587,14 +1587,14 @@ export default function EnhancedBooking() {
                     {/* Subtotal */}
                     <div className="flex justify-between text-sm font-medium border-t pt-2">
                       <span>Subtotal</span>
-                      <span>${calculateSubtotal().toLocaleString()}</span>
+                      <span>{formatPrice(calculateSubtotal())}</span>
                     </div>
                     
                     {/* Coupon Discount */}
                     {appliedCoupon && (
                       <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-medium">
                         <span>Coupon Discount ({appliedCoupon.code} - {appliedCoupon.discount}% off)</span>
-                        <span>-${Math.round(calculateSubtotal() * (appliedCoupon.discount / 100)).toLocaleString()}</span>
+                        <span>-{formatPrice(Math.round(calculateSubtotal() * (appliedCoupon.discount / 100)))}</span>
                       </div>
                     )}
                     
