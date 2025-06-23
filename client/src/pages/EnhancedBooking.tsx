@@ -1400,8 +1400,7 @@ export default function EnhancedBooking() {
 
                   {/* Detailed Pricing Breakdown */}
                   <div className="pricing-breakdown-section">
-                    <h4 className="font-semibold text-base mb-4 flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-gold-accent" />
+                    <h4 className="font-semibold text-base mb-4">
                       Price Breakdown
                     </h4>
                     
