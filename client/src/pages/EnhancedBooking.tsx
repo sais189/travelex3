@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useRoute } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
-  Calendar,
   Users,
   MapPin,
   Star,
@@ -55,7 +54,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useCurrency } from "@/components/CurrencyProvider";
-import { format, addDays } from "date-fns";
+
 import { RobustImage } from "@/components/ui/robust-image";
 import DayByDayItinerary from "@/components/DayByDayItinerary";
 import Reviews from "@/components/Reviews";
@@ -94,8 +93,7 @@ export default function EnhancedBooking() {
   const { toast } = useToast();
   const { formatPrice, convertPrice, currency } = useCurrency();
 
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
+
   const [guests, setGuests] = useState(2);
   const [travelClass, setTravelClass] = useState("economy");
   const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([]);
@@ -141,15 +139,7 @@ export default function EnhancedBooking() {
     }
   }, [isAuthenticated, authLoading, navigate, toast]);
 
-  // Set default dates
-  useEffect(() => {
-    const today = new Date();
-    const defaultCheckIn = addDays(today, 7);
-    const defaultCheckOut = addDays(defaultCheckIn, destination?.duration || 7);
-    
-    setCheckIn(format(defaultCheckIn, 'yyyy-MM-dd'));
-    setCheckOut(format(defaultCheckOut, 'yyyy-MM-dd'));
-  }, [destination]);
+
 
   // Scroll tracking for parallax effects and stage progression
   useEffect(() => {
@@ -946,7 +936,7 @@ export default function EnhancedBooking() {
   };
 
   const handleBookNow = () => {
-    if (!checkIn || !checkOut || !user) return;
+    if (!user) return;
 
     // Calculate total in USD for database storage
     const basePrice = parseFloat(destination?.price || "0");
@@ -959,10 +949,15 @@ export default function EnhancedBooking() {
     const couponDiscount = appliedCoupon ? Math.round(subtotal * (appliedCoupon.discount / 100)) : 0;
     const totalUSD = subtotal - couponDiscount;
 
+    // Set default dates for backend compatibility
+    const today = new Date();
+    const defaultCheckIn = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const defaultCheckOut = new Date(today.getTime() + (7 + (destination?.duration || 7)) * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
     const bookingData = {
       destinationId,
-      checkIn,
-      checkOut,
+      checkIn: defaultCheckIn,
+      checkOut: defaultCheckOut,
       guests,
       travelClass,
       upgrades: selectedUpgrades,
@@ -1205,26 +1200,6 @@ export default function EnhancedBooking() {
                   </div>
 
                   <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="check-in">Check In</Label>
-                      <Input
-                        id="check-in"
-                        type="date"
-                        value={checkIn}
-                        onChange={(e) => setCheckIn(e.target.value)}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="check-out">Check Out</Label>
-                      <Input
-                        id="check-out"
-                        type="date"
-                        value={checkOut}
-                        onChange={(e) => setCheckOut(e.target.value)}
-                      />
-                    </div>
-
                     <div>
                       <Label htmlFor="guests">Guests</Label>
                       <Select value={guests.toString()} onValueChange={(value) => setGuests(parseInt(value))}>
