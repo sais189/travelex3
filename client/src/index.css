@@ -5,13 +5,13 @@
 :root {
   /* Light mode colors */
   --background: 0 0% 98%; /* #FAFAFA */
-  --foreground: 0 0% 7%; /* #121212 */
+  --foreground: 0 0% 15%; /* #262626 - darker for better readability */
   --muted: 210 10% 95%; /* #F1F3F5 */
   --muted-foreground: 0 0% 40%; /* #666666 */
   --popover: 0 0% 100%; /* #FFFFFF */
-  --popover-foreground: 0 0% 7%; /* #121212 */
+  --popover-foreground: 0 0% 15%; /* #262626 */
   --card: 0 0% 100%; /* #FFFFFF */
-  --card-foreground: 0 0% 7%; /* #121212 */
+  --card-foreground: 0 0% 15%; /* #262626 */
   --border: 210 10% 90%; /* #E6E9ED */
   --input: 210 10% 95%; /* #F1F3F5 */
   --primary: 45 89% 53%; /* #D4AF37 gold */
@@ -19,15 +19,15 @@
   --secondary: 245 83% 76%; /* #8884FF lavender */
   --secondary-foreground: 0 0% 98%; /* #FAFAFA */
   --accent: 162 76% 72%; /* #9FE2BF mint */
-  --accent-foreground: 0 0% 7%; /* #121212 */
+  --accent-foreground: 0 0% 15%; /* #262626 */
   --destructive: 0 65% 68%; /* #F16C6C */
   --destructive-foreground: 0 0% 98%; /* #FAFAFA */
   --ring: 45 89% 53%; /* #D4AF37 gold */
   --radius: 0.75rem;
 
   /* Custom glassmorphism variables for light mode */
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.15);
 }
 
 .dark {
@@ -151,6 +151,15 @@
 
   .bg-slate-panel {
     background-color: #FFFFFF;
+  }
+
+  /* Light mode heading colors */
+  h1, h2, h3, h4, h5, h6 {
+    color: hsl(var(--foreground));
+  }
+
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: hsl(var(--foreground));
   }
 
   /* Color utilities that work in both modes */

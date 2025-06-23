@@ -86,8 +86,8 @@ export default function Navbar() {
                   className={cn(
                     "flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-300 cursor-pointer",
                     isActive(item.path) 
-                      ? "text-white bg-white bg-opacity-20 shadow-lg" 
-                      : "text-foreground hover:text-white"
+                      ? "text-white bg-white bg-opacity-20 shadow-lg dark:text-white dark:bg-white dark:bg-opacity-20 text-gold-accent bg-gold-accent bg-opacity-20" 
+                      : "text-foreground hover:text-white dark:text-foreground dark:hover:text-white hover:text-gold-accent"
                   )}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -187,8 +187,8 @@ export default function Navbar() {
                       className={cn(
                         "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-300 cursor-pointer",
                         isActive(item.path) 
-                          ? "text-white bg-white bg-opacity-20 shadow-lg" 
-                          : "text-foreground hover:text-white"
+                          ? "text-white bg-white bg-opacity-20 shadow-lg dark:text-white dark:bg-white dark:bg-opacity-20 text-gold-accent bg-gold-accent bg-opacity-20" 
+                          : "text-foreground hover:text-white dark:text-foreground dark:hover:text-white hover:text-gold-accent"
                       )}
                       onClick={() => setIsMobileMenuOpen(false)}
                       whileTap={{ scale: 0.95 }}
