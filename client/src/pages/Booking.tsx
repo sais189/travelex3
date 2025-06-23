@@ -422,6 +422,7 @@ export default function Booking() {
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
+                            onMouseEnter={() => setCheckInOpen(true)}
                             className={cn(
                               "w-full justify-start text-left font-normal bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
                               !checkIn && "text-muted-foreground"
@@ -437,7 +438,20 @@ export default function Booking() {
                             mode="single"
                             selected={checkIn}
                             onSelect={handleCheckInSelect}
-                            disabled={(date) => date < today}
+                            disabled={(date) => {
+                              const isBeforeToday = date < today;
+                              if (isBeforeToday) {
+                                // Show toast when user tries to click on disabled past date
+                                setTimeout(() => {
+                                  toast({
+                                    title: "Date Not Available",
+                                    description: "Past dates cannot be selected. Please choose today or a future date.",
+                                    variant: "destructive",
+                                  });
+                                }, 100);
+                              }
+                              return isBeforeToday;
+                            }}
                             initialFocus
                           />
                         </PopoverContent>
@@ -452,6 +466,9 @@ export default function Booking() {
                           <Button
                             variant="outline"
                             disabled={!checkIn}
+                            onMouseEnter={() => {
+                              if (checkIn) setCheckOutOpen(true);
+                            }}
                             className={cn(
                               "w-full justify-start text-left font-normal bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
                               !checkOut && "text-muted-foreground",
@@ -470,7 +487,18 @@ export default function Booking() {
                             onSelect={handleCheckOutSelect}
                             disabled={(date) => {
                               if (!checkIn) return true;
-                              return date <= checkIn;
+                              const isInvalidDate = date <= checkIn;
+                              if (isInvalidDate) {
+                                // Show toast when user tries to click on invalid checkout date
+                                setTimeout(() => {
+                                  toast({
+                                    title: "Invalid Check-out Date",
+                                    description: "Check-out date must be after the check-in date. Please select a later date.",
+                                    variant: "destructive",
+                                  });
+                                }, 100);
+                              }
+                              return isInvalidDate;
                             }}
                             initialFocus
                           />
