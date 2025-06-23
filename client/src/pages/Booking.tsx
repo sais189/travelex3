@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useParams } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -39,14 +39,25 @@ export default function Booking() {
   const [checkInOpen, setCheckInOpen] = useState(false);
   const [checkOutOpen, setCheckOutOpen] = useState(false);
   
-  // Add mouse leave handlers to close calendars
-  const handleCheckInMouseLeave = () => {
-    setTimeout(() => setCheckInOpen(false), 300);
-  };
+  const checkInRef = useRef<HTMLDivElement>(null);
+  const checkOutRef = useRef<HTMLDivElement>(null);
   
-  const handleCheckOutMouseLeave = () => {
-    setTimeout(() => setCheckOutOpen(false), 300);
-  };
+  // Handle click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (checkInRef.current && !checkInRef.current.contains(event.target as Node)) {
+        setCheckInOpen(false);
+      }
+      if (checkOutRef.current && !checkOutRef.current.contains(event.target as Node)) {
+        setCheckOutOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   
   // Get today's date
   const today = new Date();
@@ -447,70 +458,72 @@ export default function Booking() {
                       <Label className="text-xs text-muted-foreground mb-1 block">
                         Check-in
                       </Label>
-                      <Popover open={checkInOpen} onOpenChange={setCheckInOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            onClick={() => setCheckInOpen(true)}
-                            className={cn(
-                              "w-full justify-start text-left font-normal pl-4 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent cursor-pointer",
-                              !checkIn && "text-muted-foreground"
-                            )}
-                          >
-                            {checkIn ? format(checkIn, "PPP") : "Pick a date"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent 
-                          className="w-auto p-0" 
-                          align="start"
+                      <div className="relative" ref={checkInRef}>
+                        <Button
+                          variant="outline"
+                          onClick={() => setCheckInOpen(!checkInOpen)}
+                          className={cn(
+                            "w-full justify-start text-left font-normal pl-4 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent cursor-pointer",
+                            !checkIn && "text-muted-foreground"
+                          )}
                         >
-                          <CalendarComponent
-                            mode="single"
-                            selected={checkIn}
-                            onSelect={handleCheckInWithValidation}
-                            disabled={(date: Date) => date < today}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+                          {checkIn ? format(checkIn, "PPP") : "Pick a date"}
+                          <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", checkInOpen && "rotate-180")} />
+                        </Button>
+                        {checkInOpen && (
+                          <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background dark:bg-card border border-border rounded-md shadow-lg">
+                            <CalendarComponent
+                              mode="single"
+                              selected={checkIn}
+                              onSelect={(date) => {
+                                handleCheckInWithValidation(date);
+                                setCheckInOpen(false);
+                              }}
+                              disabled={(date: Date) => date < today}
+                              className="p-3 text-foreground"
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground mb-1 block">
                         Check-out
                       </Label>
-                      <Popover open={checkOutOpen} onOpenChange={setCheckOutOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            disabled={!checkIn}
-                            onClick={() => {
-                              if (checkIn) setCheckOutOpen(true);
-                            }}
-                            className={cn(
-                              "w-full justify-start text-left font-normal pl-4 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent cursor-pointer",
-                              !checkOut && "text-muted-foreground",
-                              !checkIn && "opacity-50 cursor-not-allowed"
-                            )}
-                          >
-                            {checkOut ? format(checkOut, "PPP") : "Pick a date"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent 
-                          className="w-auto p-0" 
-                          align="start"
+                      <div className="relative" ref={checkOutRef}>
+                        <Button
+                          variant="outline"
+                          disabled={!checkIn}
+                          onClick={() => {
+                            if (checkIn) setCheckOutOpen(!checkOutOpen);
+                          }}
+                          className={cn(
+                            "w-full justify-start text-left font-normal pl-4 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent cursor-pointer",
+                            !checkOut && "text-muted-foreground",
+                            !checkIn && "opacity-50 cursor-not-allowed"
+                          )}
                         >
-                          <CalendarComponent
-                            mode="single"
-                            selected={checkOut}
-                            onSelect={handleCheckOutWithValidation}
-                            disabled={(date: Date) => {
-                              if (!checkIn) return true;
-                              return date <= checkIn;
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+                          {checkOut ? format(checkOut, "PPP") : "Pick a date"}
+                          <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", checkOutOpen && "rotate-180")} />
+                        </Button>
+                        {checkOutOpen && checkIn && (
+                          <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background dark:bg-card border border-border rounded-md shadow-lg">
+                            <CalendarComponent
+                              mode="single"
+                              selected={checkOut}
+                              onSelect={(date) => {
+                                handleCheckOutWithValidation(date);
+                                setCheckOutOpen(false);
+                              }}
+                              disabled={(date: Date) => {
+                                if (!checkIn) return true;
+                                return date <= checkIn;
+                              }}
+                              className="p-3 text-foreground"
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
