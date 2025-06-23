@@ -6,6 +6,8 @@ import {
   Users,
   MapPin,
   Star,
+  Calendar,
+  Clock,
   Plane,
   CreditCard,
   Check,
@@ -1225,7 +1227,16 @@ export default function EnhancedBooking() {
                               !checkIn && "text-muted-foreground"
                             )}
                           >
-                            {checkIn? format(checkIn, "PPP") : "Pick check-in date"}
+                            <div className="flex items-center gap-2">
+                              {checkIn ? (
+                                <>
+                                  <Calendar className="w-3 h-3 text-muted-foreground pointer-events-none" />
+                                  <span>{format(checkIn, "PPP")}</span>
+                                </>
+                              ) : (
+                                "Pick check-in date"
+                              )}
+                            </div>
                             <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </PopoverTrigger>
@@ -1262,8 +1273,16 @@ export default function EnhancedBooking() {
                               !checkOut && "text-muted-foreground"
                             )}
                           >
-                            
-                            {checkOut ? format(checkOut, "PPP") : "Pick check-out date"}
+                            <div className="flex items-center gap-2">
+                              {checkOut ? (
+                                <>
+                                  <Calendar className="w-3 h-3 text-muted-foreground pointer-events-none" />
+                                  <span>{format(checkOut, "PPP")}</span>
+                                </>
+                              ) : (
+                                "Pick check-out date"
+                              )}
+                            </div>
                             <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </PopoverTrigger>
