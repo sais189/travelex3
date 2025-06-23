@@ -242,6 +242,22 @@
     background: #000000 !important;
     opacity: 0 !important;
   }
+  
+  /* Specifically target base price row calendar icon */
+  .base-price-row::before,
+  .base-price-row *::before,
+  .base-price-text::before,
+  .base-price-text::after {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    color: transparent !important;
+    background: transparent !important;
+    font-size: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
 
   .bg-gold-accent {
     background-color: #D4AF37;

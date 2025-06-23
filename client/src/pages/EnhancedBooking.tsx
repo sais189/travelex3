@@ -1406,10 +1406,8 @@ export default function EnhancedBooking() {
                     </h4>
                     
                     {/* Base Price */}
-                    <div className="flex justify-between text-sm">
-                      <div className="flex items-center">
-                        <span>Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
-                      </div>
+                    <div className="flex justify-between text-sm base-price-row">
+                      <span className="base-price-text">Base price × {guests} guest{guests > 1 ? 's' : ''}</span>
                       <span>{formatPrice(parseFloat(destination?.price || "0") * guests)}</span>
                     </div>
                     
