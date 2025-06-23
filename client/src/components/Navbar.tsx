@@ -61,8 +61,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-7xl px-6">
-      <div className="glass-morphism rounded-3xl h-16 lg:h-20 flex items-center justify-between px-8 lg:px-12 transition-all duration-300 shadow-lg">
+    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-[95vw] xl:max-w-[1400px] px-4 sm:px-6">
+      <div className="glass-morphism rounded-3xl h-16 lg:h-20 flex items-center justify-between px-6 sm:px-8 lg:px-12 xl:px-16 transition-all duration-300 shadow-lg">
         {/* Logo */}
         <Link href="/">
           <motion.div 
@@ -78,7 +78,7 @@ export default function Navbar() {
 
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-12">
+        <div className="hidden lg:flex items-center space-x-8 xl:space-x-12">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -102,7 +102,7 @@ export default function Navbar() {
         </div>
 
         {/* Currency, Theme Toggle & Auth & Admin Buttons */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3 lg:space-x-4 xl:space-x-6">
           {/* Currency Selector */}
           <div className="hidden lg:block">
             <CurrencySelector />
