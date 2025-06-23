@@ -194,9 +194,43 @@
   }
 
   /* Hide any icons that might appear before base price */
-  .no-icon::before {
+  .no-icon::before,
+  .no-icon::after {
     display: none !important;
     content: none !important;
+  }
+  
+  /* Force hide any calendar icons in price breakdown items */
+  .space-y-3 .flex.justify-between span:first-child::before,
+  .space-y-3 .flex.justify-between span:first-child::after {
+    display: none !important;
+    content: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* Specifically target base price elements */
+  .space-y-3 div:nth-child(2) span:first-child::before,
+  .space-y-3 div:nth-child(2) span:first-child::after,
+  .no-icon *::before,
+  .no-icon *::after {
+    display: none !important;
+    content: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  /* Hide calendar icons specifically from base price text */
+  .no-icon *,
+  .no-icon *::before,
+  .no-icon *::after {
+    background-image: none !important;
+    list-style: none !important;
+  }
+  
+  .no-icon::before {
+    background-image: none !important;
+    background: none !important;
+    font-family: inherit !important;
   }
 
   .bg-gold-accent {
