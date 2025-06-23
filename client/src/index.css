@@ -3,30 +3,31 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 5%; /* #0D0D0D */
-  --foreground: 0 0% 93%; /* #EDEDED */
-  --muted: 220 7% 11%; /* #1B1C1F */
-  --muted-foreground: 0 0% 60%; /* #9A9A9A */
-  --popover: 220 7% 11%; /* #1B1C1F */
-  --popover-foreground: 0 0% 93%; /* #EDEDED */
-  --card: 220 7% 11%; /* #1B1C1F */
-  --card-foreground: 0 0% 93%; /* #EDEDED */
-  --border: 220 7% 15%; /* slightly lighter than card */
-  --input: 220 7% 15%;
+  /* Light mode colors */
+  --background: 0 0% 98%; /* #FAFAFA */
+  --foreground: 0 0% 7%; /* #121212 */
+  --muted: 210 10% 95%; /* #F1F3F5 */
+  --muted-foreground: 0 0% 40%; /* #666666 */
+  --popover: 0 0% 100%; /* #FFFFFF */
+  --popover-foreground: 0 0% 7%; /* #121212 */
+  --card: 0 0% 100%; /* #FFFFFF */
+  --card-foreground: 0 0% 7%; /* #121212 */
+  --border: 210 10% 90%; /* #E6E9ED */
+  --input: 210 10% 95%; /* #F1F3F5 */
   --primary: 45 89% 53%; /* #D4AF37 gold */
-  --primary-foreground: 0 0% 5%; /* #0D0D0D */
+  --primary-foreground: 0 0% 98%; /* #FAFAFA */
   --secondary: 245 83% 76%; /* #8884FF lavender */
-  --secondary-foreground: 0 0% 5%; /* #0D0D0D */
+  --secondary-foreground: 0 0% 98%; /* #FAFAFA */
   --accent: 162 76% 72%; /* #9FE2BF mint */
-  --accent-foreground: 0 0% 5%; /* #0D0D0D */
+  --accent-foreground: 0 0% 7%; /* #121212 */
   --destructive: 0 65% 68%; /* #F16C6C */
-  --destructive-foreground: 0 0% 93%; /* #EDEDED */
+  --destructive-foreground: 0 0% 98%; /* #FAFAFA */
   --ring: 45 89% 53%; /* #D4AF37 gold */
   --radius: 0.75rem;
 
-  /* Custom glassmorphism variables */
-  --glass-bg: rgba(27, 28, 31, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  /* Custom glassmorphism variables for light mode */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.1);
 }
 
 .dark {
@@ -59,7 +60,6 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
     font-family: 'Inter', sans-serif;
-    background: #0D0D0D;
     min-height: 100vh;
   }
 
@@ -215,16 +215,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #1B1C1F;
+  background: hsl(var(--muted));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4AF37;
+  background: hsl(var(--primary));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b8941f;
+  background: hsl(var(--primary) / 0.8);
 }
 
 /* Loading animations */

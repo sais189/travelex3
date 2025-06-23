@@ -3,7 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { Suspense, lazy, useEffect } from "react";
 import { preloadCriticalResources } from "@/utils/performanceCache";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
@@ -79,9 +79,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
-          <div className="min-h-screen bg-deep-black text-foreground">
+          <div className="min-h-screen bg-background text-foreground">
             <Toaster />
             <Router />
           </div>

@@ -15,17 +15,21 @@ import {
   Menu, 
   X,
   Settings,
-  Tag
+  Tag,
+  Sun,
+  Moon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 import DestinationDropdown from "@/components/DestinationDropdown";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function Navbar() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, isLoading } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const isValidRoute = (path: string) => {
     const validRoutes = ["/", "/destinations", "/booking", "/my-trips", "/admin", "/auth", "/about", "/contact"];
@@ -96,8 +100,21 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Auth & Admin Buttons */}
+        {/* Theme Toggle & Auth & Admin Buttons */}
         <div className="flex items-center space-x-4">
+          {/* Theme Toggle Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="text-foreground hover:bg-accent hover:text-accent-foreground"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </Button>
           {!isLoading && (
             <>
               {!isAuthenticated ? (
@@ -184,6 +201,25 @@ export default function Navbar() {
               })}
 
               <div className="border-t border-border pt-3 mt-3">
+                {/* Mobile Theme Toggle */}
+                <motion.div
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-foreground hover:bg-accent hover:bg-opacity-10 transition-colors duration-300 cursor-pointer"
+                  onClick={toggleTheme}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {theme === "dark" ? (
+                    <>
+                      <Sun className="w-5 h-5" />
+                      <span>Light Mode</span>
+                    </>
+                  ) : (
+                    <>
+                      <Moon className="w-5 h-5" />
+                      <span>Dark Mode</span>
+                    </>
+                  )}
+                </motion.div>
+                
                 {!isLoading && (
                   <>
                     {!isAuthenticated ? (
