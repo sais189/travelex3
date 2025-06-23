@@ -32,6 +32,57 @@ export default function Booking() {
   
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+  
+  // Get today's date in YYYY-MM-DD format for min date validation
+  const today = new Date().toISOString().split('T')[0];
+  
+  // Get minimum checkout date (day after checkin)
+  const getMinCheckoutDate = () => {
+    if (!checkIn) return today;
+    const checkInDate = new Date(checkIn);
+    checkInDate.setDate(checkInDate.getDate() + 1);
+    return checkInDate.toISOString().split('T')[0];
+  };
+
+  // Handle checkin date change and validate checkout
+  const handleCheckInChange = (newCheckIn: string) => {
+    setCheckIn(newCheckIn);
+    
+    // If checkout date is set and is before or same as new checkin, clear it
+    if (checkOut && newCheckIn) {
+      const checkInDate = new Date(newCheckIn);
+      const checkOutDate = new Date(checkOut);
+      if (checkOutDate <= checkInDate) {
+        setCheckOut("");
+      }
+    }
+  };
+
+  // Handle checkout date change with validation
+  const handleCheckOutChange = (newCheckOut: string) => {
+    if (!checkIn) {
+      toast({
+        title: "Select Check-in First",
+        description: "Please select a check-in date before choosing check-out",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(newCheckOut);
+    
+    if (checkOutDate <= checkInDate) {
+      toast({
+        title: "Invalid Date Selection",
+        description: "Check-out date must be after check-in date",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setCheckOut(newCheckOut);
+  };
   const [guests, setGuests] = useState("2");
   const [travelClass, setTravelClass] = useState("business");
   const [upgrades, setUpgrades] = useState<string[]>([]);
@@ -357,7 +408,8 @@ export default function Booking() {
                       <Input
                         type="date"
                         value={checkIn}
-                        onChange={(e) => setCheckIn(e.target.value)}
+                        min={today}
+                        onChange={(e) => handleCheckInChange(e.target.value)}
                         className="bg-slate-panel border-border focus:border-gold-accent"
                       />
                     </div>
@@ -368,8 +420,10 @@ export default function Booking() {
                       <Input
                         type="date"
                         value={checkOut}
-                        onChange={(e) => setCheckOut(e.target.value)}
+                        min={getMinCheckoutDate()}
+                        onChange={(e) => handleCheckOutChange(e.target.value)}
                         className="bg-slate-panel border-border focus:border-gold-accent"
+                        disabled={!checkIn}
                       />
                     </div>
                   </div>
