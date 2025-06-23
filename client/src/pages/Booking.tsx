@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useParams } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Star, MapPin, Clock, Users, Calendar, CreditCard, Home, Utensils, Plane, Coffee, Tag, Check, X } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Users, Calendar, CreditCard, Home, Utensils, Plane, Coffee, Tag, Check, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,6 +22,8 @@ import { RobustImage } from "@/components/ui/robust-image";
 import DayByDayItinerary from "@/components/DayByDayItinerary";
 import CouponCodeInput from "@/components/CouponCodeInput";
 import Reviews from "@/components/Reviews";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import type { Destination } from "@shared/schema";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
@@ -30,36 +34,46 @@ export default function Booking() {
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
   
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
+  const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
+  const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
+  const [checkInOpen, setCheckInOpen] = useState(false);
+  const [checkOutOpen, setCheckOutOpen] = useState(false);
   
-  // Get today's date in YYYY-MM-DD format for min date validation
-  const today = new Date().toISOString().split('T')[0];
+  // Get today's date
+  const today = new Date();
   
-  // Get minimum checkout date (day after checkin)
-  const getMinCheckoutDate = () => {
-    if (!checkIn) return today;
-    const checkInDate = new Date(checkIn);
-    checkInDate.setDate(checkInDate.getDate() + 1);
-    return checkInDate.toISOString().split('T')[0];
-  };
-
-  // Handle checkin date change and validate checkout
-  const handleCheckInChange = (newCheckIn: string) => {
-    setCheckIn(newCheckIn);
+  // Handle checkin date selection with validation
+  const handleCheckInSelect = (date: Date | undefined) => {
+    if (!date) return;
+    
+    // Check if selected date is in the past
+    if (date < today) {
+      toast({
+        title: "Invalid Date",
+        description: "You cannot select a date in the past. Please choose today or a future date.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setCheckIn(date);
+    setCheckInOpen(false);
     
     // If checkout date is set and is before or same as new checkin, clear it
-    if (checkOut && newCheckIn) {
-      const checkInDate = new Date(newCheckIn);
-      const checkOutDate = new Date(checkOut);
-      if (checkOutDate <= checkInDate) {
-        setCheckOut("");
-      }
+    if (checkOut && date >= checkOut) {
+      setCheckOut(undefined);
+      toast({
+        title: "Check-out Updated",
+        description: "Check-out date has been cleared as it must be after check-in date.",
+        variant: "default",
+      });
     }
   };
 
-  // Handle checkout date change with validation
-  const handleCheckOutChange = (newCheckOut: string) => {
+  // Handle checkout date selection with validation
+  const handleCheckOutSelect = (date: Date | undefined) => {
+    if (!date) return;
+    
     if (!checkIn) {
       toast({
         title: "Select Check-in First",
@@ -69,10 +83,8 @@ export default function Booking() {
       return;
     }
     
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(newCheckOut);
-    
-    if (checkOutDate <= checkInDate) {
+    // Check if selected date is before checkin
+    if (date <= checkIn) {
       toast({
         title: "Invalid Date Selection",
         description: "Check-out date must be after check-in date",
@@ -81,7 +93,8 @@ export default function Booking() {
       return;
     }
     
-    setCheckOut(newCheckOut);
+    setCheckOut(date);
+    setCheckOutOpen(false);
   };
   const [guests, setGuests] = useState("2");
   const [travelClass, setTravelClass] = useState("business");
@@ -266,8 +279,8 @@ export default function Booking() {
 
     const bookingData = {
       destinationId: destination.id,
-      checkIn,
-      checkOut,
+      checkIn: checkIn.toISOString().split('T')[0],
+      checkOut: checkOut.toISOString().split('T')[0],
       guests: parseInt(guests),
       travelClass,
       upgrades,
@@ -405,26 +418,64 @@ export default function Booking() {
                       <Label className="text-xs text-muted-foreground mb-1 block">
                         Check-in
                       </Label>
-                      <Input
-                        type="date"
-                        value={checkIn}
-                        min={today}
-                        onChange={(e) => handleCheckInChange(e.target.value)}
-                        className="bg-slate-panel border-border focus:border-gold-accent"
-                      />
+                      <Popover open={checkInOpen} onOpenChange={setCheckInOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                              !checkIn && "text-muted-foreground"
+                            )}
+                          >
+                            <Calendar className="mr-2 h-4 w-4" />
+                            {checkIn ? format(checkIn, "PPP") : "Select check-in date"}
+                            <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={checkIn}
+                            onSelect={handleCheckInSelect}
+                            disabled={(date) => date < today}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground mb-1 block">
                         Check-out
                       </Label>
-                      <Input
-                        type="date"
-                        value={checkOut}
-                        min={getMinCheckoutDate()}
-                        onChange={(e) => handleCheckOutChange(e.target.value)}
-                        className="bg-slate-panel border-border focus:border-gold-accent"
-                        disabled={!checkIn}
-                      />
+                      <Popover open={checkOutOpen} onOpenChange={setCheckOutOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            disabled={!checkIn}
+                            className={cn(
+                              "w-full justify-start text-left font-normal bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
+                              !checkOut && "text-muted-foreground",
+                              !checkIn && "opacity-50 cursor-not-allowed"
+                            )}
+                          >
+                            <Calendar className="mr-2 h-4 w-4" />
+                            {checkOut ? format(checkOut, "PPP") : "Select check-out date"}
+                            <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={checkOut}
+                            onSelect={handleCheckOutSelect}
+                            disabled={(date) => {
+                              if (!checkIn) return true;
+                              return date <= checkIn;
+                            }}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </div>
                   </div>
                 </div>
