@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useRoute } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
-  Calendar,
   Users,
   MapPin,
   Star,
@@ -1227,7 +1226,7 @@ export default function EnhancedBooking() {
                               !checkIn && "text-muted-foreground"
                             )}
                           >
-                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+                            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
                             {checkIn ? format(checkIn, "PPP") : "Pick check-in date"}
                             <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
@@ -1265,7 +1264,7 @@ export default function EnhancedBooking() {
                               !checkOut && "text-muted-foreground"
                             )}
                           >
-                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
+                            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent w-5 h-5" />
                             {checkOut ? format(checkOut, "PPP") : "Pick check-out date"}
                             <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
