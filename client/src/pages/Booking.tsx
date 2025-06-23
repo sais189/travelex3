@@ -449,28 +449,20 @@ export default function Booking() {
                       </Label>
                       <Popover open={checkInOpen} onOpenChange={setCheckInOpen}>
                         <PopoverTrigger asChild>
-                          <div
-                            onMouseEnter={() => setCheckInOpen(true)}
-                            onMouseLeave={handleCheckInMouseLeave}
+                          <Button
+                            variant="outline"
+                            onClick={() => setCheckInOpen(true)}
+                            className={cn(
+                              "w-full justify-start text-left font-normal pl-4 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent cursor-pointer",
+                              !checkIn && "text-muted-foreground"
+                            )}
                           >
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
-                                !checkIn && "text-muted-foreground"
-                              )}
-                            >
-                              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gold-accent calendar-icon w-5 h-5" />
-                              {checkIn ? format(checkIn, "PPP") : "Pick a date"}
-                              <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </div>
+                            {checkIn ? format(checkIn, "PPP") : "Pick a date"}
+                          </Button>
                         </PopoverTrigger>
                         <PopoverContent 
                           className="w-auto p-0" 
                           align="start"
-                          onMouseEnter={() => setCheckInOpen(true)}
-                          onMouseLeave={handleCheckInMouseLeave}
                         >
                           <CalendarComponent
                             mode="single"
@@ -488,34 +480,24 @@ export default function Booking() {
                       </Label>
                       <Popover open={checkOutOpen} onOpenChange={setCheckOutOpen}>
                         <PopoverTrigger asChild>
-                          <div
-                            onMouseEnter={() => {
+                          <Button
+                            variant="outline"
+                            disabled={!checkIn}
+                            onClick={() => {
                               if (checkIn) setCheckOutOpen(true);
                             }}
-                            onMouseLeave={handleCheckOutMouseLeave}
+                            className={cn(
+                              "w-full justify-start text-left font-normal pl-4 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent cursor-pointer",
+                              !checkOut && "text-muted-foreground",
+                              !checkIn && "opacity-50 cursor-not-allowed"
+                            )}
                           >
-                            <Button
-                              variant="outline"
-                              disabled={!checkIn}
-                              className={cn(
-                                "w-full justify-start text-left font-normal pl-10 bg-slate-panel border-border hover:bg-slate-panel/80 focus:border-gold-accent",
-                                !checkOut && "text-muted-foreground",
-                                !checkIn && "opacity-50 cursor-not-allowed"
-                              )}
-                            >
-                              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lavender-accent calendar-icon w-5 h-5" />
-                              {checkOut ? format(checkOut, "PPP") : "Pick a date"}
-                              <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </div>
+                            {checkOut ? format(checkOut, "PPP") : "Pick a date"}
+                          </Button>
                         </PopoverTrigger>
                         <PopoverContent 
                           className="w-auto p-0" 
                           align="start"
-                          onMouseEnter={() => {
-                            if (checkIn) setCheckOutOpen(true);
-                          }}
-                          onMouseLeave={handleCheckOutMouseLeave}
                         >
                           <CalendarComponent
                             mode="single"
