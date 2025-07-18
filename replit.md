@@ -18,7 +18,7 @@ This is a comprehensive travel booking platform built as a full-stack web applic
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js server
 - **Database**: PostgreSQL with Drizzle ORM for type-safe database operations
-- **Database Provider**: Neon Database (serverless PostgreSQL)
+- **Database Provider**: PostgreSQL Database (Render.com hosting)
 - **Authentication**: Session-based authentication with OpenID Connect (Replit Auth)
 - **Session Storage**: PostgreSQL-backed session store using connect-pg-simple
 
@@ -59,17 +59,32 @@ This is a comprehensive travel booking platform built as a full-stack web applic
 
 ## Data Flow
 
-1. **User Authentication**: Users authenticate via Replit Auth or username/password
+1. **User Authentication**: Users authenticate via username/password with bcrypt hashing
 2. **Destination Discovery**: Browse destinations via interactive globe or traditional listing
 3. **Booking Process**: Select dates, guests, upgrades, and proceed to payment
 4. **Payment Processing**: Secure payment via Stripe with booking confirmation
 5. **Trip Management**: Users can view and manage their bookings
 6. **Administrative Oversight**: Admins manage destinations, users, and bookings via dashboard
 
+## Database Migration Status
+
+### Recent Changes (July 18, 2025)
+✅ **Successfully migrated to PostgreSQL Database**
+- **Database Provider**: Render.com PostgreSQL
+- **Connection**: `postgresql://sai_j16q_user:Ktz9XhfvegcunhDBccYng71gUSfvoFvY@dpg-d1ss8amr433s73emf0l0-a.singapore-postgres.render.com/sai_j16q`
+- **Data Exported**: All CSV data successfully imported to PostgreSQL
+  - 205 users (including admin accounts)
+  - 38 destinations with full itineraries and pricing
+  - 9 bookings with payment information
+  - 185 customer reviews
+  - 121 activity logs for admin dashboard
+- **Status**: Application successfully connected and operational
+- **Configuration**: Updated `server/db.ts` with direct connection string
+
 ## External Dependencies
 
 ### Core Dependencies
-- **@neondatabase/serverless**: Serverless PostgreSQL client for Neon Database (or local PostgreSQL)
+- **pg**: PostgreSQL client for connecting to Render.com PostgreSQL database
 - **drizzle-orm**: Type-safe ORM for database operations
 - **@stripe/stripe-js**: Payment processing integration
 - **three**: 3D graphics library for globe visualization
