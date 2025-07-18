@@ -19,8 +19,25 @@ import {
 import { RobustImage } from "@/components/ui/robust-image";
 import PDFExport from "@/components/PDFExport";
 
+// Type definition for destination image sets
+type DestinationImageSet = {
+  day1: string;
+  day2: string;
+  day3: string;
+  day4: string;
+  day5: string;
+  day6: string;
+  day7?: string;
+  day8?: string;
+  day9?: string;
+  day10?: string;
+  day11?: string;
+  day12?: string;
+  fallback: string;
+};
+
 // Landmark images for each specific destination
-const DESTINATION_LANDMARK_IMAGES = {
+const DESTINATION_LANDMARK_IMAGES: Record<string, DestinationImageSet> = {
   // Maldives Luxury Resort (ID: 2)
   "maldives_luxury_resort": {
     day1: "https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&h=600&fit=crop&auto=format&q=80", // Overwater bungalows
@@ -32,7 +49,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=600&fit=crop&auto=format&q=80", // Romantic sunset cruise
     fallback: "https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Tokyo Adventure (ID: 3)
   "tokyo_adventure": {
     day1: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&h=600&fit=crop&auto=format&q=80", // Tokyo skyline
@@ -44,7 +61,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&h=600&fit=crop&auto=format&q=80", // Meiji Shrine
     fallback: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Himalayan Expedition (ID: 4)
   "himalayan_expedition": {
     day1: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&auto=format&q=80", // Everest Base Camp
@@ -56,7 +73,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&h=600&fit=crop&auto=format&q=80", // Kathmandu valley departure
     fallback: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // African Safari (ID: 5)
   "african_safari": {
     day1: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Elephants migration
@@ -68,7 +85,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1564149504063-338de52293c6?w=800&h=600&fit=crop&auto=format&q=80", // Safari camp
     fallback: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Iceland Adventure (ID: 6)
   "iceland_adventure": {
     day1: "https://images.unsplash.com/photo-1551524164-6cf96ac834fb?w=800&h=600&fit=crop&auto=format&q=80", // Gullfoss waterfall
@@ -80,7 +97,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop&auto=format&q=80", // Skaftafell glacier
     fallback: "https://images.unsplash.com/photo-1551524164-6cf96ac834fb?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Swiss Alps (ID: 7)
   "swiss_alps": {
     day1: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=600&fit=crop&auto=format&q=80", // Matterhorn peak
@@ -92,7 +109,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&h=600&fit=crop&auto=format&q=80", // Alpine sunset
     fallback: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Great Barrier Reef (ID: 8)
   "great_barrier_reef": {
     day1: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=800&h=600&fit=crop&auto=format&q=80", // Coral reef aerial
@@ -104,7 +121,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1471919743851-c4df8b6ee585?w=800&h=600&fit=crop&auto=format&q=80", // Sunset sail
     fallback: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Australian Outback (ID: 9)
   "australian_outback": {
     day1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Uluru at sunrise
@@ -116,7 +133,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&h=600&fit=crop&auto=format&q=80", // Desert sunset
     fallback: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Norwegian Fjords (ID: 10)
   "norwegian_fjords": {
     day1: "https://images.unsplash.com/photo-1601439678777-b2b3c56fa627?w=800&h=600&fit=crop&auto=format&q=80", // Geirangerfjord panorama
@@ -128,7 +145,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day7: "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800&h=600&fit=crop&auto=format&q=80", // Northern lights
     fallback: "https://images.unsplash.com/photo-1601439678777-b2b3c56fa627?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Serengeti Migration (ID: 21)
   "serengeti_migration": {
     day1: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Serengeti entry gates
@@ -141,7 +158,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day8: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Final migration sunset
     fallback: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
   // Rajasthan Palace Tour (ID: 19)
   "rajasthan_palace_tour": {
     day1: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop&auto=format&q=80", // Jaipur Pink City
@@ -171,7 +188,102 @@ const DESTINATION_LANDMARK_IMAGES = {
     day10: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80", // Galápagos sunset with marine life silhouettes
     fallback: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80"
   },
-  
+
+  // Tokyo Cherry Blossom Trip (ID: 1)
+  "tokyo_cherry_blossom": {
+    day1: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&h=600&fit=crop&auto=format&q=80", // Tokyo skyline arrival
+    day2: "https://images.unsplash.com/photo-1554797589-7241bb691973?w=800&h=600&fit=crop&auto=format&q=80", // Cherry blossoms in bloom
+    day3: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&h=600&fit=crop&auto=format&q=80", // Sensoji Temple
+    day4: "https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800&h=600&fit=crop&auto=format&q=80", // Shibuya crossing
+    day5: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&h=600&fit=crop&auto=format&q=80", // Meiji Shrine
+    day6: "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=800&h=600&fit=crop&auto=format&q=80", // Mount Fuji view
+    day7: "https://images.unsplash.com/photo-1560707303-4e980ce876ad?w=800&h=600&fit=crop&auto=format&q=80", // Traditional gardens
+    fallback: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+
+  // Swiss Alps Adventure (ID: 3)
+  "swiss_alps_adventure": {
+    day1: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=600&fit=crop&auto=format&q=80", // Matterhorn peak
+    day2: "https://images.unsplash.com/photo-1527004760525-c46ddf7e4438?w=800&h=600&fit=crop&auto=format&q=80", // Swiss village
+    day3: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800&h=600&fit=crop&auto=format&q=80", // Alpine lake
+    day4: "https://images.unsplash.com/photo-1507809781116-65c95a3a6d4b?w=800&h=600&fit=crop&auto=format&q=80", // Cable car
+    day5: "https://images.unsplash.com/photo-1505841512822-bddf79a048c5?w=800&h=600&fit=crop&auto=format&q=80", // Mountain meadow
+    day6: "https://images.unsplash.com/photo-1528728329032-2972f65dfb3f?w=800&h=600&fit=crop&auto=format&q=80", // Traditional chalet
+    fallback: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+
+  // Canadian Rockies Adventure (ID: 4)
+  "canadian_rockies": {
+    day1: "https://images.unsplash.com/photo-1501436513145-30f24e19fcc4?w=800&h=600&fit=crop&auto=format&q=80", // Banff National Park
+    day2: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Lake Louise
+    day3: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80", // Forest hiking trail
+    day4: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&auto=format&q=80", // Rocky mountain peaks
+    day5: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&h=600&fit=crop&auto=format&q=80", // Mountain wildlife
+    day6: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&h=600&fit=crop&auto=format&q=80", // Alpine sunset
+    day7: "https://images.unsplash.com/photo-1505841512822-bddf79a048c5?w=800&h=600&fit=crop&auto=format&q=80", // Mountain meadow
+    day8: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&h=600&fit=crop&auto=format&q=80", // Stargazing
+    fallback: "https://images.unsplash.com/photo-1501436513145-30f24e19fcc4?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+
+  // Kenya Safari Experience (ID: 5)
+  "kenya_safari": {
+    day1: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Safari entrance
+    day2: "https://images.unsplash.com/photo-1566649112285-e6d2e8cd3c5b?w=800&h=600&fit=crop&auto=format&q=80", // Giraffe at sunset
+    day3: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=600&fit=crop&auto=format&q=80", // Lions pride
+    day4: "https://images.unsplash.com/photo-1566555110834-0af5e5cf38c5?w=800&h=600&fit=crop&auto=format&q=80", // Zebra herds
+    day5: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800&h=600&fit=crop&auto=format&q=80", // Masai culture
+    day6: "https://images.unsplash.com/photo-1549318441-e6324cbb769e?w=800&h=600&fit=crop&auto=format&q=80", // African sunset
+    day7: "https://images.unsplash.com/photo-1564149504063-338de52293c6?w=800&h=600&fit=crop&auto=format&q=80", // Safari camp
+    fallback: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+
+  // Machu Picchu Trail (ID: 6)
+  "machu_picchu": {
+    day1: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800&h=600&fit=crop&auto=format&q=80", // Machu Picchu ruins
+    day2: "https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800&h=600&fit=crop&auto=format&q=80", // Inca trail hiking
+    day3: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&h=600&fit=crop&auto=format&q=80", // Andean mountains
+    day4: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80", // Cloud forest
+    day5: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Sacred Valley
+    day6: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&h=600&fit=crop&auto=format&q=80", // Sunrise at ruins
+    fallback: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+
+  // Northern Lights Explorer (ID: 7)
+  "northern_lights": {
+    day1: "https://images.unsplash.com/photo-1578401572462-f6c5b2d39c48?w=800&h=600&fit=crop&auto=format&q=80", // Aurora Borealis
+    day2: "https://images.unsplash.com/photo-1551524164-6cf96ac834fb?w=800&h=600&fit=crop&auto=format&q=80", // Iceland winter landscape
+    day3: "https://images.unsplash.com/photo-1573160813959-df05c19ffc85?w=800&h=600&fit=crop&auto=format&q=80", // Frozen lake
+    day4: "https://images.unsplash.com/photo-1569163139394-de4e6d43e4e5?w=800&h=600&fit=crop&auto=format&q=80", // Arctic wildlife
+    day5: "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?w=800&h=600&fit=crop&auto=format&q=80", // Northern village
+    day6: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop&auto=format&q=80", // Ice formations
+    day7: "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800&h=600&fit=crop&auto=format&q=80", // Aurora reflection
+    fallback: "https://images.unsplash.com/photo-1578401572462-f6c5b2d39c48?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+
+  // Great Wall Adventure (ID: 8)
+  "great_wall": {
+    day1: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&h=600&fit=crop&auto=format&q=80", // Great Wall of China
+    day2: "https://images.unsplash.com/photo-1529265985101-33e1e651e28c?w=800&h=600&fit=crop&auto=format&q=80", // Forbidden City
+    day3: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop&auto=format&q=80", // Temple of Heaven
+    day4: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&h=600&fit=crop&auto=format&q=80", // Traditional architecture
+    day5: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&h=600&fit=crop&auto=format&q=80", // Mountain section
+    day6: "https://images.unsplash.com/photo-1554797589-7241bb691973?w=800&h=600&fit=crop&auto=format&q=80", // Cultural gardens
+    day7: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop&auto=format&q=80", // Sunset over wall
+    day8: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Final views
+    fallback: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+
+  // Santorini Sunset (ID: 18)
+  "santorini_sunset": {
+    day1: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&h=600&fit=crop&auto=format&q=80", // Santorini arrival blue domes
+    day2: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800&h=600&fit=crop&auto=format&q=80", // Oia village white houses
+    day3: "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=800&h=600&fit=crop&auto=format&q=80", // Santorini cliffs and sea
+    day4: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800&h=600&fit=crop&auto=format&q=80", // Traditional Greek architecture
+    day5: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Aegean Sea vista
+    day6: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&h=600&fit=crop&auto=format&q=80", // Santorini sunset panorama
+    fallback: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&h=600&fit=crop&auto=format&q=80"
+  },
+
   // Generic fallback for unknown destinations
   generic: {
     day1: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80", // Travel wanderlust
@@ -179,7 +291,7 @@ const DESTINATION_LANDMARK_IMAGES = {
     day3: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=600&fit=crop&auto=format&q=80", // Ocean horizon
     day4: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&auto=format&q=80", // Forest path
     day5: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80", // Mountain vista
-    day6: "https://images.unsplash.com/photo-1464822759844-d150baef493e?w=800&h=600&fit=crop&auto=format&q=80", // Nature escape
+    day6: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop&auto=format&q=80", // Nature escape (fixed broken URL)
     day7: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop&auto=format&q=80", // Sunset journey
     fallback: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80"
   }
@@ -215,13 +327,13 @@ export default function DayByDayItinerary({
   activeDay = 1, 
   onDaySelect 
 }: DayByDayItineraryProps) {
-  
+
   // Generate day-specific highlights based on destination and day content
   const getHighlightsForDay = (day: ItineraryDay, index: number) => {
     const dayActivities = day?.activities || [];
     const destinationName = destination?.name.toLowerCase() || '';
     const dayNumber = index + 1;
-    
+
     // Use existing activities if available
     if (dayActivities.length > 0) {
       return dayActivities.slice(0, 4);
@@ -239,7 +351,7 @@ export default function DayByDayItinerary({
         ["Golden Pavilion temple visit", "Traditional tea ceremony participation", "Nijo Castle gardens exploration", "Departure arrangements and transfers"]
       ];
       return tokyoHighlights[Math.min(index, tokyoHighlights.length - 1)] || tokyoHighlights[0];
-      
+
     } else if (destinationName.includes('maldives')) {
       const maldivesHighlights = [
         ["Seaplane transfer with aerial island views", "Overwater villa check-in and orientation", "Sunset cocktails on private deck", "Welcome dinner under the stars"],
@@ -251,7 +363,7 @@ export default function DayByDayItinerary({
         ["Final sunrise yoga session", "Underwater photography workshop", "Farewell reef snorkeling", "Seaplane departure with memories"]
       ];
       return maldivesHighlights[Math.min(index, maldivesHighlights.length - 1)] || maldivesHighlights[0];
-      
+
     } else if (destinationName.includes('himalaya') || destinationName.includes('everest') || destinationName.includes('nepal')) {
       const himalayanHighlights = [
         ["Arrival in Kathmandu with mountain views", "Traditional Nepali welcome ceremony", "Durbar Square UNESCO heritage tour", "Equipment fitting for trekking"],
@@ -263,7 +375,7 @@ export default function DayByDayItinerary({
         ["Helicopter rescue scenic flight", "Mountain rescue demonstration", "Kathmandu valley sightseeing", "Traditional farewell dinner"]
       ];
       return himalayanHighlights[Math.min(index, himalayanHighlights.length - 1)] || himalayanHighlights[0];
-      
+
     } else if (destinationName.includes('ecuadorian') || destinationName.includes('amazon') || destinationName.includes('galápagos')) {
       const amazonGalapagosHighlights = [
         // Day 1: Amazon Arrival
@@ -303,15 +415,29 @@ export default function DayByDayItinerary({
   const getLandmarkImageForDay = (destination: any, dayIndex: number) => {
     const destinationName = destination?.name.toLowerCase().replace(/\s+/g, '_') || '';
     const destinationId = destination?.id;
-    
+
     // Create destination key from name
     let destinationKey = 'generic';
-    
+
     // Direct mapping based on destination names and IDs
     if (destinationName.includes('maldives') && destinationName.includes('luxury')) {
       destinationKey = 'maldives_luxury_resort';
+    } else if (destinationName.includes('tokyo') && destinationName.includes('cherry')) {
+      destinationKey = 'tokyo_cherry_blossom';
     } else if (destinationName.includes('tokyo') || destinationName.includes('adventure')) {
       destinationKey = 'tokyo_adventure';
+    } else if (destinationName.includes('swiss') && destinationName.includes('alps')) {
+      destinationKey = 'swiss_alps_adventure';
+    } else if (destinationName.includes('canadian') && destinationName.includes('rockies')) {
+      destinationKey = 'canadian_rockies';
+    } else if (destinationName.includes('kenya') && destinationName.includes('safari')) {
+      destinationKey = 'kenya_safari';
+    } else if (destinationName.includes('machu') && destinationName.includes('picchu')) {
+      destinationKey = 'machu_picchu';
+    } else if (destinationName.includes('northern') && destinationName.includes('lights')) {
+      destinationKey = 'northern_lights';
+    } else if (destinationName.includes('great') && destinationName.includes('wall')) {
+      destinationKey = 'great_wall';
     } else if (destinationName.includes('himalayan') || destinationName.includes('expedition')) {
       destinationKey = 'himalayan_expedition';
     } else if (destinationName.includes('serengeti') || destinationName.includes('migration')) {
@@ -333,30 +459,56 @@ export default function DayByDayItinerary({
     } else if (destinationName.includes('ecuadorian') || destinationName.includes('amazon') || destinationName.includes('galápagos')) {
       destinationKey = 'ecuadorian_amazon_galapagos';
     }
-    
+
     // Fallback based on ID if name matching fails
     if (destinationKey === 'generic') {
       switch (destinationId) {
+        case 1: destinationKey = 'tokyo_cherry_blossom'; break;
         case 2: destinationKey = 'maldives_luxury_resort'; break;
-        case 3: destinationKey = 'tokyo_adventure'; break;
-        case 4: destinationKey = 'himalayan_expedition'; break;
-        case 5: destinationKey = 'african_safari'; break;
-        case 6: destinationKey = 'iceland_adventure'; break;
-        case 7: destinationKey = 'swiss_alps'; break;
-        case 8: destinationKey = 'great_barrier_reef'; break;
+        case 3: destinationKey = 'swiss_alps_adventure'; break;
+        case 4: destinationKey = 'canadian_rockies'; break;
+        case 5: destinationKey = 'kenya_safari'; break;
+        case 6: destinationKey = 'machu_picchu'; break;
+        case 7: destinationKey = 'northern_lights'; break;
+        case 8: destinationKey = 'great_wall'; break;
         case 9: destinationKey = 'australian_outback'; break;
         case 10: destinationKey = 'norwegian_fjords'; break;
+        case 11: destinationKey = 'generic'; break; // Sahara Desert Trek
+        case 12: destinationKey = 'norwegian_fjords'; break; // Fjord Explorer
+        case 13: destinationKey = 'generic'; break; // Pyramids & Nile Journey
+        case 14: destinationKey = 'himalayan_expedition'; break; // Himalayan Base Camp
+        case 15: destinationKey = 'generic'; break; // Patagonia Wilderness
+        case 16: destinationKey = 'generic'; break; // Bagan Temple Discovery
+        case 17: destinationKey = 'generic'; break; // Tuscany Wine & Culture
+        case 18: destinationKey = 'santorini_sunset'; break; // Santorini Sunset
         case 19: destinationKey = 'rajasthan_palace_tour'; break;
+        case 20: destinationKey = 'tokyo_cherry_blossom'; break; // Cherry Blossom Seoul
         case 21: destinationKey = 'serengeti_migration'; break;
+        case 22: destinationKey = 'generic'; break; // Scottish Highlands
+        case 23: destinationKey = 'generic'; break; // Vietnam Motorbike Journey
+        case 24: destinationKey = 'machu_picchu'; break; // Inca Trail Classic
+        case 25: destinationKey = 'northern_lights'; break; // Northern Lights Finland
+        case 26: destinationKey = 'generic'; break; // Patagonia Torres del Paine
+        case 27: destinationKey = 'generic'; break; // Angkor Wat Temple Complex
+        case 28: destinationKey = 'generic'; break; // Bali Cultural Immersion
+        case 29: destinationKey = 'generic'; break; // Colombian Coffee Triangle
+        case 30: destinationKey = 'generic'; break; // Cappadocia Balloon Adventure
+        case 31: destinationKey = 'generic'; break; // Madagascar Wildlife Discovery
+        case 33: destinationKey = 'generic'; break; // Irish Countryside & Castles
         case 34: destinationKey = 'ecuadorian_amazon_galapagos'; break;
+        case 35: destinationKey = 'generic'; break; // Polish Medieval Towns
+        case 36: destinationKey = 'generic'; break; // Costa Rican Eco-Adventure
+        case 38: destinationKey = 'tokyo_adventure'; break; // Tokyo Neon Nights
+        case 39: destinationKey = 'generic'; break; // Patagonia Wilderness
+        case 40: destinationKey = 'generic'; break; // Bali Spiritual Retreat
         default: destinationKey = 'generic';
       }
     }
-    
+
     // Get the specific day image or fallback
-    const dayKey = `day${dayIndex + 1}` as keyof typeof DESTINATION_LANDMARK_IMAGES.generic;
-    const imageSet = DESTINATION_LANDMARK_IMAGES[destinationKey as keyof typeof DESTINATION_LANDMARK_IMAGES] || DESTINATION_LANDMARK_IMAGES.generic;
-    
+    const dayKey = `day${dayIndex + 1}` as keyof DestinationImageSet;
+    const imageSet = DESTINATION_LANDMARK_IMAGES[destinationKey] || DESTINATION_LANDMARK_IMAGES.generic;
+
     return imageSet[dayKey] || imageSet.fallback;
   };
 
@@ -364,7 +516,7 @@ export default function DayByDayItinerary({
   const getIconForDay = (day: ItineraryDay, index: number) => {
     const dayTitle = day?.title?.toLowerCase() || '';
     const dayNumber = index + 1;
-    
+
     if (dayTitle.includes('arrival') || dayNumber === 1) return MapPin;
     if (dayTitle.includes('mountain') || dayTitle.includes('trek')) return Mountain;
     if (dayTitle.includes('water') || dayTitle.includes('beach') || dayTitle.includes('diving')) return Waves;
@@ -374,7 +526,7 @@ export default function DayByDayItinerary({
     if (dayTitle.includes('sunset') || dayTitle.includes('sunrise')) return Sun;
     if (dayTitle.includes('fish') || dayTitle.includes('marine')) return Fish;
     if (dayTitle.includes('island') || dayTitle.includes('tropical')) return TreePalm;
-    
+
     return Sparkles; // Default icon
   };
 
@@ -393,7 +545,7 @@ export default function DayByDayItinerary({
           backgroundAttachment: 'fixed'
         }}
       />
-      
+
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Section Title */}
         <motion.div
@@ -412,7 +564,7 @@ export default function DayByDayItinerary({
           >
             Your Journey Unfolds
           </motion.h2>
-          
+
           <motion.p 
             className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6"
             initial={{ opacity: 0, x: 100 }}
@@ -422,7 +574,7 @@ export default function DayByDayItinerary({
           >
             Experience every moment of your {destination.name} adventure with our carefully crafted day-by-day itinerary
           </motion.p>
-          
+
           <motion.div
             className="flex justify-center"
             initial={{ opacity: 0, y: 20 }}
@@ -448,7 +600,7 @@ export default function DayByDayItinerary({
           {itinerary.map((day: ItineraryDay, index: number) => {
             const DayIcon = getIconForDay(day, index);
             const highlights = getHighlightsForDay(day, index);
-            
+
             return (
               <motion.div
                 key={day.day}
@@ -486,10 +638,10 @@ export default function DayByDayItinerary({
                         alt={`${day.title} - Day ${index + 1} Landmark`}
                         className="w-full h-full object-cover"
                       />
-                      
+
                       {/* Gradient Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                      
+
                       {/* Day Number Badge */}
                       <motion.div 
                         className="absolute top-6 left-6"
@@ -564,7 +716,7 @@ export default function DayByDayItinerary({
                           <span>{day.duration}</span>
                         </motion.div>
                       )}
-                      
+
                       {day.location && (
                         <motion.div 
                           className="flex items-center gap-2 text-sm text-muted-foreground"
