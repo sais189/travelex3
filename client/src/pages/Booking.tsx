@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
-import { loadStripe } from "@stripe/stripe-js";
+
 import { RobustImage } from "@/components/ui/robust-image";
 import DayByDayItinerary from "@/components/DayByDayItinerary";
 import CouponCodeInput from "@/components/CouponCodeInput";
@@ -24,7 +24,7 @@ import Reviews from "@/components/Reviews";
 import { cn } from "@/lib/utils";
 import type { Destination } from "@shared/schema";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
+import { stripePromise } from "@/lib/stripeConfig";
 
 export default function Booking() {
   const params = useParams();

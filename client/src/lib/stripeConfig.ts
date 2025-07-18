@@ -1,7 +1,10 @@
 import { loadStripe } from "@stripe/stripe-js";
 
 // Initialize Stripe
-const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY || "pk_test_51RORfCI0cIptDIR44TIePNPcAZhZyZATnmI1lTuKslHmd6pUFYZmUTcAvve1zyyR9ZGufTaJiwVvDOeiS4kFzrmv00ffYBpFO6";
+
+console.log("Stripe publishable key:", stripePublishableKey ? "✓ Found" : "✗ Missing");
+console.log("Environment variables:", import.meta.env);
 
 if (!stripePublishableKey) {
   console.warn("Stripe publishable key not found. Payment functionality will be limited.");
